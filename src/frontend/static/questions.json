@@ -53,7 +53,29 @@
           "groupReason": "Frequent distress symptoms",
           "urgency": "moderate"
         }
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿con qué frecuencia se sintió cansado sin ninguna buena razón?",
+          "options": {
+            "1": "Nunca",
+            "2": "Pocas veces",
+            "3": "A veces",
+            "4": "Casi siempre",
+            "5": "Siempre"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, com que frequência você se sentiu cansado sem um bom motivo?",
+          "options": {
+            "1": "Nunca",
+            "2": "Poucas vezes",
+            "3": "Às vezes",
+            "4": "Quase sempre",
+            "5": "Sempre"
+          }
+        }
+      }
     },
     {
       "questionNumber": 2,
@@ -98,7 +120,29 @@
           ],
           "groupReason": "Frequent distress symptoms"
         }
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿con qué frecuencia se sintió nervioso?",
+          "options": {
+            "1": "Nunca",
+            "2": "Pocas veces",
+            "3": "A veces",
+            "4": "Casi siempre",
+            "5": "Siempre"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, com que frequência você se sentiu nervoso?",
+          "options": {
+            "1": "Nunca",
+            "2": "Poucas vezes",
+            "3": "Às vezes",
+            "4": "Quase sempre",
+            "5": "Sempre"
+          }
+        }
+      }
     },
     {
       "questionNumber": 3,
@@ -143,7 +187,29 @@
           ],
           "groupReason": "Frequent distress symptoms"
         }
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿con qué frecuencia se sintió tan nervioso que nada podía calmarlo?",
+          "options": {
+            "1": "Nunca",
+            "2": "Pocas veces",
+            "3": "A veces",
+            "4": "Casi siempre",
+            "5": "Siempre"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, com que frequência você se sentiu tão nervoso que nada conseguia acalmá-lo?",
+          "options": {
+            "1": "Nunca",
+            "2": "Poucas vezes",
+            "3": "Às vezes",
+            "4": "Quase sempre",
+            "5": "Sempre"
+          }
+        }
+      }
     },
     {
       "questionNumber": 4,
@@ -188,7 +254,29 @@
           ],
           "groupReason": "Frequent distress symptoms"
         }
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿con qué frecuencia se sintió sin esperanza?",
+          "options": {
+            "1": "Nunca",
+            "2": "Pocas veces",
+            "3": "A veces",
+            "4": "Casi siempre",
+            "5": "Siempre"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, com que frequência você se sentiu sem esperança?",
+          "options": {
+            "1": "Nunca",
+            "2": "Poucas vezes",
+            "3": "Às vezes",
+            "4": "Quase sempre",
+            "5": "Sempre"
+          }
+        }
+      }
     },
     {
       "questionNumber": 5,
@@ -233,7 +321,29 @@
           ],
           "groupReason": "Frequent distress symptoms"
         }
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿con qué frecuencia se sintió inquieto o impaciente?",
+          "options": {
+            "1": "Nunca",
+            "2": "Pocas veces",
+            "3": "A veces",
+            "4": "Casi siempre",
+            "5": "Siempre"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, com que frequência você se sentiu inquieto ou agitado?",
+          "options": {
+            "1": "Nunca",
+            "2": "Poucas vezes",
+            "3": "Às vezes",
+            "4": "Quase sempre",
+            "5": "Sempre"
+          }
+        }
+      }
     },
     {
       "questionNumber": 6,
@@ -278,7 +388,29 @@
           ],
           "groupReason": "Frequent distress symptoms"
         }
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿con qué frecuencia se sintió tan inquieto que no podía quedarse quieto?",
+          "options": {
+            "1": "Nunca",
+            "2": "Pocas veces",
+            "3": "A veces",
+            "4": "Casi siempre",
+            "5": "Siempre"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, com que frequência você se sentiu tão inquieto que não conseguia ficar parado?",
+          "options": {
+            "1": "Nunca",
+            "2": "Poucas vezes",
+            "3": "Às vezes",
+            "4": "Quase sempre",
+            "5": "Sempre"
+          }
+        }
+      }
     },
     {
       "questionNumber": 7,
@@ -323,7 +455,29 @@
           ],
           "groupReason": "Frequent distress symptoms"
         }
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿con qué frecuencia se sintió deprimido?",
+          "options": {
+            "1": "Nunca",
+            "2": "Pocas veces",
+            "3": "A veces",
+            "4": "Casi siempre",
+            "5": "Siempre"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, com que frequência você se sentiu deprimido?",
+          "options": {
+            "1": "Nunca",
+            "2": "Poucas vezes",
+            "3": "Às vezes",
+            "4": "Quase sempre",
+            "5": "Sempre"
+          }
+        }
+      }
     },
     {
       "questionNumber": 8,
@@ -368,7 +522,29 @@
           ],
           "groupReason": "Frequent distress symptoms"
         }
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿con qué frecuencia sintió que todo le costaba mucho esfuerzo?",
+          "options": {
+            "1": "Nunca",
+            "2": "Pocas veces",
+            "3": "A veces",
+            "4": "Casi siempre",
+            "5": "Siempre"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, com que frequência você sentiu que tudo exigia muito esforço?",
+          "options": {
+            "1": "Nunca",
+            "2": "Poucas vezes",
+            "3": "Às vezes",
+            "4": "Quase sempre",
+            "5": "Sempre"
+          }
+        }
+      }
     },
     {
       "questionNumber": 9,
@@ -413,7 +589,29 @@
           ],
           "groupReason": "Frequent distress symptoms"
         }
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿con qué frecuencia se sintió tan triste que nada podía animarlo?",
+          "options": {
+            "1": "Nunca",
+            "2": "Pocas veces",
+            "3": "A veces",
+            "4": "Casi siempre",
+            "5": "Siempre"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, com que frequência você se sentiu tão triste que nada conseguia animá-lo?",
+          "options": {
+            "1": "Nunca",
+            "2": "Poucas vezes",
+            "3": "Às vezes",
+            "4": "Quase sempre",
+            "5": "Sempre"
+          }
+        }
+      }
     },
     {
       "questionNumber": 10,
@@ -458,7 +656,29 @@
           ],
           "groupReason": "Frequent distress symptoms"
         }
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿con qué frecuencia sintió que no valía nada?",
+          "options": {
+            "1": "Nunca",
+            "2": "Pocas veces",
+            "3": "A veces",
+            "4": "Casi siempre",
+            "5": "Siempre"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, com que frequência você sentiu que não valia nada?",
+          "options": {
+            "1": "Nunca",
+            "2": "Poucas vezes",
+            "3": "Às vezes",
+            "4": "Quase sempre",
+            "5": "Sempre"
+          }
+        }
+      }
     },
     {
       "questionNumber": 11,
@@ -515,7 +735,31 @@
       "exclusiveOptionIds": [
         "none",
         "pnots"
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "¿Cuál lo describe mejor hoy? (Seleccione todas las que apliquen)",
+          "options": {
+            "mh_current": "Enfrentando desafíos de salud mental",
+            "su_current": "Enfrentando desafíos con el uso de sustancias",
+            "mh_recovery": "En recuperación de una condición de salud mental",
+            "su_recovery": "En recuperación del uso de sustancias",
+            "none": "Ninguna de las anteriores",
+            "pnots": "Prefiero no decir"
+          }
+        },
+        "pt": {
+          "text": "O que descreve melhor você hoje? (Selecione todas as opções que se aplicam)",
+          "options": {
+            "mh_current": "Enfrentando desafios de saúde mental",
+            "su_current": "Enfrentando desafios com o uso de substâncias",
+            "mh_recovery": "Em recuperação de uma condição de saúde mental",
+            "su_recovery": "Em recuperação do uso de substâncias",
+            "none": "Nenhuma das opções",
+            "pnots": "Prefiro não dizer"
+          }
+        }
+      }
     },
     {
       "questionNumber": 12,
@@ -617,7 +861,43 @@
       ],
       "exclusiveOptionIds": [
         "none"
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿cuáles de las siguientes cosas sintió en general? (Seleccione todas las que apliquen)",
+          "options": {
+            "nervous": "Nervioso",
+            "anxious": "Ansioso",
+            "hopeless": "Sin esperanza",
+            "hopeful": "Con esperanza",
+            "lonely": "Solo",
+            "restless": "Inquieto",
+            "fidgety": "Impaciente",
+            "happy": "Feliz",
+            "sad": "Triste",
+            "depressed": "Deprimido",
+            "worthless": "Sin valor",
+            "none": "Ninguna de las anteriores"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, o que você geralmente sentiu? (Selecione todas as opções que se aplicam)",
+          "options": {
+            "nervous": "Nervoso",
+            "anxious": "Ansioso",
+            "hopeless": "Sem esperança",
+            "hopeful": "Esperançoso",
+            "lonely": "Sozinho",
+            "restless": "Inquieto",
+            "fidgety": "Agitado",
+            "happy": "Feliz",
+            "sad": "Triste",
+            "depressed": "Deprimido",
+            "worthless": "Sem valor",
+            "none": "Nenhuma das opções"
+          }
+        }
+      }
     },
     {
       "questionNumber": 13,
@@ -666,7 +946,29 @@
       ],
       "exclusiveOptionIds": [
         "none"
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿cuáles de las siguientes cosas ha experimentado? (Seleccione todas las que apliquen)",
+          "options": {
+            "restlessness": "Inquietud",
+            "irritability": "Irritabilidad",
+            "trouble_concentrating": "Dificultad para concentrarse",
+            "trouble_sleeping": "Problemas para dormir",
+            "none": "Ninguna de las anteriores"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, o que você experimentou? (Selecione todas as opções que se aplicam)",
+          "options": {
+            "restlessness": "Inquietação",
+            "irritability": "Irritabilidade",
+            "trouble_concentrating": "Dificuldade de concentração",
+            "trouble_sleeping": "Problemas para dormir",
+            "none": "Nenhuma das opções"
+          }
+        }
+      }
     },
     {
       "questionNumber": 14,
@@ -707,6 +1009,28 @@
             "notEquals": "none"
           }
         ]
+      },
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿cómo ha manejado estas experiencias? (Seleccione todas las que apliquen)",
+          "options": {
+            "contacted_dr": "Contacté a un médico",
+            "let_it_pass": "Dejé que pasara",
+            "prescribed_substance": "Usé sustancias recetadas",
+            "non-prescribed_substance": "Usé sustancias no recetadas, incluido el alcohol",
+            "own_coping": "Usé mis propios métodos (ej. ejercicio, lectura)"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, como você lidou com essas experiências? (Selecione todas as opções que se aplicam)",
+          "options": {
+            "contacted_dr": "Procurei um médico",
+            "let_it_pass": "Deixei passar",
+            "prescribed_substance": "Usei substâncias prescritas",
+            "non-prescribed_substance": "Usei substâncias não prescritas, incluindo álcool",
+            "own_coping": "Usei meus próprios métodos (ex.: exercício, leitura)"
+          }
+        }
       }
     },
     {
@@ -788,7 +1112,37 @@
       ],
       "exclusiveOptionIds": [
         "none"
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿qué síntomas físicos ha experimentado? (Seleccione todas las que apliquen)",
+          "options": {
+            "increased_hr": "Ritmo cardíaco acelerado",
+            "rapid_breathing": "Respiración rápida",
+            "muscle_tension": "Tensión muscular",
+            "sweating": "Sudoración",
+            "dry_mouth": "Boca seca",
+            "headache": "Dolor de cabeza",
+            "stomachache": "Dolor de estómago",
+            "dizziness": "Mareos",
+            "none": "Ninguna de las anteriores"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, quais sintomas físicos você teve? (Selecione todas as opções que se aplicam)",
+          "options": {
+            "increased_hr": "Batimentos cardíacos acelerados",
+            "rapid_breathing": "Respiração rápida",
+            "muscle_tension": "Tensão muscular",
+            "sweating": "Suor excessivo",
+            "dry_mouth": "Boca seca",
+            "headache": "Dor de cabeça",
+            "stomachache": "Dor de estômago",
+            "dizziness": "Tontura",
+            "none": "Nenhuma das opções"
+          }
+        }
+      }
     },
     {
       "questionNumber": 16,
@@ -821,6 +1175,28 @@
       "showIf": {
         "questionId": "t5",
         "notEquals": "none"
+      },
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿cómo ha manejado estos síntomas físicos? (Seleccione todas las que apliquen)",
+          "options": {
+            "contacted_dr": "Contacté a un médico",
+            "let_it_pass": "Dejé que pasara",
+            "prescribed_substance": "Usé sustancias recetadas",
+            "non-prescribed_substance": "Usé sustancias no recetadas, incluido el alcohol",
+            "own_coping": "Usé mis propios métodos (ej. ejercicio, lectura)"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, como você lidou com esses sintomas físicos? (Selecione todas as opções que se aplicam)",
+          "options": {
+            "contacted_dr": "Procurei um médico",
+            "let_it_pass": "Deixei passar",
+            "prescribed_substance": "Usei substâncias prescritas",
+            "non-prescribed_substance": "Usei substâncias não prescritas, incluindo álcool",
+            "own_coping": "Usei meus próprios métodos (ex.: exercício, leitura)"
+          }
+        }
       }
     },
     {
@@ -866,7 +1242,33 @@
           "id": "family",
           "label": "Spend time with my family"
         }
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "¿Qué hace por usted mismo? (Seleccione todas las que apliquen)",
+          "options": {
+            "walk": "Caminar",
+            "friends": "Reunirme con amigos",
+            "drink": "Tomar un trago",
+            "substances": "Usar otras sustancias",
+            "meditate": "Meditar",
+            "sports": "Ver deportes",
+            "family": "Pasar tiempo con mi familia"
+          }
+        },
+        "pt": {
+          "text": "O que você faz por você mesmo? (Selecione todas as opções que se aplicam)",
+          "options": {
+            "walk": "Caminhar",
+            "friends": "Encontrar os amigos",
+            "drink": "Tomar um drinque",
+            "substances": "Usar outras substâncias",
+            "meditate": "Meditar",
+            "sports": "Assistir esportes",
+            "family": "Passar tempo com a família"
+          }
+        }
+      }
     },
     {
       "questionNumber": 18,
@@ -890,7 +1292,23 @@
             "alcohol"
           ]
         }
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿ha consumido alcohol?",
+          "options": {
+            "yes": "Sí",
+            "no": "No"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, você consumiu álcool?",
+          "options": {
+            "yes": "Sim",
+            "no": "Não"
+          }
+        }
+      }
     },
     {
       "questionNumber": 19,
@@ -943,7 +1361,29 @@
           ],
           "groupReason": "Alcohol consumption frequency"
         }
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿con qué frecuencia bebió alcohol?",
+          "options": {
+            "daily": "Todos los días",
+            "weekly": "Cada semana",
+            "monthly": "Cada mes",
+            "socially": "Socialmente (menos de tres veces al mes)",
+            "rarely": "Rara vez"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, com que frequência você bebeu álcool?",
+          "options": {
+            "daily": "Todos os dias",
+            "weekly": "Toda semana",
+            "monthly": "Todo mês",
+            "socially": "Socialmente (menos de três vezes por mês)",
+            "rarely": "Raramente"
+          }
+        }
+      }
     },
     {
       "questionNumber": 20,
@@ -968,7 +1408,23 @@
           "id": "no",
           "label": "No"
         }
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿fue el alcohol una de sus formas de sobrellevar las cosas?",
+          "options": {
+            "yes": "Sí",
+            "no": "No"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, o álcool foi uma das suas formas de lidar com as coisas?",
+          "options": {
+            "yes": "Sim",
+            "no": "Não"
+          }
+        }
+      }
     },
     {
       "questionNumber": 21,
@@ -1029,7 +1485,31 @@
           ],
           "groupReason": "Multi-day alcohol consumption"
         }
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿en cuántos días bebió más de una bebida alcohólica?",
+          "options": {
+            "1-2": "1–2 días",
+            "3-5": "3–5 días",
+            "6-9": "6–9 días",
+            "10-19": "10–19 días",
+            "20-29": "20–29 días",
+            "30": "Los 30 días"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, em quantos dias você bebeu mais de uma bebida alcoólica?",
+          "options": {
+            "1-2": "1–2 dias",
+            "3-5": "3–5 dias",
+            "6-9": "6–9 dias",
+            "10-19": "10–19 dias",
+            "20-29": "20–29 dias",
+            "30": "Todos os 30 dias"
+          }
+        }
+      }
     },
     {
       "questionNumber": 22,
@@ -1140,7 +1620,43 @@
           ],
           "reason": "Drinking due to boredom"
         }
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "¿Cuáles son algunas razones por las que bebe alcohol? (Seleccione todas las que apliquen)",
+          "options": {
+            "forget_worries": "Para olvidar las preocupaciones",
+            "enjoy_party": "Porque le ayuda a disfrutar una fiesta",
+            "cope_mood": "Porque le ayuda cuando se siente deprimido o nervioso",
+            "sociable": "Para socializar",
+            "taste": "Me gusta el sabor",
+            "get_drunk": "Disfruto la sensación de estar borracho",
+            "like_the_feeling": "Porque le gusta la sensación",
+            "social_avoidance": "Para que otros no se burlen por no beber",
+            "confidence": "Porque se siente con más confianza y seguridad",
+            "relax": "Para relajarse o aliviar el estrés",
+            "celebrate": "Para celebrar",
+            "boredom": "Por aburrimiento"
+          }
+        },
+        "pt": {
+          "text": "Quais são alguns motivos pelos quais você bebe álcool? (Selecione todas as opções que se aplicam)",
+          "options": {
+            "forget_worries": "Para esquecer as preocupações",
+            "enjoy_party": "Porque ajuda a curtir uma festa",
+            "cope_mood": "Porque ajuda quando você se sente deprimido ou nervoso",
+            "sociable": "Para socializar",
+            "taste": "Gosto do sabor",
+            "get_drunk": "Gosto da sensação de estar bêbado",
+            "like_the_feeling": "Porque você gosta da sensação",
+            "social_avoidance": "Para que os outros não zombem por você não beber",
+            "confidence": "Porque você se sente mais confiante e seguro",
+            "relax": "Para relaxar ou aliviar o estresse",
+            "celebrate": "Para comemorar",
+            "boredom": "Por tédio"
+          }
+        }
+      }
     },
     {
       "questionNumber": 23,
@@ -1179,7 +1695,27 @@
           "id": "none",
           "label": "None"
         }
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, sin contar el alcohol, ¿ha usado alguna sustancia o medicamento?",
+          "options": {
+            "prescribed": "Recetados",
+            "non_prescribed": "No recetados",
+            "both": "Recetados y no recetados",
+            "none": "Ninguno"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, sem contar o álcool, você usou alguma substância ou medicamento?",
+          "options": {
+            "prescribed": "Prescritos",
+            "non_prescribed": "Não prescritos",
+            "both": "Prescritos e não prescritos",
+            "none": "Nenhum"
+          }
+        }
+      }
     },
     {
       "questionNumber": 24,
@@ -1237,6 +1773,28 @@
           "non_prescribed",
           "both"
         ]
+      },
+      "i18n": {
+        "es": {
+          "text": "En los últimos 30 días, ¿con qué frecuencia usó drogas?",
+          "options": {
+            "daily": "Todos los días",
+            "weekly": "Cada semana",
+            "rarely": "Rara vez",
+            "socially": "Socialmente (menos de tres veces al mes)",
+            "prescribed": "Solo según lo recetado"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 30 dias, com que frequência você usou drogas?",
+          "options": {
+            "daily": "Todos os dias",
+            "weekly": "Toda semana",
+            "rarely": "Raramente",
+            "socially": "Socialmente (menos de três vezes por mês)",
+            "prescribed": "Somente conforme prescrito"
+          }
+        }
       }
     },
     {
@@ -1265,6 +1823,22 @@
           "non_prescribed",
           "both"
         ]
+      },
+      "i18n": {
+        "es": {
+          "text": "¿Cuántas veces en el último año usó una droga ilegal o un medicamento recetado por razones no médicas?",
+          "options": {
+            "0": "0 veces",
+            "1": "1 o más veces"
+          }
+        },
+        "pt": {
+          "text": "Quantas vezes no último ano você usou uma droga ilegal ou um medicamento controlado por motivos não médicos?",
+          "options": {
+            "0": "0 vezes",
+            "1": "1 ou mais vezes"
+          }
+        }
       }
     },
     {
@@ -1297,6 +1871,22 @@
           "prescribed",
           "both"
         ]
+      },
+      "i18n": {
+        "es": {
+          "text": "¿Con qué frecuencia toma su medicamento?",
+          "options": {
+            "daily": "Todos los días",
+            "as_prescribed": "Según lo recetado"
+          }
+        },
+        "pt": {
+          "text": "Com que frequência você toma seu medicamento?",
+          "options": {
+            "daily": "Todos os dias",
+            "as_prescribed": "Conforme prescrito"
+          }
+        }
       }
     },
     {
@@ -1346,6 +1936,28 @@
       "showIf": {
         "questionId": "notes_q4",
         "equals": "daily"
+      },
+      "i18n": {
+        "es": {
+          "text": "Si es todos los días, ¿para qué lo usa? (Seleccione todas las que apliquen)",
+          "options": {
+            "pain": "Dolor",
+            "anxiety": "Ansiedad",
+            "depression": "Depresión",
+            "sleep": "Dormir",
+            "other": "Otro"
+          }
+        },
+        "pt": {
+          "text": "Se for todos os dias, para que você o usa? (Selecione todas as opções que se aplicam)",
+          "options": {
+            "pain": "Dor",
+            "anxiety": "Ansiedade",
+            "depression": "Depressão",
+            "sleep": "Sono",
+            "other": "Outro"
+          }
+        }
       }
     },
     {
@@ -1363,7 +1975,23 @@
           "id": "no",
           "label": "No"
         }
-      ]
+      ],
+      "i18n": {
+        "es": {
+          "text": "En los últimos 12 meses, ¿ha apostado (por ej., lotería, apuestas deportivas, casino)?",
+          "options": {
+            "yes": "Sí",
+            "no": "No"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 12 meses, você apostou (ex.: loteria, apostas esportivas, cassino)?",
+          "options": {
+            "yes": "Sim",
+            "no": "Não"
+          }
+        }
+      }
     },
     {
       "questionNumber": 29,
@@ -1388,6 +2016,22 @@
       "showIf": {
         "questionId": "g0",
         "equals": "yes"
+      },
+      "i18n": {
+        "es": {
+          "text": "Durante los últimos 12 meses, ¿se ha sentido inquieto, irritable o ansioso al intentar dejar de apostar o apostar menos?",
+          "options": {
+            "yes": "Sí",
+            "no": "No"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 12 meses, você ficou inquieto, irritado ou ansioso ao tentar parar de apostar ou apostar menos?",
+          "options": {
+            "yes": "Sim",
+            "no": "Não"
+          }
+        }
       }
     },
     {
@@ -1413,6 +2057,22 @@
       "showIf": {
         "questionId": "g0",
         "equals": "yes"
+      },
+      "i18n": {
+        "es": {
+          "text": "Durante los últimos 12 meses, ¿ha intentado ocultar a su familia o amigos cuánto apostaba?",
+          "options": {
+            "yes": "Sí",
+            "no": "No"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 12 meses, você tentou esconder da família ou dos amigos o quanto apostava?",
+          "options": {
+            "yes": "Sim",
+            "no": "Não"
+          }
+        }
       }
     },
     {
@@ -1438,6 +2098,22 @@
       "showIf": {
         "questionId": "g0",
         "equals": "yes"
+      },
+      "i18n": {
+        "es": {
+          "text": "Durante los últimos 12 meses, ¿tuvo problemas económicos por las apuestas y necesitó ayuda de familiares, amigos o asistencia social para sus gastos?",
+          "options": {
+            "yes": "Sí",
+            "no": "No"
+          }
+        },
+        "pt": {
+          "text": "Nos últimos 12 meses, você teve problemas financeiros por causa das apostas e precisou de ajuda da família, de amigos ou da assistência social para as despesas?",
+          "options": {
+            "yes": "Sim",
+            "no": "Não"
+          }
+        }
       }
     },
     {
@@ -1487,6 +2163,28 @@
       "showIf": {
         "questionId": "g0",
         "equals": "yes"
+      },
+      "i18n": {
+        "es": {
+          "text": "¿Cómo describiría su relación con las apuestas en este momento?",
+          "options": {
+            "no_thoughts": "Nunca pienso en mis apuestas.",
+            "think_less": "A veces pienso en apostar menos.",
+            "decided_less": "He decidido apostar menos.",
+            "cutting_back": "Ya estoy tratando de apostar menos.",
+            "changed": "Cambié mis apuestas. Ahora no apuesto o apuesto menos que antes."
+          }
+        },
+        "pt": {
+          "text": "Como você descreveria sua relação com as apostas neste momento?",
+          "options": {
+            "no_thoughts": "Nunca penso nas minhas apostas.",
+            "think_less": "Às vezes penso em apostar menos.",
+            "decided_less": "Decidi apostar menos.",
+            "cutting_back": "Já estou tentando apostar menos.",
+            "changed": "Mudei minhas apostas. Agora não aposto ou aposto menos do que antes."
+          }
+        }
       }
     }
   ]

@@ -5,10 +5,12 @@ service_account.json
 # scratch files
 scratch.mjs
 
+# task/reference docs
+Send Actionable Items.pdf
+
 # installations
 node_modules
 
 ## data and generated outputs
-*.jpg
 examples/
 **/questions-json-to-csv/*.csv

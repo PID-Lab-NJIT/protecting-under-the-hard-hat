@@ -1,0 +1,72 @@
+{
+  "associations": [
+    {
+      "name": "Associated Construction Contractors of New Jersey (ACCNJ)",
+      "featured": true,
+      "logo": null,
+      "icon": "fas fa-building-columns",
+      "url": "https://www.accnj.org/",
+      "description": "Placeholder description — logo to be added."
+    }
+  ],
+  "contractors": [
+    {
+      "name": "Simpson and Brown",
+      "logo": null,
+      "icon": "fas fa-helmet-safety",
+      "url": null,
+      "description": "Placeholder — logo and link to be added."
+    },
+    {
+      "name": "Skanska",
+      "logo": null,
+      "icon": "fas fa-helmet-safety",
+      "url": null,
+      "description": "Placeholder — logo and link to be added."
+    },
+    {
+      "name": "Waters and Bugbee",
+      "logo": null,
+      "icon": "fas fa-helmet-safety",
+      "url": null,
+      "description": "Placeholder — logo and link to be added."
+    },
+    {
+      "name": "Weeks Marine",
+      "logo": null,
+      "icon": "fas fa-helmet-safety",
+      "url": null,
+      "description": "Placeholder — logo and link to be added."
+    }
+  ],
+  "unions": [
+    {
+      "name": "International Union of Operating Engineers Local 825",
+      "featured": true,
+      "logo": null,
+      "icon": "fas fa-people-carry-box",
+      "url": "https://www.iuoe825.org/",
+      "description": "Placeholder description — logo to be added."
+    }
+  ],
+  "testimonies": [
+    {
+      "name": "Sample Supporter",
+      "affiliation": "IUOE Local 825 (placeholder)",
+      "headshot": "static/assets/headshots/placeholder.svg",
+      "quote": "This initiative opened the door for real conversations about mental health on our job sites. (Placeholder testimony)"
+    },
+    {
+      "name": "Sample Contractor",
+      "affiliation": "General Contractor (placeholder)",
+      "headshot": "static/assets/headshots/placeholder.svg",
+      "quote": "The survey and resources made it easy for our crews to find help without stigma. (Placeholder testimony)"
+    },
+    {
+      "name": "Sample Worker",
+      "affiliation": "Construction Worker (placeholder)",
+      "headshot": "static/assets/headshots/placeholder.svg",
+      "quote": "I didn't know where to start until a coworker showed me this site. It pointed me to the right people. (Placeholder testimony)"
+    }
+  ]
+}

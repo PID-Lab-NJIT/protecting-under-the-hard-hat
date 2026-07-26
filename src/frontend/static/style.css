@@ -132,6 +132,13 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  transition: transform 0.25s ease, color 0.25s ease, background 0.25s ease;
+}
+
+/* Icon-parity with the landing page's .theme-toggle-btn hover */
+.theme-toggle:hover {
+  transform: rotate(-15deg) scale(1.08);
+  color: var(--accent);
 }
 
 .start-logo {
@@ -882,6 +889,13 @@ body.dark-mode .progress-container {
   transform: translateY(-1px);
 }
 
+/* Chips rendered as <button> (e.g. "See resources anyway") */
+button.chip {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
 /* Why Section Styles */
 .why-section {
   text-align: left;
@@ -1039,5 +1053,1004 @@ body.dark-mode .footer-branding {
   60%,
   80% {
     transform: translateX(5px);
+  }
+}
+/* ===== Questionnaire additions (frontend overhaul) ===== */
+
+/* Language toggle: globe button + dropdown menu */
+.lang-toggle {
+  position: fixed;
+  top: 16px;
+  right: 76px;
+  z-index: 3200;
+}
+
+.lang-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1.5px solid var(--text-secondary);
+  border-radius: 999px;
+  padding: 11px 14px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.4);
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.lang-menu-btn:hover,
+.lang-menu-btn[aria-expanded="true"] {
+  border-color: var(--accent);
+}
+
+.lang-menu-btn .lang-caret {
+  font-size: 0.65rem;
+  transition: transform 0.2s ease;
+}
+
+.lang-menu-btn[aria-expanded="true"] .lang-caret {
+  transform: rotate(180deg);
+}
+
+.lang-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 160px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--text-secondary);
+  border-radius: 14px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  transform: translateY(-6px);
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+}
+
+.lang-menu.open {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.lang-menu li {
+  margin: 0;
+}
+
+.lang-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: inherit;
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.lang-btn:hover {
+  background: var(--bg-primary);
+}
+
+.lang-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.lang-btn.active::after {
+  content: "\2713";
+  font-size: 0.8rem;
+  margin-left: 10px;
+}
+
+/* "Was this tool helpful?" slide-up card (H3) */
+.feedback-card {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translate(-50%, calc(100% + 24px));
+  z-index: 3300;
+  width: min(340px, calc(100vw - 32px));
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1.5px solid var(--text-secondary);
+  border-radius: 18px;
+  padding: 18px 20px 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, visibility 0.35s;
+}
+
+.feedback-card.show {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.feedback-card h3 {
+  font-size: 1rem;
+  font-weight: 800;
+  margin: 0 24px 12px 0;
+}
+
+.feedback-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.feedback-dismiss {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.feedback-dismiss:hover {
+  color: var(--text-primary);
+  background: var(--bg-primary);
+}
+
+@media (max-width: 600px) {
+  .feedback-card {
+    bottom: 84px;
+  }
+}
+
+/* Persistent exit ramp button */
+.exit-ramp-btn {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 3200;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 13px 20px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(204, 0, 0, 0.35);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.exit-ramp-btn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+/* Resource tools: search + email on top, ZIP lookup card beneath */
+.help-tools {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Top row: search box grows, email button sits beside it */
+.help-tools-top {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.help-search-row {
+  flex: 1 1 260px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--text-secondary);
+  border-radius: 999px;
+  padding: 10px 18px;
+}
+
+.help-search-row i {
+  color: var(--text-secondary);
+}
+
+.help-search-row input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+/* Email shortcut lives in the top toolbar, next to search */
+.email-results-btn {
+  width: auto;
+  flex: 1 1 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  box-shadow: none;
+  white-space: nowrap;
+}
+
+/* ZIP lookup card — centered, self-contained: header, controls, status and
+   local results all live inside so the output is clearly tied to the lookup */
+.zip-card {
+  background: var(--bg-secondary);
+  border: 1.5px solid rgba(113, 128, 150, 0.35);
+  border-radius: 18px;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.zip-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.zip-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.05rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--njit-blue) 100%);
+}
+
+.zip-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+
+.zip-label {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.zip-hint {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+/* Unified ZIP search: a single connected pill — icon, input, and Search CTA */
+.zip-search {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.zip-search-field {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-primary);
+  border: 1.5px solid rgba(113, 128, 150, 0.5);
+  border-radius: 999px;
+  padding: 5px 6px 5px 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.zip-search-field:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.12);
+}
+
+.zip-search-icon {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  font-size: 0.95rem;
+}
+
+.zip-search-field input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 0.98rem;
+  font-family: inherit;
+  letter-spacing: 0.14em;
+}
+
+.zip-search-field input::placeholder {
+  letter-spacing: normal;
+  color: var(--text-secondary);
+}
+
+.zip-search-go {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--njit-blue) 100%);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.zip-search-go:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 16px rgba(204, 0, 0, 0.28);
+}
+
+.zip-search-go:active {
+  transform: translateY(0);
+}
+
+.zip-search-go:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.28);
+}
+
+/* Text link to drop back to national-only view */
+.zip-clear-link {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  padding: 2px 6px;
+  transition: color 0.15s ease;
+}
+
+.zip-clear-link:hover {
+  color: var(--accent);
+}
+
+.zip-status {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  min-height: 1.2em;
+  max-width: 560px;
+}
+
+/* Refine group: a subtle inner panel that visually bundles the filter,
+   sort and distance controls so they read as one "refine" unit */
+.local-filters {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: rgba(113, 128, 150, 0.07);
+  border: 1px solid rgba(113, 128, 150, 0.2);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.local-filters-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  text-align: left;
+}
+
+.local-filters-head i {
+  color: var(--accent);
+  font-size: 0.9em;
+}
+
+/* Union/Contractor filter row: typeahead input + sort select */
+.local-filter-row {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.union-filter {
+  position: relative;
+  flex: 1 1 260px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-primary);
+  border: 1.5px solid rgba(113, 128, 150, 0.5);
+  border-radius: 12px;
+  padding: 9px 12px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.union-filter:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.12);
+}
+
+.union-filter > i {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.union-filter input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.union-clear-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 2px 4px;
+  border-radius: 6px;
+  line-height: 1;
+}
+
+.union-clear-btn:hover {
+  color: var(--accent);
+}
+
+.union-typeahead-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: none;
+  max-height: 220px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--bg-secondary);
+  border: 1.5px solid rgba(113, 128, 150, 0.5);
+  border-radius: 12px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
+  text-align: left;
+}
+
+.union-typeahead-list.open {
+  display: block;
+}
+
+.union-typeahead-item {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 10px;
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.union-typeahead-item:hover,
+.union-typeahead-item:focus {
+  background: var(--bg-primary);
+  color: var(--accent);
+  outline: none;
+}
+
+.union-typeahead-empty {
+  padding: 9px 10px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.local-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.local-sort-label {
+  flex-shrink: 0;
+}
+
+/* Custom sort dropdown — matches the union typeahead look & feel so the
+   popup list (which a native <select> can't style) is fully themed. */
+.custom-select {
+  position: relative;
+}
+
+.custom-select-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 140px;
+  background: var(--bg-primary);
+  border: 1.5px solid rgba(113, 128, 150, 0.5);
+  border-radius: 12px;
+  padding: 9px 12px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-select-trigger:hover {
+  border-color: rgba(113, 128, 150, 0.8);
+}
+
+.custom-select-trigger:focus-visible,
+.custom-select-trigger[aria-expanded="true"] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.12);
+}
+
+.custom-select-trigger > i {
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.custom-select-trigger[aria-expanded="true"] > i {
+  transform: rotate(180deg);
+}
+
+.custom-select-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.custom-select-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: none;
+  max-height: 240px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--bg-secondary);
+  border: 1.5px solid rgba(113, 128, 150, 0.5);
+  border-radius: 12px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
+  text-align: left;
+}
+
+.custom-select-list.open {
+  display: block;
+}
+
+.custom-select-item {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+  padding: 9px 10px;
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  cursor: pointer;
+  outline: none;
+}
+
+.custom-select-item:hover,
+.custom-select-item:focus {
+  background: var(--bg-primary);
+  color: var(--accent);
+}
+
+.custom-select-item.is-selected {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.custom-select-item[aria-disabled="true"] {
+  color: var(--text-secondary);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.custom-select-item[aria-disabled="true"]:hover,
+.custom-select-item[aria-disabled="true"]:focus {
+  background: none;
+  color: var(--text-secondary);
+}
+
+/* Max-distance slider row (disabled until a ZIP search) */
+.local-distance-row {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  background: var(--bg-primary);
+  border: 1.5px solid rgba(113, 128, 150, 0.5);
+  border-radius: 12px;
+  padding: 10px 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.local-distance-row:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.12);
+}
+
+.local-distance-row.disabled {
+  opacity: 0.55;
+}
+
+.local-distance-row.disabled:focus-within {
+  border-color: rgba(113, 128, 150, 0.5);
+  box-shadow: none;
+}
+
+.local-distance {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.local-distance-row.disabled .local-distance {
+  cursor: not-allowed;
+}
+
+.local-distance-label {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.local-distance-label strong {
+  color: var(--text-primary);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.local-distance input[type="range"] {
+  flex: 1;
+  min-width: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(113, 128, 150, 0.35);
+  outline: none;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.local-distance input[type="range"]:disabled {
+  cursor: not-allowed;
+}
+
+.local-distance input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg-primary);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease;
+}
+
+.local-distance input[type="range"]:not(:disabled)::-webkit-slider-thumb:hover {
+  transform: scale(1.12);
+}
+
+.local-distance input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg-primary);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.local-distance input[type="range"]:disabled::-webkit-slider-thumb {
+  background: var(--text-secondary);
+}
+
+.local-distance input[type="range"]:disabled::-moz-range-thumb {
+  background: var(--text-secondary);
+}
+
+.local-distance-hint {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Per-card distance badge (shown only when the endpoint returns a distance) */
+.help-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.help-card-header h4 {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Topic support shown as chips (icon + label) on local result cards */
+.topic-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 2px 0;
+}
+
+.topic-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(28, 20, 117, 0.09);
+  color: var(--njit-blue);
+  border: 1px solid rgba(28, 20, 117, 0.2);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.topic-chip i {
+  font-size: 0.85em;
+  opacity: 0.9;
+}
+
+body.dark-mode .topic-chip {
+  background: rgba(140, 160, 255, 0.16);
+  color: #b7c4ff;
+  border-color: rgba(140, 160, 255, 0.3);
+}
+
+/* Address row on local cards, with a pin icon */
+.local-address {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.local-address i {
+  color: var(--accent);
+  margin-top: 2px;
+  flex-shrink: 0;
+  font-size: 0.9em;
+}
+
+.distance-badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(204, 0, 0, 0.1);
+  color: var(--accent);
+  border: 1px solid rgba(204, 0, 0, 0.25);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+body.dark-mode .distance-badge {
+  background: rgba(204, 0, 0, 0.22);
+  color: #ff9d9d;
+  border-color: rgba(255, 120, 120, 0.35);
+}
+
+/* Relevance grouping: "Recommended for you" heading + "More resources" divider */
+.resource-group-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin: 2px 2px 0;
+  text-align: left;
+}
+
+.resource-group-heading i {
+  font-size: 0.8em;
+}
+
+.resource-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 2px 2px;
+  color: var(--text-secondary);
+}
+
+.resource-divider::before,
+.resource-divider::after {
+  content: '';
+  flex: 1;
+  border-top: 1.5px dashed rgba(113, 128, 150, 0.5);
+}
+
+.resource-divider-label {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.zip-status:empty {
+  display: none;
+}
+
+.zip-status.error {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Local results render INSIDE the ZIP card, under the controls */
+.zip-local-results {
+  width: 100%;
+  border-top: 1px dashed rgba(113, 128, 150, 0.45);
+  padding-top: 14px;
+  margin-top: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+.zip-local-results .local-resources-title {
+  margin: 0 0 2px;
+}
+
+.zip-local-results .help-card {
+  background: var(--bg-primary);
+}
+
+.local-resources-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 10px 0 14px;
+  text-align: center;
+}
+
+/* Kept for backwards-compat with any cached markup */
+.email-results-row {
+  display: flex;
+  justify-content: center;
+}
+
+.local-divider {
+  border: none;
+  border-top: 1px dashed var(--text-secondary);
+  opacity: 0.4;
+  margin: 24px auto;
+  width: 80%;
+}
+
+@media (max-width: 600px) {
+  .lang-toggle {
+    right: 70px;
+  }
+
+  .help-tools-top {
+    flex-direction: column;
+  }
+
+  .email-results-btn {
+    width: 100%;
+    white-space: normal;
+  }
+
+  .zip-card {
+    padding: 16px;
+  }
+
+  .zip-search-go {
+    padding: 10px 14px;
+  }
+
+  .local-filter-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .local-sort {
+    justify-content: center;
+  }
+
+  .exit-ramp-btn {
+    bottom: 14px;
+    right: 14px;
+    padding: 11px 16px;
+    font-size: 0.85rem;
   }
 }

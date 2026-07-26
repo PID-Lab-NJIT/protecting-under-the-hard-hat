@@ -25,7 +25,27 @@
                 "href": "https://988lifeline.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "meta": "24/7 \u2022 Presione 2 o diga \u201cAyuda\u201d para espa\u00f1ol",
+                "description": "Apoyo inmediato en crisis para suicidio, salud mental y angustia emocional.",
+                "actions": [
+                    { "label": "Llame al 988" },
+                    { "label": "Texto al 988" },
+                    { "label": "988lifeline.org" }
+                ]
+            },
+            "pt": {
+                "meta": "24/7 \u2022 Pressione 2 ou diga \u201cAyuda\u201d para espanhol",
+                "description": "Apoio imediato em crises de suic\u00eddio, sa\u00fade mental e sofrimento emocional.",
+                "actions": [
+                    { "label": "Ligue para 988" },
+                    { "label": "SMS para 988" },
+                    { "label": "988lifeline.org" }
+                ]
+            }
+        }
     },
     {
         "title": "Veterans Crisis Line",
@@ -55,7 +75,29 @@
                 "href": "https://www.veteranscrisisline.net/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "L\u00ednea de Crisis para Veteranos",
+                "meta": "Para todos los veteranos y sus familias \u2022 24/7",
+                "description": "Apoyo confidencial en crisis para veteranos, miembros del servicio y sus familias.",
+                "actions": [
+                    { "label": "Llame al 988 y presione 1" },
+                    { "label": "Texto al 838-255" },
+                    { "label": "veteranscrisisline.net" }
+                ]
+            },
+            "pt": {
+                "title": "Linha de Crise para Veteranos",
+                "meta": "Para todos os veteranos e fam\u00edlias \u2022 24/7",
+                "description": "Apoio confidencial em crise para veteranos, militares e suas fam\u00edlias.",
+                "actions": [
+                    { "label": "Ligue para 988 e pressione 1" },
+                    { "label": "SMS para 838-255" },
+                    { "label": "veteranscrisisline.net" }
+                ]
+            }
+        }
     },
     {
         "title": "Crisis Text Line",
@@ -84,7 +126,25 @@
                 "href": "https://www.crisistextline.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "description": "Consejer\u00eda de crisis gratuita y confidencial por mensaje de texto con consejeros capacitados.",
+                "actions": [
+                    { "label": "Textea HELLO al 741-741 (ingl\u00e9s)" },
+                    { "label": "Textea HOLA al 741-741" },
+                    { "label": "crisistextline.org" }
+                ]
+            },
+            "pt": {
+                "description": "Aconselhamento de crise gratuito e confidencial por mensagem de texto com conselheiros treinados.",
+                "actions": [
+                    { "label": "Envie HELLO para 741-741 (ingl\u00eas)" },
+                    { "label": "Envie HOLA para 741-741 (espanhol)" },
+                    { "label": "crisistextline.org" }
+                ]
+            }
+        }
     },
     {
         "title": "The Trevor Project",
@@ -114,7 +174,27 @@
                 "href": "https://www.thetrevorproject.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "meta": "LGBTQ+ \u2022 24/7",
+                "description": "Intervenci\u00f3n en crisis y prevenci\u00f3n del suicidio para j\u00f3venes LGBTQ+.",
+                "actions": [
+                    { "label": "Llame al 1-866-488-7356" },
+                    { "label": "Texto al 678-678" },
+                    { "label": "thetrevorproject.org" }
+                ]
+            },
+            "pt": {
+                "meta": "LGBTQ+ \u2022 24/7",
+                "description": "Interven\u00e7\u00e3o em crise e preven\u00e7\u00e3o do suic\u00eddio para jovens LGBTQ+.",
+                "actions": [
+                    { "label": "Ligue para 1-866-488-7356" },
+                    { "label": "SMS para 678-678" },
+                    { "label": "thetrevorproject.org" }
+                ]
+            }
+        }
     },
     {
         "title": "Boys Town National Hotline",
@@ -144,7 +224,27 @@
                 "href": "https://www.boystown.org/child-family-services/crisis#hotline",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "meta": "Ni\u00f1os y adolescentes \u2022 24/7",
+                "description": "Apoyo en crisis para ni\u00f1os, adolescentes y familias que enfrentan problemas de salud mental, abuso o sustancias.",
+                "actions": [
+                    { "label": "Llame al 1-800-448-3000" },
+                    { "label": "Texto al 20121" },
+                    { "label": "boystown.org" }
+                ]
+            },
+            "pt": {
+                "meta": "Crian\u00e7as e adolescentes \u2022 24/7",
+                "description": "Apoio em crise para crian\u00e7as, adolescentes e fam\u00edlias que enfrentam problemas de sa\u00fade mental, abuso ou subst\u00e2ncias.",
+                "actions": [
+                    { "label": "Ligue para 1-800-448-3000" },
+                    { "label": "SMS para 20121" },
+                    { "label": "boystown.org" }
+                ]
+            }
+        }
     },
     {
         "title": "National Domestic Violence Hotline",
@@ -172,7 +272,29 @@
                 "href": "https://www.thehotline.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "L\u00ednea Nacional contra la Violencia Dom\u00e9stica",
+                "meta": "24/7 \u2022 Env\u00ede \u201cStart\u201d por texto",
+                "description": "Apoyo confidencial para cualquier persona afectada por la violencia dom\u00e9stica.",
+                "actions": [
+                    { "label": "Llame al 1-800-799-7233" },
+                    { "label": "Env\u00ede START al 88788" },
+                    { "label": "thehotline.org" }
+                ]
+            },
+            "pt": {
+                "title": "Linha Nacional contra a Viol\u00eancia Dom\u00e9stica",
+                "meta": "24/7 \u2022 Envie \u201cStart\u201d por SMS",
+                "description": "Apoio confidencial para qualquer pessoa afetada pela viol\u00eancia dom\u00e9stica.",
+                "actions": [
+                    { "label": "Ligue para 1-800-799-7233" },
+                    { "label": "Envie START para 88788" },
+                    { "label": "thehotline.org" }
+                ]
+            }
+        }
     },
     {
         "title": "National Sexual Assault Hotline",
@@ -200,7 +322,29 @@
                 "href": "https://rainn.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "L\u00ednea Nacional de Agresi\u00f3n Sexual",
+                "meta": "24/7 \u2022 Env\u00ede \u201cHope\u201d por texto \u2022 Operada por RAINN",
+                "description": "Apoyo confidencial para sobrevivientes de agresi\u00f3n sexual y sus seres queridos.",
+                "actions": [
+                    { "label": "Llame al 1-800-656-4673" },
+                    { "label": "Env\u00ede HOPE al 64673" },
+                    { "label": "rainn.org" }
+                ]
+            },
+            "pt": {
+                "title": "Linha Nacional contra Agress\u00e3o Sexual",
+                "meta": "24/7 \u2022 Envie \u201cHope\u201d por SMS \u2022 Operada pela RAINN",
+                "description": "Apoio confidencial para sobreviventes de agress\u00e3o sexual e seus entes queridos.",
+                "actions": [
+                    { "label": "Ligue para 1-800-656-4673" },
+                    { "label": "Envie HOPE para 64673" },
+                    { "label": "rainn.org" }
+                ]
+            }
+        }
     },
     {
         "title": "Childhelp National Child Abuse Hotline",
@@ -228,7 +372,29 @@
                 "href": "https://www.childhelphotline.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "L\u00ednea Nacional Childhelp contra el Abuso Infantil",
+                "meta": "24/7 \u2022 Env\u00ede \u201cGo\u201d al 1-800-422-4453",
+                "description": "Intervenci\u00f3n en crisis y apoyo para v\u00edctimas de abuso infantil, agresores y personas en riesgo.",
+                "actions": [
+                    { "label": "Llame al 1-800-422-4453" },
+                    { "label": "Env\u00ede GO al 1-800-422-4453" },
+                    { "label": "childhelphotline.org" }
+                ]
+            },
+            "pt": {
+                "title": "Linha Nacional Childhelp contra o Abuso Infantil",
+                "meta": "24/7 \u2022 Envie \u201cGo\u201d para 1-800-422-4453",
+                "description": "Interven\u00e7\u00e3o em crise e apoio para v\u00edtimas de abuso infantil, agressores e pessoas em risco.",
+                "actions": [
+                    { "label": "Ligue para 1-800-422-4453" },
+                    { "label": "Envie GO para 1-800-422-4453" },
+                    { "label": "childhelphotline.org" }
+                ]
+            }
+        }
     },
     {
         "title": "National Human Trafficking Hotline",
@@ -256,7 +422,29 @@
                 "href": "https://humantraffickinghotline.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "L\u00ednea Nacional contra la Trata de Personas",
+                "meta": "24/7",
+                "description": "Apoyo confidencial y recursos para v\u00edctimas de trata de personas y quienes sospechen de un caso.",
+                "actions": [
+                    { "label": "Llame al 1-888-373-7888" },
+                    { "label": "Texto al 233733" },
+                    { "label": "humantraffickinghotline.org" }
+                ]
+            },
+            "pt": {
+                "title": "Linha Nacional contra o Tr\u00e1fico Humano",
+                "meta": "24/7",
+                "description": "Apoio confidencial e recursos para v\u00edtimas de tr\u00e1fico humano e para quem suspeita de tr\u00e1fico.",
+                "actions": [
+                    { "label": "Ligue para 1-888-373-7888" },
+                    { "label": "SMS para 233733" },
+                    { "label": "humantraffickinghotline.org" }
+                ]
+            }
+        }
     },
     {
         "title": "DoD Safe Helpline",
@@ -279,7 +467,25 @@
                 "href": "https://safehelpline.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "meta": "Militares de EE. UU. y sus familias \u2022 Operada por RAINN \u2022 24/7",
+                "description": "Apoyo confidencial en crisis por agresi\u00f3n sexual dentro de la comunidad del Departamento de Defensa.",
+                "actions": [
+                    { "label": "Llame al 1-877-995-5247" },
+                    { "label": "safehelpline.org" }
+                ]
+            },
+            "pt": {
+                "meta": "Militares dos EUA e fam\u00edlias \u2022 Operada pela RAINN \u2022 24/7",
+                "description": "Apoio confidencial em crise para agress\u00e3o sexual na comunidade do Departamento de Defesa.",
+                "actions": [
+                    { "label": "Ligue para 1-877-995-5247" },
+                    { "label": "safehelpline.org" }
+                ]
+            }
+        }
     },
     {
         "title": "National Grad Crisis Line",
@@ -302,7 +508,27 @@
                 "href": "https://gradresources.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "L\u00ednea de Crisis para Estudiantes de Posgrado",
+                "meta": "Estudiantes universitarios y de posgrado \u2022 24/7",
+                "description": "L\u00ednea de apoyo en crisis dedicada a estudiantes universitarios y de posgrado.",
+                "actions": [
+                    { "label": "Llame al 1-877-472-3457" },
+                    { "label": "gradresources.org" }
+                ]
+            },
+            "pt": {
+                "title": "Linha de Crise para P\u00f3s-Graduandos",
+                "meta": "Estudantes universit\u00e1rios e de p\u00f3s-gradua\u00e7\u00e3o \u2022 24/7",
+                "description": "Linha de apoio em crise dedicada a estudantes universit\u00e1rios e de p\u00f3s-gradua\u00e7\u00e3o.",
+                "actions": [
+                    { "label": "Ligue para 1-877-472-3457" },
+                    { "label": "gradresources.org" }
+                ]
+            }
+        }
     },
     {
         "title": "NY HOPEline",
@@ -332,7 +558,27 @@
                 "href": "https://oasas.ny.gov/hopeline",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "meta": "24/7",
+                "description": "L\u00ednea de apoyo del estado de Nueva York para adicciones y crisis de uso de sustancias y salud mental.",
+                "actions": [
+                    { "label": "Llame al 1-877-846-7369" },
+                    { "label": "Env\u00ede HOPENY al 467369" },
+                    { "label": "oasas.ny.gov/hopeline" }
+                ]
+            },
+            "pt": {
+                "meta": "24/7",
+                "description": "Linha do estado de Nova York para depend\u00eancia e crises de uso de subst\u00e2ncias e sa\u00fade mental.",
+                "actions": [
+                    { "label": "Ligue para 1-877-846-7369" },
+                    { "label": "Envie HOPENY para 467369" },
+                    { "label": "oasas.ny.gov/hopeline" }
+                ]
+            }
+        }
     },
     {
         "title": "Gambler Helpline",
@@ -354,7 +600,27 @@
                 "href": "https://800gambler.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "L\u00ednea de Ayuda al Jugador",
+                "meta": "24/7",
+                "description": "Ayuda confidencial para personas y familias afectadas por el juego problem\u00e1tico.",
+                "actions": [
+                    { "label": "Llame al 1-800-426-2537" },
+                    { "label": "800gambler.org" }
+                ]
+            },
+            "pt": {
+                "title": "Linha de Ajuda ao Jogador",
+                "meta": "24/7",
+                "description": "Ajuda confidencial para pessoas e fam\u00edlias afetadas pelo jogo problem\u00e1tico.",
+                "actions": [
+                    { "label": "Ligue para 1-800-426-2537" },
+                    { "label": "800gambler.org" }
+                ]
+            }
+        }
     },
     {
         "title": "SAMHSA Disaster Distress Helpline",
@@ -384,7 +650,29 @@
                 "href": "https://www.samhsa.gov/find-help/helplines/disaster-distress-helpline",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "L\u00ednea de Ayuda de SAMHSA para Angustia por Desastres",
+                "meta": "24/7 \u2022 Angustia relacionada con desastres \u2022 Presione 2 para espa\u00f1ol",
+                "description": "Consejer\u00eda inmediata para la angustia emocional relacionada con desastres naturales o causados por el ser humano.",
+                "actions": [
+                    { "label": "Llame al 1-800-985-5990" },
+                    { "label": "Texto al 1-800-985-5990" },
+                    { "label": "samhsa.gov/disaster-distress-helpline" }
+                ]
+            },
+            "pt": {
+                "title": "Linha de Ajuda da SAMHSA para Sofrimento em Desastres",
+                "meta": "24/7 \u2022 Sofrimento relacionado a desastres \u2022 Pressione 2 para espanhol",
+                "description": "Aconselhamento imediato para o sofrimento emocional relacionado a desastres naturais ou causados pelo ser humano.",
+                "actions": [
+                    { "label": "Ligue para 1-800-985-5990" },
+                    { "label": "SMS para 1-800-985-5990" },
+                    { "label": "samhsa.gov/disaster-distress-helpline" }
+                ]
+            }
+        }
     },
     {
         "title": "SAMHSA National Helpline",
@@ -414,7 +702,29 @@
                 "href": "https://www.samhsa.gov/find-help/helplines/national-helpline",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "L\u00ednea Nacional de Ayuda de SAMHSA",
+                "meta": "24/7 \u2022 Servicio de informaci\u00f3n y referencias de tratamiento",
+                "description": "Servicio confidencial de referencias para programas de tratamiento de salud mental y uso de sustancias.",
+                "actions": [
+                    { "label": "Llame al 1-800-662-HELP" },
+                    { "label": "Env\u00ede su c\u00f3digo ZIP al 435748" },
+                    { "label": "samhsa.gov/national-helpline" }
+                ]
+            },
+            "pt": {
+                "title": "Linha Nacional de Ajuda da SAMHSA",
+                "meta": "24/7 \u2022 Servi\u00e7o de informa\u00e7\u00f5es e encaminhamento para tratamento",
+                "description": "Servi\u00e7o confidencial de encaminhamento para programas de tratamento de sa\u00fade mental e uso de subst\u00e2ncias.",
+                "actions": [
+                    { "label": "Ligue para 1-800-662-HELP" },
+                    { "label": "Envie seu c\u00f3digo ZIP para 435748" },
+                    { "label": "samhsa.gov/national-helpline" }
+                ]
+            }
+        }
     },
     {
         "title": "Reach NJ Addiction Helpline",
@@ -437,7 +747,27 @@
                 "href": "https://nj.gov/humanservices/reachnj/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "L\u00ednea de Ayuda para Adicciones Reach NJ",
+                "meta": "Nueva Jersey \u2022 24/7",
+                "description": "L\u00ednea centralizada de Nueva Jersey para referencias y apoyo en el tratamiento de adicciones.",
+                "actions": [
+                    { "label": "Llame al 1-844-732-2465" },
+                    { "label": "nj.gov/humanservices/reachnj" }
+                ]
+            },
+            "pt": {
+                "title": "Linha de Ajuda para Depend\u00eancias Reach NJ",
+                "meta": "Nova Jersey \u2022 24/7",
+                "description": "Linha centralizada de Nova Jersey para encaminhamento e apoio no tratamento de depend\u00eancias.",
+                "actions": [
+                    { "label": "Ligue para 1-844-732-2465" },
+                    { "label": "nj.gov/humanservices/reachnj" }
+                ]
+            }
+        }
     },
     {
         "title": "211 United Way",
@@ -461,7 +791,23 @@
                 "href": "https://www.211.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "description": "Le conecta con servicios comunitarios de salud mental, vivienda, alimentaci\u00f3n y necesidades b\u00e1sicas.",
+                "actions": [
+                    { "label": "Llame al 211" },
+                    { "label": "211.org" }
+                ]
+            },
+            "pt": {
+                "description": "Conecta voc\u00ea a servi\u00e7os comunit\u00e1rios de sa\u00fade mental, moradia, alimenta\u00e7\u00e3o e necessidades b\u00e1sicas.",
+                "actions": [
+                    { "label": "Ligue para 211" },
+                    { "label": "211.org" }
+                ]
+            }
+        }
     },
     {
         "title": "Alcoholics Anonymous (AA)",
@@ -488,7 +834,27 @@
                 "href": "https://aa-intergroup.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "Alcoh\u00f3licos An\u00f3nimos (AA)",
+                "description": "Reuniones de recuperaci\u00f3n dirigidas por pares para el consumo de alcohol.",
+                "actions": [
+                    { "label": "Llame al 1-212-870-3400" },
+                    { "label": "aa.org" },
+                    { "label": "Intergrupo en l\u00ednea" }
+                ]
+            },
+            "pt": {
+                "title": "Alco\u00f3licos An\u00f4nimos (AA)",
+                "description": "Reuni\u00f5es de recupera\u00e7\u00e3o conduzidas por pares para o uso de \u00e1lcool.",
+                "actions": [
+                    { "label": "Ligue para 1-212-870-3400" },
+                    { "label": "aa.org" },
+                    { "label": "Intergrupo on-line" }
+                ]
+            }
+        }
     },
     {
         "title": "Al\u2011Anon",
@@ -516,7 +882,25 @@
                 "href": "https://al-anon.org/al-anon-meetings/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "description": "Grupos de apoyo para familiares y amigos de personas con consumo de alcohol.",
+                "actions": [
+                    { "label": "Llame al 1-888-4AL-ANON" },
+                    { "label": "al-anon.org" },
+                    { "label": "Buscar reuniones" }
+                ]
+            },
+            "pt": {
+                "description": "Grupos de apoio para familiares e amigos de pessoas com uso de \u00e1lcool.",
+                "actions": [
+                    { "label": "Ligue para 1-888-4AL-ANON" },
+                    { "label": "al-anon.org" },
+                    { "label": "Encontrar reuni\u00f5es" }
+                ]
+            }
+        }
     },
     {
         "title": "Alateen",
@@ -539,7 +923,25 @@
                 "href": "https://al-anon.org/newcomers/teen-corner-alateen/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "meta": "Ni\u00f1os y adolescentes",
+                "description": "Programa de Al-Anon para adolescentes afectados por el consumo de alcohol o drogas de otra persona.",
+                "actions": [
+                    { "label": "Llame al 1-888-4AL-ANON" },
+                    { "label": "al-anon.org/alateen" }
+                ]
+            },
+            "pt": {
+                "meta": "Crian\u00e7as e adolescentes",
+                "description": "Programa do Al-Anon para adolescentes afetados pelo consumo de \u00e1lcool ou drogas de outra pessoa.",
+                "actions": [
+                    { "label": "Ligue para 1-888-4AL-ANON" },
+                    { "label": "al-anon.org/alateen" }
+                ]
+            }
+        }
     },
     {
         "title": "American Foundation for Suicide Prevention (AFSP)",
@@ -560,7 +962,25 @@
                 "href": "https://afsp.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "Fundaci\u00f3n Estadounidense para la Prevenci\u00f3n del Suicidio (AFSP)",
+                "description": "Educaci\u00f3n para la prevenci\u00f3n del suicidio, programas comunitarios y recursos de apoyo.",
+                "actions": [
+                    { "label": "Llame al 1-888-333-2377" },
+                    { "label": "afsp.org" }
+                ]
+            },
+            "pt": {
+                "title": "Funda\u00e7\u00e3o Americana para a Preven\u00e7\u00e3o do Suic\u00eddio (AFSP)",
+                "description": "Educa\u00e7\u00e3o em preven\u00e7\u00e3o do suic\u00eddio, programas comunit\u00e1rios e recursos de apoio.",
+                "actions": [
+                    { "label": "Ligue para 1-888-333-2377" },
+                    { "label": "afsp.org" }
+                ]
+            }
+        }
     },
     {
         "title": "Mental Health America (MHA)",
@@ -583,7 +1003,23 @@
                 "href": "https://mhanational.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "description": "Herramientas gratuitas de evaluaci\u00f3n de salud mental, educaci\u00f3n y recursos de referencia.",
+                "actions": [
+                    { "label": "Llame al 1-800-969-6642" },
+                    { "label": "mhanational.org" }
+                ]
+            },
+            "pt": {
+                "description": "Ferramentas gratuitas de triagem de sa\u00fade mental, educa\u00e7\u00e3o e recursos de encaminhamento.",
+                "actions": [
+                    { "label": "Ligue para 1-800-969-6642" },
+                    { "label": "mhanational.org" }
+                ]
+            }
+        }
     },
     {
         "title": "NAMI Helpline",
@@ -612,7 +1048,29 @@
                 "href": "https://www.nami.org/support-education/nami-helpline/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "L\u00ednea de Ayuda de NAMI",
+                "meta": "No es una l\u00ednea de crisis",
+                "description": "Informaci\u00f3n, educaci\u00f3n y referencias proporcionadas por personal y voluntarios capacitados de NAMI.",
+                "actions": [
+                    { "label": "Llame al 1-800-950-NAMI" },
+                    { "label": "Texto al 62640" },
+                    { "label": "nami.org/helpline" }
+                ]
+            },
+            "pt": {
+                "title": "Linha de Ajuda da NAMI",
+                "meta": "N\u00e3o \u00e9 uma linha de crise",
+                "description": "Informa\u00e7\u00f5es, educa\u00e7\u00e3o e encaminhamentos fornecidos por equipe e volunt\u00e1rios treinados da NAMI.",
+                "actions": [
+                    { "label": "Ligue para 1-800-950-NAMI" },
+                    { "label": "SMS para 62640" },
+                    { "label": "nami.org/helpline" }
+                ]
+            }
+        }
     },
     {
         "title": "Narcotics Anonymous (NA)",
@@ -639,7 +1097,27 @@
                 "href": "https://na.org/meetingsearch/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "Narc\u00f3ticos An\u00f3nimos (NA)",
+                "description": "Reuniones de recuperaci\u00f3n dirigidas por pares para el consumo de drogas.",
+                "actions": [
+                    { "label": "Llame al 1-818-773-9999" },
+                    { "label": "na.org" },
+                    { "label": "Buscar reuniones" }
+                ]
+            },
+            "pt": {
+                "title": "Narc\u00f3ticos An\u00f4nimos (NA)",
+                "description": "Reuni\u00f5es de recupera\u00e7\u00e3o conduzidas por pares para o uso de drogas.",
+                "actions": [
+                    { "label": "Ligue para 1-818-773-9999" },
+                    { "label": "na.org" },
+                    { "label": "Buscar reuni\u00f5es" }
+                ]
+            }
+        }
     },
     {
         "title": "NJ Mental Health Cares",
@@ -662,7 +1140,23 @@
                 "href": "https://www.njmentalhealthcares.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "description": "Informaci\u00f3n de salud mental de NJ, referencias y apoyo entre pares.",
+                "actions": [
+                    { "label": "Llame al 1-866-202-4357" },
+                    { "label": "njmentalhealthcares.org" }
+                ]
+            },
+            "pt": {
+                "description": "Informa\u00e7\u00f5es de sa\u00fade mental de NJ, encaminhamentos e apoio entre pares.",
+                "actions": [
+                    { "label": "Ligue para 1-866-202-4357" },
+                    { "label": "njmentalhealthcares.org" }
+                ]
+            }
+        }
     },
     {
         "title": "NJ Connect for Recovery",
@@ -684,7 +1178,23 @@
                 "href": "https://www.njconnectforrecovery.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "description": "L\u00ednea de apoyo de NJ para servicios de recuperaci\u00f3n de alcohol y drogas.",
+                "actions": [
+                    { "label": "Llame al 1-855-652-3737" },
+                    { "label": "njconnectforrecovery.org" }
+                ]
+            },
+            "pt": {
+                "description": "Linha de apoio de NJ para servi\u00e7os de recupera\u00e7\u00e3o de \u00e1lcool e drogas.",
+                "actions": [
+                    { "label": "Ligue para 1-855-652-3737" },
+                    { "label": "njconnectforrecovery.org" }
+                ]
+            }
+        }
     },
     {
         "title": "NJ Self\u2011Help Clearinghouse",
@@ -708,7 +1218,25 @@
                 "href": "https://www.njgroups.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "meta": "Fuera de NJ llame al: 1-973-571-4100",
+                "description": "Directorio de grupos de apoyo entre pares y de autoayuda en todo NJ.",
+                "actions": [
+                    { "label": "Llame al 1-800-367-6274" },
+                    { "label": "njgroups.org" }
+                ]
+            },
+            "pt": {
+                "meta": "Fora de NJ, ligue: 1-973-571-4100",
+                "description": "Diret\u00f3rio de grupos de apoio entre pares e autoajuda em todo o estado de NJ.",
+                "actions": [
+                    { "label": "Ligue para 1-800-367-6274" },
+                    { "label": "njgroups.org" }
+                ]
+            }
+        }
     },
     {
         "title": "SAFE Locator",
@@ -725,7 +1253,21 @@
                 "href": "https://safelocator.org/en/search",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "description": "Directorio de b\u00fasqueda de tratamiento de uso de sustancias y recursos de recuperaci\u00f3n.",
+                "actions": [
+                    { "label": "safelocator.org" }
+                ]
+            },
+            "pt": {
+                "description": "Diret\u00f3rio de busca de tratamento para uso de subst\u00e2ncias e recursos de recupera\u00e7\u00e3o.",
+                "actions": [
+                    { "label": "safelocator.org" }
+                ]
+            }
+        }
     },
     {
         "title": "SAFE Solutions",
@@ -742,7 +1284,21 @@
                 "href": "https://www.yoursafesolutions.us",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "description": "Recursos y herramientas de recuperaci\u00f3n para personas y familias.",
+                "actions": [
+                    { "label": "yoursafesolutions.us" }
+                ]
+            },
+            "pt": {
+                "description": "Recursos e ferramentas de recupera\u00e7\u00e3o para indiv\u00edduos e fam\u00edlias.",
+                "actions": [
+                    { "label": "yoursafesolutions.us" }
+                ]
+            }
+        }
     },
     {
         "title": "Courage First Athlete Helpline",
@@ -770,7 +1326,29 @@
                 "href": "https://www.athletehelpline.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "L\u00ednea para Atletas Courage First",
+                "meta": "Fuera de horario responde Childhelp",
+                "description": "L\u00ednea de apoyo de salud mental y abuso espec\u00edficamente para atletas.",
+                "actions": [
+                    { "label": "Llame al 1-888-279-1026" },
+                    { "label": "Texto al 1-888-279-1026" },
+                    { "label": "athletehelpline.org" }
+                ]
+            },
+            "pt": {
+                "title": "Linha para Atletas Courage First",
+                "meta": "Fora do hor\u00e1rio, atendida pela Childhelp",
+                "description": "Linha de apoio \u00e0 sa\u00fade mental e contra abuso especificamente para atletas.",
+                "actions": [
+                    { "label": "Ligue para 1-888-279-1026" },
+                    { "label": "SMS para 1-888-279-1026" },
+                    { "label": "athletehelpline.org" }
+                ]
+            }
+        }
     },
     {
         "title": "National Institute of Mental Health",
@@ -793,7 +1371,25 @@
                 "href": "https://www.nimh.nih.gov/health/find-help",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "Instituto Nacional de Salud Mental (NIMH)",
+                "description": "Informaci\u00f3n de salud mental basada en investigaci\u00f3n, recursos y referencias del NIMH.",
+                "actions": [
+                    { "label": "nimh.nih.gov" },
+                    { "label": "Buscar ayuda" }
+                ]
+            },
+            "pt": {
+                "title": "Instituto Nacional de Sa\u00fade Mental (NIMH)",
+                "description": "Informa\u00e7\u00f5es de sa\u00fade mental baseadas em pesquisa, recursos e encaminhamentos do NIMH.",
+                "actions": [
+                    { "label": "nimh.nih.gov" },
+                    { "label": "Encontrar ajuda" }
+                ]
+            }
+        }
     },
     {
         "title": "Peer Recovery Warm Line",
@@ -815,7 +1411,25 @@
                 "href": "https://www.mhanj.org/people-in-recovery-warmline/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "L\u00ednea de Apoyo entre Pares en Recuperaci\u00f3n",
+                "description": "L\u00ednea de apoyo entre pares para personas en recuperaci\u00f3n del consumo de alcohol o drogas en NJ.",
+                "actions": [
+                    { "label": "Llame al 1-877-292-5588" },
+                    { "label": "mhanj.org" }
+                ]
+            },
+            "pt": {
+                "title": "Linha de Apoio entre Pares em Recupera\u00e7\u00e3o",
+                "description": "Linha de apoio entre pares para pessoas em recupera\u00e7\u00e3o do uso de \u00e1lcool ou drogas em NJ.",
+                "actions": [
+                    { "label": "Ligue para 1-877-292-5588" },
+                    { "label": "mhanj.org" }
+                ]
+            }
+        }
     },
     {
         "title": "IUOE Local 825 Sober Sunday",
@@ -832,7 +1446,23 @@
                 "href": "https://zoom.us/j/82251608337?pwd=625319",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "meta": "Abierto a todos, semanal",
+                "description": "Reuni\u00f3n virtual semanal de recuperaci\u00f3n abierta a todos.",
+                "actions": [
+                    { "label": "Reuni\u00f3n virtual: domingos 8am (hora del Este)" }
+                ]
+            },
+            "pt": {
+                "meta": "Aberto a todos, semanal",
+                "description": "Reuni\u00e3o virtual semanal de recupera\u00e7\u00e3o aberta a todos.",
+                "actions": [
+                    { "label": "Reuni\u00e3o virtual: domingos, 8h (hor\u00e1rio do Leste dos EUA)" }
+                ]
+            }
+        }
     },
     {
         "title": "SAFE Virtual Veteran\u2019s Recovery Meeting",
@@ -850,7 +1480,25 @@
                 "href": "https://www.safeproject.us/veterans/recovery-meetings/#Reminder",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "Reuni\u00f3n Virtual de Recuperaci\u00f3n para Veteranos de SAFE",
+                "meta": "Semanal \u2022 Martes 6pm (hora del Este)",
+                "description": "Reuni\u00f3n virtual semanal de recuperaci\u00f3n para veteranos que enfrentan el consumo de alcohol o sustancias.",
+                "actions": [
+                    { "label": "Reuni\u00f3n virtual: martes 6pm (hora del Este)" }
+                ]
+            },
+            "pt": {
+                "title": "Reuni\u00e3o Virtual de Recupera\u00e7\u00e3o para Veteranos da SAFE",
+                "meta": "Semanal \u2022 Ter\u00e7as, 18h (hor\u00e1rio do Leste)",
+                "description": "Reuni\u00e3o virtual semanal de recupera\u00e7\u00e3o para veteranos que lidam com uso de \u00e1lcool ou subst\u00e2ncias.",
+                "actions": [
+                    { "label": "Reuni\u00e3o virtual: ter\u00e7as, 18h (hor\u00e1rio do Leste)" }
+                ]
+            }
+        }
     },
     {
         "title": "SMART Recovery",
@@ -878,7 +1526,25 @@
                 "href": "https://smartrecovery.org/meeting",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "description": "Reuniones de apoyo mutuo basadas en la ciencia para la recuperaci\u00f3n de adicciones.",
+                "actions": [
+                    { "label": "Llame al 1-440-951-5357" },
+                    { "label": "smartrecovery.org" },
+                    { "label": "Buscar reuniones" }
+                ]
+            },
+            "pt": {
+                "description": "Reuni\u00f5es de apoio m\u00fatuo baseadas em ci\u00eancia para a recupera\u00e7\u00e3o de depend\u00eancias.",
+                "actions": [
+                    { "label": "Ligue para 1-440-951-5357" },
+                    { "label": "smartrecovery.org" },
+                    { "label": "Encontrar reuni\u00f5es" }
+                ]
+            }
+        }
     },
     {
         "title": "Alliance for Naloxone Safety in the Workplace (ANSW)",
@@ -894,7 +1560,23 @@
                 "href": "https://www.answ.org/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "Alianza para la Seguridad con Naloxona en el Trabajo (ANSW)",
+                "description": "Capacitaci\u00f3n sobre naloxona en el lugar de trabajo y recursos de prevenci\u00f3n de sobredosis.",
+                "actions": [
+                    { "label": "answ.org" }
+                ]
+            },
+            "pt": {
+                "title": "Alian\u00e7a para a Seguran\u00e7a com Naloxona no Trabalho (ANSW)",
+                "description": "Treinamento em naloxona no local de trabalho e recursos de preven\u00e7\u00e3o de overdose.",
+                "actions": [
+                    { "label": "answ.org" }
+                ]
+            }
+        }
     },
     {
         "title": "CDC Info",
@@ -919,7 +1601,25 @@
                 "href": "https://www.cdc.gov/cdc-info/about-us/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "meta": "1-800-CDC-INFO",
+                "description": "Informaci\u00f3n general de salud y referencias de los Centros para el Control y la Prevenci\u00f3n de Enfermedades.",
+                "actions": [
+                    { "label": "Llame al 1-800-232-4636" },
+                    { "label": "cdc.gov" }
+                ]
+            },
+            "pt": {
+                "meta": "1-800-CDC-INFO",
+                "description": "Informa\u00e7\u00f5es gerais de sa\u00fade e encaminhamentos dos Centros de Controle e Preven\u00e7\u00e3o de Doen\u00e7as.",
+                "actions": [
+                    { "label": "Ligue para 1-800-232-4636" },
+                    { "label": "cdc.gov" }
+                ]
+            }
+        }
     },
     {
         "title": "Construction Industry Alliance for Suicide Prevention (CIASP)",
@@ -935,7 +1635,23 @@
                 "href": "https://www.preventconstructionsuicide.com/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "Alianza de la Industria de la Construcci\u00f3n para la Prevenci\u00f3n del Suicidio (CIASP)",
+                "description": "Capacitaci\u00f3n en prevenci\u00f3n del suicidio y recursos laborales adaptados a la industria de la construcci\u00f3n.",
+                "actions": [
+                    { "label": "preventconstructionsuicide.com" }
+                ]
+            },
+            "pt": {
+                "title": "Alian\u00e7a da Ind\u00fastria da Constru\u00e7\u00e3o para a Preven\u00e7\u00e3o do Suic\u00eddio (CIASP)",
+                "description": "Treinamento em preven\u00e7\u00e3o do suic\u00eddio e recursos de trabalho voltados para a constru\u00e7\u00e3o civil.",
+                "actions": [
+                    { "label": "preventconstructionsuicide.com" }
+                ]
+            }
+        }
     },
     {
         "title": "Construction Suicide Prevention Week (CSPW)",
@@ -951,7 +1667,23 @@
                 "href": "https://constructionsuicideprevention.com/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "title": "Semana de Prevenci\u00f3n del Suicidio en la Construcci\u00f3n (CSPW)",
+                "description": "Campa\u00f1a de concientizaci\u00f3n con herramientas de prevenci\u00f3n para equipos de construcci\u00f3n.",
+                "actions": [
+                    { "label": "constructionsuicideprevention.com" }
+                ]
+            },
+            "pt": {
+                "title": "Semana de Preven\u00e7\u00e3o do Suic\u00eddio na Constru\u00e7\u00e3o (CSPW)",
+                "description": "Campanha de conscientiza\u00e7\u00e3o com ferramentas de preven\u00e7\u00e3o para equipes da constru\u00e7\u00e3o.",
+                "actions": [
+                    { "label": "constructionsuicideprevention.com" }
+                ]
+            }
+        }
     },
     {
         "title": "SAFE Project",
@@ -968,6 +1700,20 @@
                 "href": "https://www.safeproject.us/",
                 "targetBlank": true
             }
-        ]
+        ],
+        "i18n": {
+            "es": {
+                "description": "Educaci\u00f3n, defensa y apoyo para la recuperaci\u00f3n de adicciones.",
+                "actions": [
+                    { "label": "safeproject.us" }
+                ]
+            },
+            "pt": {
+                "description": "Educa\u00e7\u00e3o, defesa de direitos e apoio para a recupera\u00e7\u00e3o de depend\u00eancias.",
+                "actions": [
+                    { "label": "safeproject.us" }
+                ]
+            }
+        }
     }
 ]

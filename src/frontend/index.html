@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Protecting Under the Hard Hat</title>
+  <link rel="icon" type="image/png" href="static/assets/logos/PUTHH-Logo.png" />
   <link rel="stylesheet" href="static/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
@@ -23,13 +24,20 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg-primary);
+      background-color: var(--bg-primary);
+      /* Subtle layered texture so plain white isn't glaring */
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(28, 20, 117, 0.05) 0%, transparent 42%),
+        radial-gradient(circle at 88% 8%, rgba(204, 0, 0, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 50% 100%, rgba(28, 20, 117, 0.04) 0%, transparent 55%);
+      background-attachment: fixed;
       color: var(--text-primary);
       min-height: 100vh;
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
       display: flex;
       flex-direction: column;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     /* Navigation Container */
@@ -120,13 +128,512 @@
       padding: 10px 20px;
       margin-left: 10px;
       font-weight: 700;
-      box-shadow: var(--glow);
+      box-shadow: 0 4px 14px rgba(204, 0, 0, 0.25);
       transition: all 0.3s ease;
     }
 
     .tab-btn.survey-tab:hover {
       background: var(--accent-hover);
       transform: translateY(-2px);
+    }
+
+    /* Theme (dark mode) toggle */
+    .theme-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      margin-left: 12px;
+      border: none;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-inset);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.25s ease, color 0.25s ease, background 0.25s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      transform: rotate(-15deg) scale(1.08);
+      color: var(--accent);
+    }
+
+    /* Overview landing pages (About / Supporters) — flex so odd counts center */
+    .overview-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 22px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .overview-card {
+      flex: 1 1 230px;
+      max-width: 300px;
+      min-width: 230px;
+      text-align: left;
+      background: var(--bg-secondary);
+      border: none;
+      border-radius: 18px;
+      padding: 28px 26px;
+      cursor: pointer;
+      box-shadow: var(--shadow-a);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      color: var(--text-primary);
+    }
+
+    .overview-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 34px rgba(0, 0, 0, 0.16);
+    }
+
+    .overview-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--njit-blue) 100%);
+    }
+
+    .overview-card h3 {
+      font-size: 1.15rem;
+      margin: 0;
+    }
+
+    .overview-card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin: 0;
+      flex: 1;
+    }
+
+    .overview-go {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .overview-go i {
+      transition: transform 0.25s ease;
+    }
+
+    .overview-card:hover .overview-go i {
+      transform: translateX(5px);
+    }
+
+    /* ===== DROPDOWN NAV ===== */
+    .nav-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .tab-btn .caret {
+      font-size: 0.6rem;
+      margin-left: 6px;
+      transition: transform 0.25s ease;
+      display: inline-block;
+    }
+
+    .nav-item.open > .tab-btn .caret {
+      transform: rotate(180deg);
+    }
+
+    .nav-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 210px;
+      background: var(--bg-secondary);
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-top: 3px solid var(--accent);
+      padding: 8px 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
+      z-index: 1100;
+    }
+
+    .nav-item.open > .nav-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .nav-dropdown button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      padding: 11px 18px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .nav-dropdown button:hover,
+    .nav-dropdown button.active {
+      background: rgba(204, 0, 0, 0.06);
+      color: var(--accent);
+    }
+
+    /* ===== SHARED HEADSHOT FRAME (G1) =====
+       One class for ALL portraits: fixed square frame, circular crop,
+       faces centered + equally zoomed. */
+    .headshot-frame {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      margin: 0 auto;
+      background: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 100%);
+      border: 3px solid rgba(204, 0, 0, 0.12);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    .headshot-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+
+    /* ===== HOME INTRO CARDS (C4) ===== */
+    .home-intro {
+      max-width: 900px;
+      margin: 0 auto 60px;
+      display: grid;
+      gap: 30px;
+    }
+
+    .home-intro .about-card h3 {
+      justify-content: center;
+    }
+
+    .home-intro .about-card {
+      text-align: center;
+    }
+
+    .home-intro-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 16px;
+      transition: gap 0.25s ease;
+    }
+
+    .home-intro-link:hover {
+      gap: 12px;
+    }
+
+    /* ===== ABOUT SINGLE-TOPIC PANELS ===== */
+    .single-card-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    /* Partner logo cards with real images */
+    .partner-logo-img {
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .partner-logo-img img {
+      max-height: 90px;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    /* ===== TEAM (with bio expanders) ===== */
+    .team-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto 40px;
+    }
+
+    .team-row .team-card {
+      width: 300px;
+      padding-top: 28px;
+    }
+
+    .team-row-label {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin: 30px 0 22px;
+    }
+
+    .bio-toggle {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      padding: 8px 0 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .bio-toggle:hover {
+      color: var(--accent-hover);
+    }
+
+    .bio-content {
+      display: none;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(0, 0, 0, 0.1);
+      text-align: left;
+    }
+
+    .bio-content.open {
+      display: block;
+    }
+
+    /* ===== SUPPORTERS ===== */
+    .supporter-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 26px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .supporter-card {
+      flex: 1 1 240px;
+      max-width: 320px;
+      min-width: 240px;
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 32px 26px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .supporter-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .supporter-card .supporter-logo {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      font-size: 2.2rem;
+      color: var(--accent);
+    }
+
+    .supporter-card .supporter-logo img {
+      max-height: 80px;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    .supporter-card h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .supporter-card a {
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+    }
+
+    .supporter-card a:hover {
+      text-decoration: underline;
+    }
+
+    .supporter-featured {
+      border: 2px solid rgba(204, 0, 0, 0.25);
+    }
+
+    /* ===== TESTIMONIES CAROUSEL ===== */
+    .carousel {
+      max-width: 720px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .carousel-viewport {
+      overflow: hidden;
+      border-radius: 20px;
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .testimony-slide {
+      flex: 0 0 100%;
+      background: var(--bg-secondary);
+      padding: 46px 56px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    .testimony-slide .headshot-frame {
+      width: 110px;
+      height: 110px;
+      margin-bottom: 20px;
+    }
+
+    .testimony-quote {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--text-primary);
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+
+    .testimony-quote::before {
+      content: '\201C';
+      color: var(--accent);
+      font-size: 2rem;
+      line-height: 0;
+      vertical-align: -0.35em;
+      margin-right: 4px;
+    }
+
+    .testimony-name {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .testimony-affiliation {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: none;
+      background: var(--bg-secondary);
+      color: var(--accent);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+      font-size: 1rem;
+      z-index: 5;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .carousel-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .carousel-btn.prev { left: -18px; }
+    .carousel-btn.next { right: -18px; }
+
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .carousel-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.25s ease, transform 0.25s ease;
+    }
+
+    .carousel-dot.active {
+      background: var(--accent);
+      transform: scale(1.2);
+    }
+
+    @media (max-width: 768px) {
+      .testimony-slide {
+        padding: 34px 24px;
+      }
+
+      .carousel-btn.prev { left: 6px; }
+      .carousel-btn.next { right: 6px; }
+
+      .team-row .team-card {
+        width: 100%;
+      }
+
+      .nav-dropdown {
+        position: static;
+        box-shadow: none;
+        border: none;
+        border-left: 3px solid var(--accent);
+        border-radius: 0;
+        margin-left: 14px;
+        padding: 0;
+        display: none;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        transition: none;
+      }
+
+      .nav-item.open > .nav-dropdown {
+        display: block;
+      }
+
+      .nav-item {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+      }
     }
 
     /* Sliding Indicator */
@@ -199,35 +706,6 @@
     }
 
     /* ===== DECORATIVE ELEMENTS ===== */
-    /* Geometric Background Shapes - Desktop Only */
-    .geo-bg-circle {
-      position: fixed;
-      border-radius: 50%;
-      border: 2px solid var(--accent);
-      opacity: 0.08;
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .geo-bg-circle-1 {
-      width: 300px;
-      height: 300px;
-      top: 15%;
-      right: -80px;
-    }
-
-    .geo-bg-circle-2 {
-      width: 200px;
-      height: 200px;
-      bottom: 25%;
-      left: -40px;
-    }
-
-    @media (max-width: 768px) {
-      .geo-bg-circle {
-        display: none;
-      }
-    }
 
     /* Modern diagonal accent lines */
     .diagonal-accent {
@@ -335,32 +813,15 @@
       margin-bottom: 40px;
     }
 
-    /* Subtle soft glow behind logo */
-    .hero-logo-container::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, rgba(204, 0, 0, 0.08) 0%, transparent 70%);
-      z-index: 0;
-      pointer-events: none;
-    }
-
     .hero-logo {
-      max-width: 240px;
+      max-width: 340px;
       position: relative;
       z-index: 1;
-      border-radius: var(--border-radius);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      transition: transform 0.4s ease;
     }
 
     .hero-logo:hover {
       transform: translateY(-5px);
-      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15);
     }
 
     .hero-title {
@@ -401,7 +862,7 @@
       font-size: 1.2rem;
       font-weight: 700;
       text-decoration: none;
-      box-shadow: var(--glow);
+      box-shadow: 0 6px 20px rgba(204, 0, 0, 0.28);
       transition: all 0.3s ease;
     }
 
@@ -409,17 +870,6 @@
       background: var(--accent-hover);
       transform: translateY(-3px);
       box-shadow: 0 10px 30px rgba(204, 0, 0, 0.3);
-    }
-
-    /* Smooth fade gradient at bottom of hero */
-    .hero-fade {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 100px;
-      background: linear-gradient(to top, var(--bg-primary), transparent);
-      pointer-events: none;
     }
 
     /* ===== ABOUT TAB STYLES ===== */
@@ -754,12 +1204,15 @@
 
     /* Blog Posts Grid */
     .blog-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 30px;
     }
 
     .blog-card {
+      flex: 1 1 340px;
+      max-width: 420px;
       background: var(--bg-secondary);
       border-radius: 16px;
       overflow: hidden;
@@ -987,7 +1440,7 @@
     .submit-btn:hover {
       background: var(--accent-hover);
       transform: translateY(-2px);
-      box-shadow: var(--glow);
+      box-shadow: 0 6px 18px rgba(204, 0, 0, 0.25);
     }
 
     /* Form success message */
@@ -1013,10 +1466,9 @@
 
     /* ===== FOOTER ===== */
     .main-footer {
-      background: var(--bg-secondary);
-      padding: 40px 20px;
-      text-align: center;
-      border-top: 1px solid rgba(0, 0, 0, 0.06);
+      background: transparent;
+      padding: 0;
+      border: none;
       flex-shrink: 0;
       margin-top: auto;
     }
@@ -1106,7 +1558,8 @@
       }
 
       .blog-grid {
-        grid-template-columns: 1fr;
+        flex-direction: column;
+        align-items: center;
       }
 
       /* Mobile Team Grid - Single column, more breathing room */
@@ -1203,14 +1656,6 @@
       }
 
       /* Mobile Hero - Remove glow effects */
-      .hero-logo-container::before {
-        display: none;
-      }
-
-      .hero-fade {
-        display: none;
-      }
-
       .hero-logo {
         max-width: 200px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -1256,27 +1701,22 @@
       .tab-panel {
         padding: 20px 15px;
       }
+
+      /* Mobile overview cards fill the row */
+      .overview-card,
+      .supporter-card {
+        max-width: 100%;
+      }
     }
   </style>
 </head>
 
 <body>
-  <!-- Geometric Background Shapes -->
-  <div class="geo-bg-circle geo-bg-circle-1"></div>
-  <div class="geo-bg-circle geo-bg-circle-2"></div>
-  
-  <!-- Modern diagonal accents -->
-  <div class="diagonal-accent diagonal-accent-1"></div>
-  <div class="diagonal-accent diagonal-accent-2"></div>
-  
-  <!-- Subtle gradient mesh overlay -->
-  <div class="gradient-mesh"></div>
-
   <!-- Navigation -->
   <nav class="main-nav">
     <div class="nav-container">
       <div class="nav-logo">
-        <img src="static/Logo.jpg" alt="Protecting Under the Hard Hat Logo">
+        <img src="static/assets/logos/PUTHH-Logo.png" alt="Protecting Under the Hard Hat Logo">
         <span>Protecting Under the Hard Hat</span>
       </div>
       
@@ -1285,14 +1725,53 @@
       </button>
 
       <div class="tab-wrapper" id="tabWrapper">
-        <button class="tab-btn active" data-tab="home" onclick="switchTab('home')">Home</button>
-        <button class="tab-btn" data-tab="about" onclick="switchTab('about')">About Us</button>
-        <button class="tab-btn" data-tab="materials" onclick="switchTab('materials')">Order Materials</button>
-        <button class="tab-btn" data-tab="blog" onclick="switchTab('blog')">Blog</button>
-        <button class="tab-btn" data-tab="contact" onclick="switchTab('contact')">Contact</button>
-        <a href="/questionnaire" class="tab-btn survey-tab" style="text-decoration: none;">
+        <div class="nav-item">
+          <button class="tab-btn active" data-tab="home" onclick="switchTab('home')">Home</button>
+        </div>
+
+        <div class="nav-item" id="navAbout">
+          <button class="tab-btn" data-tab="about" data-parent="about" onclick="switchTab('about')" aria-haspopup="true" aria-expanded="false">
+            About Us <span class="caret"><i class="fas fa-chevron-down"></i></span>
+          </button>
+          <div class="nav-dropdown" role="menu">
+            <button data-tab="about-mission" onclick="switchTab('about-mission')">Our Mission</button>
+            <button data-tab="about-goals" onclick="switchTab('about-goals')">Our Goals</button>
+            <button data-tab="about-partners" onclick="switchTab('about-partners')">Our Partners</button>
+            <button data-tab="about-team" onclick="switchTab('about-team')">Meet the Team</button>
+            <!-- Alumni panel exists but is hidden from nav for now -->
+          </div>
+        </div>
+
+        <div class="nav-item" id="navSupporters">
+          <button class="tab-btn" data-tab="supporters" data-parent="supporters" onclick="switchTab('supporters')" aria-haspopup="true" aria-expanded="false">
+            Supporters <span class="caret"><i class="fas fa-chevron-down"></i></span>
+          </button>
+          <div class="nav-dropdown" role="menu">
+            <button data-tab="supporters-associations" onclick="switchTab('supporters-associations')">Associations</button>
+            <button data-tab="supporters-contractors" onclick="switchTab('supporters-contractors')">Contractors</button>
+            <button data-tab="supporters-unions" onclick="switchTab('supporters-unions')">Unions</button>
+            <button data-tab="supporters-testimonies" onclick="switchTab('supporters-testimonies')">Testimonies</button>
+          </div>
+        </div>
+
+        <div class="nav-item">
+          <button class="tab-btn" data-tab="resources" onclick="switchTab('resources')">Resources</button>
+        </div>
+        <div class="nav-item">
+          <button class="tab-btn" data-tab="materials" onclick="switchTab('materials')">Order Materials</button>
+        </div>
+        <div class="nav-item">
+          <button class="tab-btn" data-tab="blog" onclick="switchTab('blog')">Blog</button>
+        </div>
+        <div class="nav-item">
+          <button class="tab-btn" data-tab="contact" onclick="switchTab('contact')">Contact</button>
+        </div>
+        <a href="questionnaire/" class="tab-btn survey-tab" style="text-decoration: none;">
           <i class="fas fa-clipboard-check"></i> Take Survey
         </a>
+        <button id="themeToggle" class="theme-toggle-btn" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+          <i class="fas fa-moon" id="themeIcon"></i>
+        </button>
         <div class="tab-indicator" id="tabIndicator"></div>
       </div>
     </div>
@@ -1306,126 +1785,327 @@
     <section id="home" class="tab-panel active">
       <div class="hero-section">
         <div class="hero-logo-container">
-          <img src="static/Logo.jpg" alt="Protecting Under the Hard Hat Logo" class="hero-logo">
+          <img src="static/assets/logos/PUTHH-Logo.png" alt="Protecting Under the Hard Hat Logo" class="hero-logo">
         </div>
         
         <h1 class="hero-title">Protecting Under the Hard Hat</h1>
         
-        <p class="hero-description">
-          Welcome to the Protecting Under the Hard Hat Wellbeing Survey. This quick check takes about 1–2 minutes. 
-          It's not a diagnosis, but it can point you to helpful resources for construction workers' mental health and wellbeing.
-        </p>
-        
-        <a href="/questionnaire" class="hero-cta">
+        <a href="questionnaire/" class="hero-cta">
           <i class="fas fa-clipboard-check"></i>
           Take the Survey
         </a>
-        
-        <div class="hero-fade"></div>
+      </div>
+
+      <!-- Home intro: About Us + Our Mission (per doc) -->
+      <div class="home-intro">
+        <div class="about-card">
+          <h3><i class="fas fa-people-group"></i> About Us</h3>
+          <p>Protecting Under the Hard Hat is a collaborative initiative between the construction industry and NJIT
+            that connects construction workers and their families with resources for mental health, substance use,
+            and overall well-being. Through a brief survey and resource platform, we aim to make it easier to find
+            support and access help when it is needed. As the initiative grows, we continue to expand our resources,
+            partnerships, and outreach to better serve the construction community.</p>
+          <a class="home-intro-link" href="#" onclick="switchTab('about-partners'); return false;">
+            Learn more about our mission and partners <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+
+        <div class="about-card">
+          <h3><i class="fas fa-bullseye"></i> Our Mission</h3>
+          <p>Protecting Under the Hard Hat connects construction workers and their families with trusted resources
+            for mental health, substance use, and overall well-being. We are committed to expanding access to support
+            across the construction industry so that help is available when and where it is needed.</p>
+          <a class="home-intro-link" href="#" onclick="switchTab('about-mission'); return false;">
+            Read more <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
       </div>
     </section>
 
-    <!-- ABOUT US TAB -->
-    <section id="about" class="tab-panel">
+    <!-- ABOUT: OVERVIEW LANDING -->
+    <section id="about" class="tab-panel" data-parent="about">
       <div class="section-header">
         <h2><span class="diagonal-line">About Us</span></h2>
-        <p>Learn about our mission and the partners who make this initiative possible</p>
+        <p>Learn about our mission, our goals, our partners, and the people who make this initiative possible</p>
       </div>
+      <div class="overview-grid">
+        <button class="overview-card" onclick="switchTab('about-mission')">
+          <span class="overview-icon"><i class="fas fa-bullseye"></i></span>
+          <h3>Our Mission</h3>
+          <p>Why Protecting Under the Hard Hat exists and who we serve.</p>
+          <span class="overview-go">Explore <i class="fas fa-arrow-right"></i></span>
+        </button>
+        <button class="overview-card" onclick="switchTab('about-goals')">
+          <span class="overview-icon"><i class="fas fa-flag-checkered"></i></span>
+          <h3>Our Goals</h3>
+          <p>What we aim to change across the construction industry.</p>
+          <span class="overview-go">Explore <i class="fas fa-arrow-right"></i></span>
+        </button>
+        <button class="overview-card" onclick="switchTab('about-partners')">
+          <span class="overview-icon"><i class="fas fa-handshake"></i></span>
+          <h3>Our Partners</h3>
+          <p>The organizations powering this initiative.</p>
+          <span class="overview-go">Explore <i class="fas fa-arrow-right"></i></span>
+        </button>
+        <button class="overview-card" onclick="switchTab('about-team')">
+          <span class="overview-icon"><i class="fas fa-users"></i></span>
+          <h3>Meet the Team</h3>
+          <p>The people behind the project.</p>
+          <span class="overview-go">Explore <i class="fas fa-arrow-right"></i></span>
+        </button>
+      </div>
+    </section>
 
-      <div class="about-grid">
+    <!-- ABOUT: OUR MISSION -->
+    <section id="about-mission" class="tab-panel" data-parent="about">
+      <div class="section-header">
+        <h2><span class="diagonal-line">Our Mission</span></h2>
+        <p>Learn about our mission and the people who make this initiative possible</p>
+      </div>
+      <div class="single-card-wrap">
         <div class="about-card">
           <h3><i class="fas fa-bullseye"></i> Our Mission</h3>
-          <p>Mission text here. We are dedicated to supporting the mental health and wellbeing of construction workers. 
-          Our goal is to provide accessible resources, early intervention tools, and a supportive community for those 
-          working in the construction industry.</p>
+          <p>Protecting Under the Hard Hat is dedicated to improving access to mental health, substance use, and
+            wellness resources for construction workers and their families. Through education, outreach, and resource
+            navigation tools, we aim to make it easier to find support, reduce barriers to seeking help, and promote
+            a healthier construction workforce.</p>
         </div>
+      </div>
+    </section>
 
+    <!-- ABOUT: OUR GOALS -->
+    <section id="about-goals" class="tab-panel" data-parent="about">
+      <div class="section-header">
+        <h2><span class="diagonal-line">Our Goals</span></h2>
+        <p>Learn about our mission and the people who make this initiative possible</p>
+      </div>
+      <div class="single-card-wrap">
         <div class="about-card">
           <h3><i class="fas fa-flag-checkered"></i> Our Goals</h3>
-          <p>Goals text here. We aim to raise awareness about mental health in construction, reduce stigma around 
-          seeking help, connect workers with appropriate resources, and create a culture where wellbeing is prioritized 
-          alongside physical safety on job sites.</p>
+          <p>Our goals are to increase awareness of mental health and substance use challenges within the construction
+            industry, reduce stigma surrounding help-seeking, and connect individuals with trusted resources and
+            support services. We strive to foster a culture in which mental well-being is valued alongside physical
+            safety and where workers know that help is available when they need it.</p>
         </div>
       </div>
+    </section>
 
+    <!-- ABOUT: OUR PARTNERS -->
+    <section id="about-partners" class="tab-panel" data-parent="about">
+      <div class="section-header">
+        <h2><span class="diagonal-line">Our Partners</span></h2>
+        <p>Learn about our mission and the people who make this initiative possible</p>
+      </div>
       <div class="partners-section">
-        <h3><span class="diagonal-line">Our Partners</span></h3>
-        <div class="partners-grid">
+        <div class="partners-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); max-width: 700px;">
           <div class="partner-card">
-            <div class="partner-logo">
-              <i class="fas fa-university"></i>
+            <div class="partner-logo-img">
+              <img src="static/New_Jersey_IT_logo.svg" alt="New Jersey Institute of Technology logo">
             </div>
-            <div class="partner-name">NJIT</div>
-            <div class="partner-role">Research Partner</div>
+            <div class="partner-name">New Jersey Institute of Technology</div>
           </div>
           <div class="partner-card">
-            <div class="partner-logo">
-              <i class="fas fa-hard-hat"></i>
+            <div class="partner-logo-img">
+              <img src="static/assets/logos/MAP-logo.jpeg" alt="IUOE 825 MAP logo">
             </div>
-            <div class="partner-name">Construction Union</div>
-            <div class="partner-role">Industry Partner</div>
-          </div>
-          <div class="partner-card">
-            <div class="partner-logo">
-              <i class="fas fa-heart-pulse"></i>
-            </div>
-            <div class="partner-name">Health Services</div>
-            <div class="partner-role">Wellness Partner</div>
-          </div>
-          <div class="partner-card">
-            <div class="partner-logo">
-              <i class="fas fa-handshake"></i>
-            </div>
-            <div class="partner-name">Safety Council</div>
-            <div class="partner-role">Advocacy Partner</div>
+            <div class="partner-name">IUOE 825 MAP</div>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- Meet the Team Section -->
-      <div class="team-section">
-        <h3><span class="diagonal-line">Meet the Team</span></h3>
-        <div class="team-grid">
+    <!-- ABOUT: MEET THE TEAM -->
+    <section id="about-team" class="tab-panel" data-parent="about">
+      <div class="section-header">
+        <h2><span class="diagonal-line">Meet the Team</span></h2>
+        <p>Learn about our mission and the people who make this initiative possible</p>
+      </div>
+
+      <div class="team-section" style="border-top: none; margin-top: 0; padding-top: 0;">
+        <!-- Leaders row (alphabetical: Roni Barak Ventura, Chris Lalevee, Therese Edwards) -->
+        <div class="team-row">
           <div class="team-card">
-            <div class="team-photo">
-              <img src="https://images.squarespace-cdn.com/content/v1/67a7dc2f4542c17ec9ee1db8/44ecb4d8-41c8-412c-8cfa-a36769263087/RBV.png?format=500w" alt="Roni Barak Ventura">
+            <div class="headshot-frame">
+              <img src="static/assets/headshots/RoniBarakVentura.webp" alt="Roni Barak Ventura">
             </div>
             <div class="team-info">
               <h4>Roni Barak Ventura</h4>
               <p class="team-role">Assistant Professor</p>
               <p class="team-bio">School of Applied Engineering and Technology, Newark College of Engineering, New Jersey Institute of Technology.</p>
+              <button class="bio-toggle" onclick="toggleBio(this)" aria-expanded="false">Bio <i class="fas fa-chevron-down"></i></button>
+              <div class="bio-content">Dr. Roni Barak Ventura is an Assistant Professor in the School of Applied Engineering and Technology at NJIT. Her research focuses on human-centered engineering approaches to health and wellbeing. <em>(Placeholder — full bio to be provided.)</em></div>
             </div>
           </div>
           <div class="team-card">
-            <div class="team-photo">
-              <img src="https://images.squarespace-cdn.com/content/v1/67a7dc2f4542c17ec9ee1db8/e993ab74-6a95-43f0-9b2d-f45a95e537a1/AC.jpeg?format=300w" alt="Andrew Couto">
+            <div class="headshot-frame">
+              <img src="static/assets/headshots/ChrisLalevee.jpg" alt="Chris Lalevee">
+            </div>
+            <div class="team-info">
+              <h4>Chris Lalevee</h4>
+              <p class="team-role">Member Assistance Coordinator</p>
+              <p class="team-bio">IUOE Local 825.</p>
+              <button class="bio-toggle" onclick="toggleBio(this)" aria-expanded="false">Bio <i class="fas fa-chevron-down"></i></button>
+              <div class="bio-content">Bio coming soon. Chris serves as Member Assistance Coordinator for IUOE Local 825, supporting members and their families. <em>(Placeholder — full bio to be provided.)</em></div>
+            </div>
+          </div>
+          <div class="team-card">
+            <div class="headshot-frame">
+              <img src="static/assets/headshots/placeholder.svg" alt="Therese Edwards">
+            </div>
+            <div class="team-info">
+              <h4>Therese Edwards</h4>
+              <p class="team-role">Health and Wellness Coordinator</p>
+              <p class="team-bio">IUOE Local 825 Funds.</p>
+              <button class="bio-toggle" onclick="toggleBio(this)" aria-expanded="false">Bio <i class="fas fa-chevron-down"></i></button>
+              <div class="bio-content">Bio coming soon. Therese serves as Health and Wellness Coordinator for IUOE Local 825 Funds. <em>(Placeholder — full bio to be provided.)</em></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-row-label">Student Researchers</div>
+
+        <!-- Students row (alphabetical) -->
+        <div class="team-row">
+          <div class="team-card">
+            <div class="headshot-frame">
+              <img src="static/assets/headshots/AndrewCouto.webp" alt="Andrew Couto">
             </div>
             <div class="team-info">
               <h4>Andrew Couto</h4>
-              <p class="team-role">Researcher</p>
-              <p class="team-bio">B.Sc. Civil Engineering, Expected 2028. Research interests: Construction, Data science, and Health and safety.</p>
+              <p class="team-role">Student Researcher</p>
+              <button class="bio-toggle" onclick="toggleBio(this)" aria-expanded="false">Bio <i class="fas fa-chevron-down"></i></button>
+              <div class="bio-content">B.Sc. Civil Engineering, expected 2028. Research interests: construction, data science, and health and safety.</div>
             </div>
           </div>
           <div class="team-card">
-            <div class="team-photo">
-              <img src="https://images.squarespace-cdn.com/content/v1/67a7dc2f4542c17ec9ee1db8/a368b7e8-9874-4669-8472-0dfe36b99644/FG.JPG?format=500w" alt="Franco Giovannetti">
+            <div class="headshot-frame">
+              <img src="static/assets/headshots/FrancoGiovannetti.webp" alt="Franco Giovannetti">
             </div>
             <div class="team-info">
               <h4>Franco Giovannetti</h4>
-              <p class="team-role">Researcher</p>
-              <p class="team-bio">B.Sc. Computer Science, Expected 2029. Research interests: Data science, Health and safety, and Web design.</p>
+              <p class="team-role">Student Researcher</p>
+              <button class="bio-toggle" onclick="toggleBio(this)" aria-expanded="false">Bio <i class="fas fa-chevron-down"></i></button>
+              <div class="bio-content">B.Sc. Computer Science, expected 2029. Research interests: data science, health and safety, and web design.</div>
             </div>
           </div>
           <div class="team-card">
-            <div class="team-photo">
-              <img src="https://images.squarespace-cdn.com/content/v1/67a7dc2f4542c17ec9ee1db8/b3e2c9d4-19b0-4c1e-a804-81c5e56453e1/KP.JPG?format=500w" alt="Krish Patel">
+            <div class="headshot-frame">
+              <img src="static/assets/headshots/KrishPatel.webp" alt="Krish Patel">
             </div>
             <div class="team-info">
               <h4>Krish Patel</h4>
-              <p class="team-role">Researcher</p>
-              <p class="team-bio">B.Sc. Computer Science, B.Sc. Applied Physics, Expected 2028. Research interests: Data science, Health and safety, and Web design.</p>
+              <p class="team-role">Student Researcher</p>
+              <button class="bio-toggle" onclick="toggleBio(this)" aria-expanded="false">Bio <i class="fas fa-chevron-down"></i></button>
+              <div class="bio-content">B.Sc. Computer Science and B.Sc. Applied Physics, expected 2028. Research interests: data science, health and safety, and web design.</div>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT: ALUMNI (hidden from nav for now) -->
+    <section id="about-alumni" class="tab-panel" data-parent="about">
+      <div class="section-header">
+        <h2><span class="diagonal-line">Alumni</span></h2>
+        <p>Former team members who contributed to Protecting Under the Hard Hat</p>
+      </div>
+      <div class="single-card-wrap">
+        <div class="about-card" style="text-align:center;">
+          <p>Alumni profiles coming soon.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUPPORTERS: OVERVIEW LANDING -->
+    <section id="supporters" class="tab-panel" data-parent="supporters">
+      <div class="section-header">
+        <h2><span class="diagonal-line">Supporters</span></h2>
+        <p>The associations, contractors, unions, and voices standing behind this initiative</p>
+      </div>
+      <div class="overview-grid">
+        <button class="overview-card" onclick="switchTab('supporters-associations')">
+          <span class="overview-icon"><i class="fas fa-building-columns"></i></span>
+          <h3>Associations</h3>
+          <p>Industry associations backing our mission.</p>
+          <span class="overview-go">Explore <i class="fas fa-arrow-right"></i></span>
+        </button>
+        <button class="overview-card" onclick="switchTab('supporters-contractors')">
+          <span class="overview-icon"><i class="fas fa-helmet-safety"></i></span>
+          <h3>Contractors</h3>
+          <p>Contractors championing worker wellbeing.</p>
+          <span class="overview-go">Explore <i class="fas fa-arrow-right"></i></span>
+        </button>
+        <button class="overview-card" onclick="switchTab('supporters-unions')">
+          <span class="overview-icon"><i class="fas fa-people-group"></i></span>
+          <h3>Unions</h3>
+          <p>Labor unions supporting their members.</p>
+          <span class="overview-go">Explore <i class="fas fa-arrow-right"></i></span>
+        </button>
+        <button class="overview-card" onclick="switchTab('supporters-testimonies')">
+          <span class="overview-icon"><i class="fas fa-quote-right"></i></span>
+          <h3>Testimonies</h3>
+          <p>Voices from the field.</p>
+          <span class="overview-go">Explore <i class="fas fa-arrow-right"></i></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- SUPPORTERS: ASSOCIATIONS -->
+    <section id="supporters-associations" class="tab-panel" data-parent="supporters">
+      <div class="section-header">
+        <h2><span class="diagonal-line">Associations</span></h2>
+        <p>Associations supporting Protecting Under the Hard Hat</p>
+      </div>
+      <div class="supporter-grid" id="associationsGrid"></div>
+    </section>
+
+    <!-- SUPPORTERS: CONTRACTORS -->
+    <section id="supporters-contractors" class="tab-panel" data-parent="supporters">
+      <div class="section-header">
+        <h2><span class="diagonal-line">Contractors</span></h2>
+        <p>Contractors supporting Protecting Under the Hard Hat</p>
+      </div>
+      <div class="supporter-grid" id="contractorsGrid"></div>
+    </section>
+
+    <!-- SUPPORTERS: UNIONS -->
+    <section id="supporters-unions" class="tab-panel" data-parent="supporters">
+      <div class="section-header">
+        <h2><span class="diagonal-line">Unions</span></h2>
+        <p>Unions supporting Protecting Under the Hard Hat</p>
+      </div>
+      <div class="supporter-grid" id="unionsGrid"></div>
+    </section>
+
+    <!-- SUPPORTERS: TESTIMONIES -->
+    <section id="supporters-testimonies" class="tab-panel" data-parent="supporters">
+      <div class="section-header">
+        <h2><span class="diagonal-line">Testimonies</span></h2>
+        <p>Voices from the construction community</p>
+      </div>
+      <div class="carousel" id="testimonyCarousel" aria-roledescription="carousel" aria-label="Testimonies">
+        <button class="carousel-btn prev" onclick="carouselMove(-1)" aria-label="Previous testimony"><i class="fas fa-chevron-left"></i></button>
+        <div class="carousel-viewport">
+          <div class="carousel-track" id="testimonyTrack"></div>
+        </div>
+        <button class="carousel-btn next" onclick="carouselMove(1)" aria-label="Next testimony"><i class="fas fa-chevron-right"></i></button>
+        <div class="carousel-dots" id="testimonyDots"></div>
+      </div>
+    </section>
+
+    <!-- RESOURCES TAB -->
+    <section id="resources" class="tab-panel">
+      <div class="section-header">
+        <h2><span class="diagonal-line">Resources</span></h2>
+        <p>Find mental health and wellbeing resources for construction workers and their families</p>
+      </div>
+      <div class="single-card-wrap">
+        <div class="about-card" style="text-align:center;">
+          <p>Browse the full list of support resources on our questionnaire page — or take the quick survey to get
+            resources matched to you.</p>
+          <a class="hero-cta" href="questionnaire/" style="margin-top: 24px;">
+            <i class="fas fa-hand-holding-heart"></i> View Resources
+          </a>
         </div>
       </div>
     </section>
@@ -1610,46 +2290,79 @@
 
   </main>
 
-  <!-- Footer -->
-  <footer class="main-footer">
-    <div class="footer-content">
-      <img src="static/New_Jersey_IT_logo.svg" alt="NJIT Logo" class="footer-logo">
-      <p class="footer-text">
-        &copy; 2024 Protecting Under the Hard Hat. A partnership with NJIT.
-      </p>
-    </div>
-  </footer>
+  <!-- Footer (NJIT logo + © text removed per request) -->
+  <footer class="main-footer"></footer>
 
   <script>
-    // Tab Switching Logic
+    // ===== Nav / Tab Switching (supports nested dropdown panels) =====
+    // Panels can declare data-parent="about" / "supporters"; the matching
+    // top-level tab button (data-parent) is highlighted for any child panel.
+    const isTouchNav = () => window.matchMedia('(max-width: 768px)').matches;
+
     function switchTab(tabId) {
+      const target = document.getElementById(tabId);
+      if (!target) return;
+
       // Hide all panels
-      const panels = document.querySelectorAll('.tab-panel');
-      panels.forEach(panel => {
-        panel.classList.remove('active');
+      document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+      target.classList.add('active');
+
+      // Update tab buttons: highlight exact match OR parent group
+      const parentGroup = target.dataset.parent || null;
+      document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => {
+        const matches = btn.getAttribute('data-tab') === tabId ||
+          (parentGroup && btn.getAttribute('data-parent') === parentGroup);
+        btn.classList.toggle('active', matches);
       });
 
-      // Show selected panel
-      document.getElementById(tabId).classList.add('active');
-
-      // Update tab buttons
-      const buttons = document.querySelectorAll('.tab-btn[data-tab]');
-      buttons.forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.getAttribute('data-tab') === tabId) {
-          btn.classList.add('active');
-        }
+      // Highlight active dropdown sub-item
+      document.querySelectorAll('.nav-dropdown button').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-tab') === tabId);
       });
 
-      // Move indicator
       updateTabIndicator();
-
-      // Close mobile menu if open
+      closeAllDropdowns();
       document.getElementById('tabWrapper').classList.remove('open');
-
-      // Scroll to top
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
+    // Parent tab click: on mobile (or click on desktop), toggle the dropdown.
+    function handleParentTab(event, navItemId, defaultTabId) {
+      event.stopPropagation();
+      const item = document.getElementById(navItemId);
+      if (!item) return;
+      const wasOpen = item.classList.contains('open');
+      closeAllDropdowns();
+      if (!wasOpen) {
+        item.classList.add('open');
+        item.querySelector('.tab-btn')?.setAttribute('aria-expanded', 'true');
+      } else if (!isTouchNav()) {
+        // Second click on desktop: go to the default sub-panel
+        switchTab(defaultTabId);
+      }
+    }
+
+    function closeAllDropdowns() {
+      document.querySelectorAll('.nav-item.open').forEach(item => {
+        item.classList.remove('open');
+        item.querySelector('.tab-btn')?.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    // Desktop hover open/close
+    document.querySelectorAll('.nav-item').forEach(item => {
+      if (!item.querySelector('.nav-dropdown')) return;
+      item.addEventListener('mouseenter', () => { if (!isTouchNav()) { closeAllDropdowns(); item.classList.add('open'); } });
+      item.addEventListener('mouseleave', () => { if (!isTouchNav()) item.classList.remove('open'); });
+    });
+
+    // Click outside closes dropdowns
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.nav-item')) closeAllDropdowns();
+    });
+
+    // Escape closes dropdowns
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAllDropdowns(); });
 
     // Update Tab Indicator Position
     function updateTabIndicator() {
@@ -1659,7 +2372,7 @@
       if (activeTab && indicator) {
         const tabRect = activeTab.getBoundingClientRect();
         const wrapperRect = document.getElementById('tabWrapper').getBoundingClientRect();
-        
+
         indicator.style.width = tabRect.width + 'px';
         indicator.style.transform = `translateX(${tabRect.left - wrapperRect.left}px)`;
       }
@@ -1670,17 +2383,120 @@
       document.getElementById('tabWrapper').classList.toggle('open');
     }
 
+    // ===== Team Bio expanders =====
+    function toggleBio(btn) {
+      const content = btn.nextElementSibling;
+      if (!content) return;
+      const open = content.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(open));
+      btn.innerHTML = open
+        ? 'Hide Bio <i class="fas fa-chevron-up"></i>'
+        : 'Bio <i class="fas fa-chevron-down"></i>';
+    }
+
+    // ===== Supporters (JSON-driven) =====
+    let SUPPORTERS = null;
+
+    function supporterCardHTML(entry) {
+      const featured = entry.featured ? ' supporter-featured' : '';
+      const logo = entry.logo
+        ? `<img src="${entry.logo}" alt="${entry.name} logo">`
+        : `<i class="${entry.icon || 'fas fa-building'}"></i>`;
+      const link = entry.url
+        ? `<a href="${entry.url}" target="_blank" rel="noopener noreferrer">Visit website <i class="fas fa-arrow-up-right-from-square" style="font-size:.75em"></i></a>`
+        : '';
+      return `
+        <div class="supporter-card${featured}">
+          <div class="supporter-logo">${logo}</div>
+          <h4>${entry.name}</h4>
+          ${entry.description ? `<p style="font-size:.88rem;color:var(--text-secondary);margin-bottom:8px;">${entry.description}</p>` : ''}
+          ${link}
+        </div>`;
+    }
+
+    function renderSupporterGroup(gridId, entries) {
+      const grid = document.getElementById(gridId);
+      if (!grid) return;
+      grid.innerHTML = (entries || []).map(supporterCardHTML).join('');
+    }
+
+    // ===== Testimonies carousel =====
+    let carouselIndex = 0;
+    let carouselCount = 0;
+
+    function renderTestimonies(entries) {
+      const track = document.getElementById('testimonyTrack');
+      const dots = document.getElementById('testimonyDots');
+      if (!track || !dots) return;
+      carouselCount = (entries || []).length;
+      track.innerHTML = (entries || []).map(t => `
+        <div class="testimony-slide" role="group" aria-roledescription="slide">
+          <div class="headshot-frame">
+            <img src="${t.headshot || 'static/assets/headshots/placeholder.svg'}" alt="${t.name}">
+          </div>
+          <p class="testimony-quote">${t.quote}</p>
+          <div class="testimony-name">${t.name}</div>
+          <div class="testimony-affiliation">${t.affiliation || ''}</div>
+        </div>`).join('');
+      dots.innerHTML = (entries || []).map((_, i) =>
+        `<button class="carousel-dot${i === 0 ? ' active' : ''}" onclick="carouselGoTo(${i})" aria-label="Go to testimony ${i + 1}"></button>`).join('');
+      carouselIndex = 0;
+      carouselUpdate();
+    }
+
+    function carouselUpdate() {
+      const track = document.getElementById('testimonyTrack');
+      if (!track) return;
+      track.style.transform = `translateX(-${carouselIndex * 100}%)`;
+      document.querySelectorAll('#testimonyDots .carousel-dot').forEach((d, i) =>
+        d.classList.toggle('active', i === carouselIndex));
+    }
+
+    function carouselMove(dir) {
+      if (!carouselCount) return;
+      carouselIndex = (carouselIndex + dir + carouselCount) % carouselCount;
+      carouselUpdate();
+    }
+
+    function carouselGoTo(i) {
+      carouselIndex = i;
+      carouselUpdate();
+    }
+
+    async function loadSupporters() {
+      try {
+        const r = await fetch('static/supporters.json', { cache: 'no-cache' });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        SUPPORTERS = await r.json();
+      } catch (e) {
+        console.error('Failed to load supporters.json', e);
+        SUPPORTERS = { associations: [], contractors: [], unions: [], testimonies: [] };
+      }
+
+      // Associations: featured (ACCNJ) first, rest alphabetical
+      const sortWithFeatured = (list) => {
+        const feat = (list || []).filter(x => x.featured);
+        const rest = (list || []).filter(x => !x.featured).sort((a, b) => a.name.localeCompare(b.name));
+        return [...feat, ...rest];
+      };
+
+      renderSupporterGroup('associationsGrid', sortWithFeatured(SUPPORTERS.associations));
+      renderSupporterGroup('contractorsGrid', (SUPPORTERS.contractors || []).slice().sort((a, b) => a.name.localeCompare(b.name)));
+      renderSupporterGroup('unionsGrid', sortWithFeatured(SUPPORTERS.unions));
+      renderTestimonies(SUPPORTERS.testimonies || []);
+    }
+
     // Handle Newsletter Submit
     function handleNewsletterSubmit(event) {
       event.preventDefault();
       const email = document.getElementById('newsletterEmail').value;
-      
+
       // Show success message
       document.getElementById('newsletterSuccess').classList.add('show');
-      
+
       // Reset form
       event.target.reset();
-      
+
       // Hide success after 5 seconds
       setTimeout(() => {
         document.getElementById('newsletterSuccess').classList.remove('show');
@@ -1690,22 +2506,49 @@
     // Handle Contact Form Submit
     function handleContactSubmit(event) {
       event.preventDefault();
-      
+
       // Show success message
       document.getElementById('contactSuccess').classList.add('show');
-      
+
       // Reset form
       event.target.reset();
-      
+
       // Hide success after 5 seconds
       setTimeout(() => {
         document.getElementById('contactSuccess').classList.remove('show');
       }, 5000);
     }
 
-    // Initialize tab indicator on load
-    window.addEventListener('load', updateTabIndicator);
-    
+    // ===== Dark mode (default light; shared key with questionnaire) =====
+    function applyTheme(theme) {
+      const dark = theme === 'dark';
+      document.body.classList.toggle('dark-mode', dark);
+      const icon = document.getElementById('themeIcon');
+      if (icon) icon.className = dark ? 'fas fa-sun' : 'fas fa-moon';
+      const btn = document.getElementById('themeToggle');
+      if (btn) btn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    }
+
+    function initTheme() {
+      let saved = null;
+      try { saved = localStorage.getItem('k10:theme'); } catch { }
+      // Default to light on the public site unless the user chose dark before.
+      applyTheme(saved === 'dark' ? 'dark' : 'light');
+      document.getElementById('themeToggle')?.addEventListener('click', () => {
+        const dark = !document.body.classList.contains('dark-mode');
+        applyTheme(dark ? 'dark' : 'light');
+        try { localStorage.setItem('k10:theme', dark ? 'dark' : 'light'); } catch { }
+        updateTabIndicator();
+      });
+    }
+
+    // Initialize on load
+    window.addEventListener('load', () => {
+      initTheme();
+      updateTabIndicator();
+      loadSupporters();
+    });
+
     // Update indicator on resize
     window.addEventListener('resize', updateTabIndicator);
   </script>

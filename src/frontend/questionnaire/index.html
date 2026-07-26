@@ -5,16 +5,36 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Protecting Under the Hard Hat</title>
+  <link rel="icon" type="image/png" href="../static/assets/logos/PUTHH-Logo.png" />
   <link rel="stylesheet" href="../static/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 
 <body>
-  <a href="#mainContent" class="skip-link">Skip to main content</a>
+  <a href="#mainContent" class="skip-link" data-i18n="skip.main">Skip to main content</a>
 
-  <button id="themeToggle" class="theme-toggle" type="button">
-    <span class="sr-only">Toggle dark mode</span>
-    <span id="themeIcon" aria-hidden="true">🌙</span>
+  <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+    <span class="sr-only" data-i18n="theme.toggle">Toggle dark mode</span>
+    <i id="themeIcon" class="fas fa-moon" aria-hidden="true"></i>
+  </button>
+
+  <!-- Language selector: globe icon opens a menu of languages in their own names -->
+  <div id="langToggle" class="lang-toggle">
+    <button id="langMenuBtn" class="lang-menu-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Choose language">
+      <i class="fas fa-globe" aria-hidden="true"></i>
+      <span id="langCurrent">EN</span>
+      <i class="fas fa-chevron-down lang-caret" aria-hidden="true"></i>
+    </button>
+    <ul id="langMenu" class="lang-menu" role="menu">
+      <li><button type="button" class="lang-btn active" data-lang="en" data-label="EN" role="menuitem" aria-pressed="true">English</button></li>
+      <li><button type="button" class="lang-btn" data-lang="es" data-label="ES" role="menuitem" aria-pressed="false">Español</button></li>
+      <li><button type="button" class="lang-btn" data-lang="pt" data-label="PT" role="menuitem" aria-pressed="false">Português</button></li>
+    </ul>
+  </div>
+
+  <!-- Persistent exit ramp: immediate support -->
+  <button id="exitRampBtn" class="exit-ramp-btn" type="button">
+    <i class="fas fa-hand-holding-heart" aria-hidden="true"></i> <span data-i18n="exit.support">I need support now</span>
   </button>
 
   <div class="container">
@@ -29,13 +49,13 @@
       </div>
     </header>
 
-    <button id="backBtn" class="back-btn" type="button"><span aria-hidden="true">←</span> Back</button>
+    <button id="backBtn" class="back-btn" type="button"><span aria-hidden="true">←</span> <span data-i18n="nav.back">Back</span></button>
 
     <main id="mainContent" role="main">
       <!-- Mode Selection Overlay (Who is this for?) -->
       <div id="modeOverlay" class="start-overlay">
         <div class="mode-card">
-          <h2>Who are you completing this for?</h2>
+          <h2 data-i18n="mode.title">Who are you completing this for?</h2>
           <div class="mode-grid">
             <button id="modeSelf" class="mode-option" type="button">
               <div class="mode-icon">
@@ -44,7 +64,7 @@
                     d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                 </svg>
               </div>
-              <div class="mode-title">For Myself</div>
+              <div class="mode-title" data-i18n="mode.self">For Myself</div>
             </button>
 
             <button id="modeOther" class="mode-option" type="button">
@@ -54,7 +74,7 @@
                     d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
                 </svg>
               </div>
-              <div class="mode-title">For Someone Else</div>
+              <div class="mode-title" data-i18n="mode.other">For Someone Else</div>
             </button>
           </div>
         </div>
@@ -63,20 +83,20 @@
       <!-- Resume Overlay (Resume or Start Fresh?) -->
       <div id="resumeOverlay" class="start-overlay">
         <div class="mode-card">
-          <h2>We found a survey in progress.</h2>
+          <h2 data-i18n="resume.title">We found a survey in progress.</h2>
           <div class="mode-grid">
             <button id="resumeBtn" class="mode-option" type="button">
               <div class="mode-icon">
                 <i class="fas fa-play" aria-hidden="true"></i>
               </div>
-              <div class="mode-title">Resume My Progress</div>
+              <div class="mode-title" data-i18n="resume.resume">Resume My Progress</div>
             </button>
 
             <button id="startFreshBtn" class="mode-option secondary" type="button">
               <div class="mode-icon">
                 <i class="fas fa-rotate-right" aria-hidden="true"></i>
               </div>
-              <div class="mode-title">Start Fresh</div>
+              <div class="mode-title" data-i18n="resume.fresh">Start Fresh</div>
             </button>
           </div>
         </div>
@@ -86,20 +106,21 @@
       <div id="startOverlay" class="start-overlay">
         <div class="start-card">
           <div id="startMedia" class="start-media">
-            <img src="../static/Logo.jpg" alt="Protecting Under the Hard Hat logo" />
+            <img src="../static/assets/logos/PUTHH-Logo.png" alt="Protecting Under the Hard Hat logo" />
           </div>
           <div class="start-content">
-            <h2>Welcome</h2>
-            <p class="start-lead">
-              This quick check takes about 1–2 minutes. It’s not a diagnosis, but it can point you to helpful resources.
+            <h2 data-i18n="start.welcome">Welcome</h2>
+            <p class="start-lead" data-i18n="start.lead">
+              Welcome to the Protecting Under the Hard Hat Wellbeing Survey. This quick check takes about 1–2 minutes.
+              It's not a diagnosis, but it can point you to helpful resources for construction workers' mental health and wellbeing.
             </p>
 
             <p class="start-anon">
-              <strong><em>This survey is anonymous and responses will not be shared with employers.</em></strong>
+              <strong><em data-i18n="start.anon">This survey is anonymous and responses will not be shared with employers.</em></strong>
             </p>
             <div class="start-actions">
-              <button id="startBegin" class="begin-btn" type="button">Begin</button>
-              <button id="startResources" class="help-nav-btn secondary" type="button">Go directly to the list of
+              <button id="startBegin" class="begin-btn" type="button" data-i18n="start.begin">Begin</button>
+              <button id="startResources" class="help-nav-btn secondary" type="button" data-i18n="start.resources">Go directly to the list of
                 Resources</button>
             </div>
           </div>
@@ -110,12 +131,12 @@
 
       <section class="completion-screen" data-question="complete" style="display:none;">
         <div class="completion-icon">✓</div>
-        <h2 class="completion-title">All Done!</h2>
-        <div class="completion-text">Thank you for completing the survey! This isn’t a diagnosis.</div>
-        <button id="helpBtn" class="help-nav-btn" type="button">View Resources</button>
-        <button id="restartBtn" class="restart-btn secondary" type="button">Do it
+        <h2 class="completion-title" data-i18n="complete.title">All Done!</h2>
+        <div class="completion-text" data-i18n="complete.text">Thank you for completing the survey! This isn’t a diagnosis.</div>
+        <button id="helpBtn" class="help-nav-btn" type="button" data-i18n="complete.viewResources">View Resources</button>
+        <button id="restartBtn" class="restart-btn secondary" type="button" data-i18n="complete.again">Do it
           again</button>
-        <div class="footer-note">If you’re concerned about your wellbeing, consider talking to a qualified professional.
+        <div class="footer-note" data-i18n="complete.note">If you’re concerned about your wellbeing, consider talking to a qualified professional.
         </div>
       </section>
 
@@ -124,42 +145,153 @@
         <div class="help-subtitle">Based on your responses, here are some options.</div>
 
         <div id="whySection" class="why-section" style="display:none;">
-          <a href="#" id="whyLink" class="why-link">Why are we showing you these resources?</a>
+          <a href="#" id="whyLink" class="why-link" data-i18n="help.why">Why are we showing you these resources?</a>
           <div id="whyContent" class="why-content" style="display:none;"></div>
         </div>
 
+        <!-- Resource tools: search + email on top, ZIP lookup card with its local results below -->
+        <div class="help-tools">
+          <div class="help-tools-top">
+            <div class="help-search-row">
+              <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+              <input type="search" id="resourceSearch" placeholder="Search resources…" aria-label="Search resources"
+                data-i18n-placeholder="search.placeholder" data-i18n-aria="search.aria" autocomplete="off">
+            </div>
+            <button id="emailResultsBtn" class="help-nav-btn secondary email-results-btn" type="button">
+              <i class="fas fa-envelope" aria-hidden="true"></i> <span data-i18n="email.button">Email results to myself</span>
+            </button>
+          </div>
+
+          <div class="zip-card">
+            <div class="zip-card-header">
+              <span class="zip-card-icon"><i class="fas fa-location-dot" aria-hidden="true"></i></span>
+              <div class="zip-card-text">
+                <label for="zipInput" class="zip-label" data-i18n="zip.label">Find local resources</label>
+                <span class="zip-hint" data-i18n="zip.hint">Enter your ZIP code to see support near you</span>
+              </div>
+            </div>
+            <div class="zip-search">
+              <div class="zip-search-field">
+                <i class="fas fa-location-crosshairs zip-search-icon" aria-hidden="true"></i>
+                <input type="text" id="zipInput" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" placeholder="e.g. 07102"
+                  aria-label="ZIP code" data-i18n-placeholder="zip.placeholder" data-i18n-aria="zip.aria">
+                <button id="zipSearchBtn" class="zip-search-go" type="button">
+                  <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+                  <span data-i18n="zip.search">Search</span>
+                </button>
+              </div>
+              <button id="zipClearBtn" class="zip-clear-link" type="button" style="display:none;" data-i18n="zip.showNational">Show national</button>
+            </div>
+
+            <!-- Refine group: union/contractor typeahead, sort, and distance -->
+            <div class="local-filters">
+              <div class="local-filters-head">
+                <i class="fas fa-sliders" aria-hidden="true"></i>
+                <span data-i18n="filters.title">Refine results</span>
+              </div>
+
+              <!-- Union/Contractor client-side filter: typeahead over the full resource list -->
+              <div class="local-filter-row">
+                <div class="union-filter">
+                  <i class="fas fa-helmet-safety" aria-hidden="true"></i>
+                  <input type="text" id="unionFilterInput" placeholder="Filter by union/contractor, e.g. Local 825"
+                    aria-label="Filter by union or contractor" data-i18n-placeholder="union.placeholder"
+                    data-i18n-aria="union.aria" autocomplete="off" role="combobox" aria-expanded="false"
+                    aria-controls="unionFilterList" aria-autocomplete="list">
+                  <button id="unionClearBtn" class="union-clear-btn" type="button" style="display:none;"
+                    aria-label="Clear union/contractor filter" data-i18n-aria="union.clear">
+                    <i class="fas fa-xmark" aria-hidden="true"></i>
+                  </button>
+                  <ul id="unionFilterList" class="union-typeahead-list" role="listbox"></ul>
+                </div>
+                <div class="local-sort">
+                  <span class="local-sort-label" data-i18n="sort.label">Sort by</span>
+                  <div class="custom-select" id="localSortWrap">
+                    <button type="button" class="custom-select-trigger" id="localSortTrigger"
+                      aria-haspopup="listbox" aria-expanded="false" aria-label="Sort local resources"
+                      data-i18n-aria="sort.aria">
+                      <span class="custom-select-value" id="localSortValue">Relevance</span>
+                      <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <ul class="custom-select-list" id="localSortList" role="listbox" tabindex="-1"
+                      aria-label="Sort local resources">
+                      <li class="custom-select-item is-selected" role="option" data-value="relevance"
+                        aria-selected="true" data-i18n="sort.relevance">Relevance</li>
+                      <li class="custom-select-item" role="option" data-value="name"
+                        aria-selected="false" data-i18n="sort.name">Name</li>
+                      <li class="custom-select-item" role="option" data-value="distance"
+                        aria-selected="false" aria-disabled="true" data-i18n="sort.distance">Distance</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Max-distance slider: filters fetched ZIP results client-side; disabled until a ZIP search -->
+              <div class="local-distance-row disabled" id="distanceRow">
+                <label class="local-distance" for="maxDistanceSlider">
+                  <span class="local-distance-label"><span data-i18n="dist.label">Max distance</span>:
+                    <strong id="maxDistanceValue">50 mi</strong></span>
+                  <input type="range" id="maxDistanceSlider" min="5" max="200" step="5" value="50" disabled
+                    aria-label="Maximum distance in miles" data-i18n-aria="dist.aria">
+                </label>
+                <span class="local-distance-hint" id="maxDistanceHint" data-i18n="dist.hint">Enter a ZIP code first</span>
+              </div>
+            </div>
+
+            <div id="zipStatus" class="zip-status" role="status" aria-live="polite"></div>
+
+            <!-- Local (ZIP-based) results live INSIDE the ZIP card so they read as its output -->
+            <div id="localResourcesSection" class="zip-local-results" style="display:none;">
+              <h3 class="local-resources-title" data-i18n="local.title">Resources near you</h3>
+              <div id="localGrid" class="help-grid"></div>
+            </div>
+          </div>
+        </div>
+
+        <h3 id="nationalTitle" class="local-resources-title" style="display:none;" data-i18n="national.title">National resources</h3>
         <div id="helpGrid" class="help-grid"></div>
         <div class="help-back-row">
           <button id="helpBackBtn" class="help-nav-btn secondary" type="button">Back
             to beginning</button>
-          <button id="helpRestartBtn" class="help-nav-btn" type="button">Restart
+          <button id="helpRestartBtn" class="help-nav-btn" type="button" data-i18n="help.restart">Restart
             survey</button>
         </div>
       </section>
     </main>
 
-    <footer class="footer-branding">
-      <img src="../static/New_Jersey_IT_logo.svg" alt="NJIT Logo" class="njit-logo-footer">
-    </footer>
+    <footer class="footer-branding"></footer>
   </div>
 
   <!-- Cookie banner -->
   <div id="cookieOverlay" class="cookie-overlay">
     <div class="cookie-banner">
-      <h3>🍪 We use cookies 🍪</h3>
-      <p>
+      <h3 data-i18n="cookie.title">🍪 We use cookies 🍪</h3>
+      <p data-i18n="cookie.text">
         We store your theme choice and survey progress locally to make your experience smoother.
         No personally identifiable data is sent to our server. To show region-appropriate help resources,
         our server may use your IP address to approximate your region. We don’t use advertising cookies,
         and we minimize and retain this data only briefly.
       </p>
       <div class="cookie-actions">
-        <button id="cookieAccept" class="cookie-btn primary" type="button">Accept</button>
-        <button id="cookieDismiss" class="cookie-btn secondary" type="button">Not now</button>
+        <button id="cookieAccept" class="cookie-btn primary" type="button" data-i18n="cookie.accept">Accept</button>
+        <button id="cookieDismiss" class="cookie-btn secondary" type="button" data-i18n="cookie.notNow">Not now</button>
       </div>
     </div>
   </div>
 
+  <!-- "Was this tool helpful?" slide-up card (H3) -->
+  <div id="feedbackCard" class="feedback-card" role="dialog" aria-label="Feedback" aria-hidden="true">
+    <button id="feedbackDismiss" class="feedback-dismiss" type="button" aria-label="Dismiss" data-i18n-aria="feedback.dismiss">
+      <i class="fas fa-xmark" aria-hidden="true"></i>
+    </button>
+    <h3 data-i18n="feedback.title">Was this tool helpful for you?</h3>
+    <div class="feedback-actions">
+      <button id="feedbackYes" class="cookie-btn primary" type="button"><i class="fas fa-thumbs-up" aria-hidden="true"></i> <span data-i18n="feedback.yes">Yes</span></button>
+      <button id="feedbackNo" class="cookie-btn secondary" type="button"><i class="fas fa-thumbs-down" aria-hidden="true"></i> <span data-i18n="feedback.no">No</span></button>
+    </div>
+  </div>
+
+  <script src="../static/i18n.js" defer></script>
   <script src="../static/script.js" defer></script>
 </body>
 
