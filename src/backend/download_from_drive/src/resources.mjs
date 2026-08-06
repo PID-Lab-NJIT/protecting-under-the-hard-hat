@@ -1,6 +1,7 @@
 // Downloads the resources Google Sheet from Drive and uploads it as a CSV to S3
 
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { buffer as streamToBuffer } from "node:stream/consumers";
 import { authorize, getDrive } from "./drive.mjs";
 
 const S3_BUCKET = process.env.S3_BUCKET_NAME;
@@ -34,12 +35,14 @@ async function download() {
         { fileId: file.id, mimeType: "text/csv" },
         { responseType: "stream" }
     );
+    // buffer the export stream fully so S3 can compute the content length itself
+    const csvBuffer = await streamToBuffer(exportResponse.data);
 
     await s3.send(new PutObjectCommand({
         Bucket: S3_BUCKET,
         Key: S3_FILE_NAME,
         ContentType: "text/csv",
-        Body: exportResponse.data,
+        Body: csvBuffer,
     }));
 
     console.log(`Downloaded "${file.name}" from Drive and uploaded to S3 as "${S3_FILE_NAME}".`);
