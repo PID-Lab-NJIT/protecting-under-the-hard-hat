@@ -1,0 +1,16 @@
+{
+  "name": "download_from_drive",
+  "version": "1.0.0",
+  "description": "Downloads specific files from Google Drive to AWS S3.",
+  "main": "src/index.mjs",
+  "type": "module",
+  "author": "Krish A. Patel",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.958.0",
+    "@aws-sdk/client-secrets-manager": "^3.1104.0",
+    "@googleapis/drive": "^20.1.0",
+    "google-auth-library": "^11.0.0",
+    "p-limit": "^7.2.0"
+  }
+}
