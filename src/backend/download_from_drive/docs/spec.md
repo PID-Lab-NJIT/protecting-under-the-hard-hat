@@ -51,7 +51,7 @@ Contains functions for downloading the resources dataset from Drive to an S3 buc
 - Use `drive.mjs` for connecting to Drive.
 - `download()`:
     - First check if Google Sheet of ID given by env var `DRIVE_RESOURCES_FILE_ID` exists. If not, throw an error.
-    - Otherwise, export that Google Sheet as a CSV buffer stream.
+    - Otherwise, export that Google Sheet as a CSV stream. Load it into memory as a buffer so S3 can calculate the content length itself.
     - Upload the stream to the S3 bucket of name given by the env var `S3_BUCKET_NAME` at the root as `resources.csv` (overriding the previous file of that name).
     - Log the success as well as the Drive and S3 file names.
 
