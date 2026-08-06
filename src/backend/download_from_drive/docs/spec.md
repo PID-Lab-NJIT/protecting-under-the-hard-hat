@@ -6,8 +6,9 @@
 ## Environment Variables
 
 ```plaintext
-GOOGLE_DRIVE_ROOT_FOLDER_ID="folder_id_here"
+DRIVE_RESOURCES_FILE_ID="resources_file_id_here"
 S3_BUCKET_NAME="bucket_name_here"
+SERVICE_ACCOUNT_SECRET_ID="secret_id_here"
 ```
 
 ## Files to Download
@@ -33,7 +34,7 @@ src/
 
 - Call `download()` in `resources.mjs`, using `plimit` of 5 to limit max concurrent connections to Drive (in case there are more downloads added in the future).
 - Use `allSettled` to ensure one failed download doesn't tear down the others.
-- Catch and log errors from per download (mentioning the filename), and proceed with the next download. Otherwise, log success for each download, including Drive and S3 filenames.
+- Catch and log errors from per download, and proceed with the next download.
 - Log `"<success>/<total> downloads succeeded"`, and return a simple `{ message }` object with that same message.
 
 ### `drive.mjs`
@@ -47,12 +48,12 @@ Contains functions for interacting with Google Drive. See `src/backend/upload_to
 
 Contains functions for downloading the resources dataset from Drive to an S3 bucket.
 
-- `download()`:
-    - A function to look non-recursively in the Drive folder given by the env var `GOOGLE_DRIVE_ROOT_FOLDER_ID` for a Google Sheet of name "Resources." Use `mimeType` to restrict to Google Sheets from the outset.
-    - If not found, log this, and fall back to a Google Sheet whose name contains "resources" (case insensitive). Assume only 1 sheet exists of that name, so always get the first result, if any are found.
-    - If not found even after the fallback, log and return `null`.
-    - Export the sheet as a CSV buffer stream. Upload the stream to the S3 bucket of name given by the env var `S3_BUCKET_NAME` at the root as `resources.csv` (overriding the previous file of that name).
 - Use `drive.mjs` for connecting to Drive.
+- `download()`:
+    - First check if Google Sheet of ID given by env var `DRIVE_RESOURCES_FILE_ID` exists. If not, throw an error.
+    - Otherwise, export that Google Sheet as a CSV buffer stream.
+    - Upload the stream to the S3 bucket of name given by the env var `S3_BUCKET_NAME` at the root as `resources.csv` (overriding the previous file of that name).
+    - Log the success as well as the Drive and S3 file names.
 
 ## Coding Conventions
 
