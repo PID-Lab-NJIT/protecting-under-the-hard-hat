@@ -6,8 +6,10 @@ import { download as downloadResources } from "./resources.mjs";
 // limit the number of concurrent Drive connections
 const limit = pLimit(5);
 
-// each entry downloads one file/dataset from Drive to S3
-const DOWNLOADS = [downloadResources];
+// each entry downloads one file/dataset from Drive to S3; `label` identifies it in error logs
+const DOWNLOADS = [
+    { label: "resources.csv", fn: downloadResources },
+];
 
 /**
  * Runs all Drive-to-S3 downloads concurrently (up to a limit of 5), logging the
@@ -16,17 +18,17 @@ const DOWNLOADS = [downloadResources];
  */
 export const handler = async () => {
     const results = await Promise.allSettled(
-        DOWNLOADS.map((downloadFn) => limit(downloadFn))
+        DOWNLOADS.map(({ fn }) => limit(fn))
     );
 
     let successCount = 0;
-    for (const result of results) {
+    results.forEach((result, i) => {
         if (result.status === "fulfilled") {
             successCount++;
         } else {
-            console.error("Download failed:", result.reason);
+            console.error(`Failed to download "${DOWNLOADS[i].label}":`, result.reason);
         }
-    }
+    });
 
     const message = `${successCount}/${DOWNLOADS.length} downloads succeeded`;
     console.log(message);
