@@ -27,7 +27,7 @@ async function download() {
         });
         file = response.data;
     } catch (e) {
-        throw new Error(`Resources Google Sheet (ID: ${fileId}) not found in Drive.`);
+        throw new Error(`Resources Google Sheet not found in Drive.`);
     }
 
     const exportResponse = await drive.files.export(
