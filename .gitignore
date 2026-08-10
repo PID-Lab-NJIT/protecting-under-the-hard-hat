@@ -1,6 +1,5 @@
 # secrets
 .env
-
 service*account.json
 
 # scratch files
