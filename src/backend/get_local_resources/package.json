@@ -1,0 +1,16 @@
+{
+  "name": "get_local_resources",
+  "version": "1.0.0",
+  "description": "Given a user ZIP code, retrieve resources from nearby ZIP codes.",
+  "main": "index.js",
+  "type": "module",
+  "author": "Krish A. Patel",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.958.0",
+    "express": "^5.1.0",
+    "papaparse": "^5.5.3",
+    "serverless-http": "^4.0.0",
+    "uuid": "^14.0.1"
+  }
+}

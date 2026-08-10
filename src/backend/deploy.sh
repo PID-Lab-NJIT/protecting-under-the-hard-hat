@@ -69,17 +69,19 @@ if [ $? -ne 0 ]; then
     exit 5
 fi
 
-# Package node_modules as a Lambda layer (nodejs/node_modules/ structure required by Lambda)
+# Package node_modules as a Lambda layer
+# (nodejs/node_modules/ structure required by Lambda layer)
 if [ "$SKIP_LAYER" = false ]; then
     echo -e "${YELLOW}📦 Packaging dependencies as Lambda layer...${NC}"
     LAYER_TMP=$(mktemp -d)
     mkdir -p "$LAYER_TMP/nodejs"
     cp -r node_modules "$LAYER_TMP/nodejs/"
-    rm -rf "$LAYER_TMP/nodejs/node_modules/@aws-sdk"
-    rm -rf "$LAYER_TMP/nodejs/node_modules/@smithy"
-    rm -rf "$LAYER_TMP/nodejs/node_modules/@aws-crypto"
-    rm -rf "$LAYER_TMP/nodejs/node_modules/aws-sdk"
-    rm -rf "$LAYER_TMP/nodejs/node_modules/.bin"
+	# [TODO]
+    # rm -rf "$LAYER_TMP/nodejs/node_modules/@aws-sdk"
+    # rm -rf "$LAYER_TMP/nodejs/node_modules/@smithy"
+    # rm -rf "$LAYER_TMP/nodejs/node_modules/@aws-crypto"
+    # rm -rf "$LAYER_TMP/nodejs/node_modules/aws-sdk"
+    # rm -rf "$LAYER_TMP/nodejs/node_modules/.bin"
     PREV_DIR=$(pwd)
     cd "$LAYER_TMP"
     zip -qr "$PREV_DIR/../$LAYER_ZIP_NAME" nodejs/

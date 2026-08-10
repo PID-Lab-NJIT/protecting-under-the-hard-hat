@@ -5,7 +5,4 @@
       "words": ["incompletes", "", ""]
     }
   ],
-  "[markdown]": {
-    "editor.formatOnSave": true
-  }
 }
