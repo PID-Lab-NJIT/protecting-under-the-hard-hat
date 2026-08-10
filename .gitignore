@@ -1,7 +1,7 @@
 # secrets
 .env
-service_account.json
-service-account.json
+
+service*account.json
 
 # scratch files
 scratch.mjs
