@@ -30,12 +30,18 @@ const _EARTH_RADIUS_M = 6371000;     // meters
 // ---------------------------------------------------------------------------
 
 /**
- * Zero-pads a ZIP code to guarantee a length of 5, e.g. "680" -> "00680".
+ * Zero-pads a ZIP code to guarantee a length of 5, e.g. "680" -> "00680".\
+ * Returns "invalid" if validation fails.
  * @param {string|number} zip
  * @returns {string} Zero-padded ZIP code.
  */
 export function normalizeZip(zip) {
-    return String(zip).padStart(5, "0");
+    const zipStr = String(zip);
+    if (zip == null || isNaN(Number(zipStr)) || zipStr.length > 5) {
+        // clear sentinel instead of null just in case
+        return "invalid";
+    }
+    return zipStr.padStart(5, "0");
 }
 
 /**
