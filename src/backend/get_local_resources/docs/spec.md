@@ -14,6 +14,14 @@
 - Normalize ZIP codes to left-0-padded 5-digit strings, e.g. "680" or 680 (number) -> "00680".
 - Use the `S3_BUCKET_NAME` env var whenever an S3 bucket is specified in this spec.
 
+## Source Structure
+
+```plaintext
+src/
+    index.mjs        # main driver with Express code
+    util.mjs         # util functions
+```
+
 ## Endpoint
 
 `GET /local-resources`
