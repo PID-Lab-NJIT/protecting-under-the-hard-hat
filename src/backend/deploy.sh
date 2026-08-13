@@ -12,8 +12,10 @@ NC='\033[0m' # No Color
 TMPDIR=$(mktemp -d) || exit 12
 
 cleanup() {
+	local exit_code=$?
     rm -rf -- "$TMPDIR"
 	echo -e "${GREEN}🧹 Cleaned up temporary files...${NC}"
+	exit "$exit_code"
 }
 
 trap cleanup EXIT
