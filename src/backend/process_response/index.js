@@ -39,7 +39,7 @@ app.post('/survey', async (req, res) => {
 
     const currDate = new Date();
     const yyyymm = currDate.getFullYear() + "-" + String(currDate.getMonth() + 1).padStart(2, '0');
-    const filePath = newResponse.test || newResponse.isTest || newResponse.query?.test ? `test/${yyyymm}.json` : `data/${yyyymm}.json`;
+    const filePath = newResponse.test || newResponse.isTest || newResponse.query?.test ? `test_json/${yyyymm}.json` : `json/${yyyymm}.json`;
 
     console.log('1. Fetching current file from S3...');
     let currFileData = [];

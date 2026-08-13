@@ -231,8 +231,8 @@ async function processDirectory(sourcePrefix, destPrefix) {
 
 export const handler = async () => {
     const [prodResult, testResult] = await Promise.all([
-        processDirectory('data/', 'csv/'),
-        processDirectory('test/', 'test_csv/'),
+        processDirectory('json/', 'csv/'),
+        processDirectory('test_json/', 'test_csv/'),
     ]);
     return { prod: prodResult, test: testResult };
 };

@@ -47,8 +47,8 @@ export const handler = async () => {
 
     try {
         if (FLAG_UPLOAD_JSON_DATA) {
-            // list JSON data files across data/ and test/ prefixes
-            for (const prefix of ['data/', 'test/']) {
+            // list JSON data files across json/ and test_json/ prefixes
+            for (const prefix of ['json/', 'test_json/']) {
                 let response = await s3.send(new ListObjectsV2Command({ Bucket: S3_BUCKET, Prefix: prefix }));
                 let objects = response.Contents ?? [];
                 let nextToken = response.NextContinuationToken;
