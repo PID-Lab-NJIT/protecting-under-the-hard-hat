@@ -1,7 +1,7 @@
 {
-  "name": "upload_to_drive",
+  "name": "generate_csv",
   "version": "1.0.0",
-  "description": "Production backend",
+  "description": "Converts JSON responses to CSV within S3.",
   "main": "src/index.mjs",
   "type": "module",
   "scripts": {
