@@ -1,7 +1,7 @@
 {
   "name": "get_local_resources",
   "version": "1.0.0",
-  "description": "Given a user ZIP code, retrieve resources from nearby ZIP codes.",
+  "description": "Retrieves resources from ZIP codes near a given user ZIP code.",
   "main": "src/index.mjs",
   "type": "module",
   "author": "Krish A. Patel",
