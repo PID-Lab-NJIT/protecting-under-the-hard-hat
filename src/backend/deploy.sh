@@ -173,8 +173,9 @@ fi
 
 # --- Step 6: Verify Zip Contents ---
 echo -e "${YELLOW}🔍 Verifying package contents...${NC}"
+# neutralize grep exit code 1 upon no match via || true
 FORBIDDEN_FILES=$(unzip -l "$ZIP_NAME" | \
-    grep -E ".env|service_account.json|service-account.json|private|aws-sdk|package-lock.json|test_input.js|node_modules|scratch.mjs")
+    grep -E "env|service[_-]account|private|package-lock|test[-_]input|node_modules|scratch" || true)
 
 if [ ! -z "$FORBIDDEN_FILES" ]; then
     echo -e "${RED}⚠️  WARNING: Forbidden files found in zip!${NC}"
