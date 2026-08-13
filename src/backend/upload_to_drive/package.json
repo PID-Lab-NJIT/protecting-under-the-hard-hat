@@ -1,8 +1,8 @@
 {
   "name": "upload_to_drive",
   "version": "1.0.0",
-  "description": "Production backend",
-  "main": "index.js",
+  "description": "Uploads response data from AWS S3 to Google Drive.",
+  "main": "src/index.mjs",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
