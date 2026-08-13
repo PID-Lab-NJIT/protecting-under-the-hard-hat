@@ -86,7 +86,7 @@ if [ "$SKIP_LAYER" = false ]; then
     echo -e "${YELLOW}📦 Packaging dependencies as Lambda layer...${NC}"
     mkdir -p "$NODE_JS_DIR"
     cp -r node_modules "$NODE_JS_DIR"
-    zip -qr "$LAYER_ZIP_NAME" "$NODE_JS_DIR"
+    (cd "$NODE_JS_DIR/.." && zip -qr "$LAYER_ZIP_NAME" nodejs)
     LAYER_ZIP_STATUS=$?
     if [ $LAYER_ZIP_STATUS -ne 0 ]; then
         echo -e "${RED}❌ Error: Failed to create layer zip.${NC}"
