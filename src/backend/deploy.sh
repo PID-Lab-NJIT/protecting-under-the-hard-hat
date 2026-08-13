@@ -1,12 +1,22 @@
 #!/bin/bash
 # Uploads a local directory to an AWS Lambda function
+set -euo pipefail
 
-# --- Configuration & Colors ---
+# --- Configuration ---
 DEPLOY_BUCKET="deploy-bucket-protecting-under-the-hard-hat"   # S3 bucket used as a staging area for Lambda deployments
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
+
+TMPDIR=$(mktemp -d) || exit 12
+
+cleanup() {
+    rm -rf -- "$TMPDIR"
+	echo -e "${GREEN}🧹 Cleaned up temporary files...${NC}"
+}
+
+trap cleanup EXIT
 
 # --- Step 1: Check AWS Login ---
 aws sts get-caller-identity &> /dev/null
@@ -40,8 +50,8 @@ DIR_NAME=$(echo "$FUNC_ARG" | sed 's|/$||')
 # Smart conversion: snake_case (dir name) to camelCase (func name)
 # process_response -> processResponse
 AWS_FUNC_NAME=$(echo "$DIR_NAME" | sed 's/_\([a-z]\)/\U\1/g')
-ZIP_NAME="${AWS_FUNC_NAME}.zip"
-LAYER_ZIP_NAME="${AWS_FUNC_NAME}-deps.zip"
+ZIP_NAME="${TMPDIR}/${AWS_FUNC_NAME}.zip"
+LAYER_ZIP_NAME="${TMPDIR}/${AWS_FUNC_NAME}-deps.zip"
 
 echo -e "${YELLOW}--- 🚀 Starting Deployment for $AWS_FUNC_NAME ---${NC}"
 
@@ -52,16 +62,14 @@ fi
 
 # --- Step 4: Zip Directory Contents ---
 echo -e "${YELLOW}📦 Packaging code from $DIR_NAME...${NC}"
-rm -f "$ZIP_NAME"   # Remove old zip if exists
 cd "$DIR_NAME" || exit 4
 
-# Zip code only — node_modules live in the Lambda layer instead
 if [ ! -f deploy_list.txt ]; then
 	echo -e "${RED}❌ Error: deploy_list.txt not found.${NC}"
     exit 11
 fi
 
-zip -qr "../$ZIP_NAME" $(cat deploy_list.txt)
+zip -qr "$ZIP_NAME" $(cat deploy_list.txt)
 
 # Check if zip was successful
 if [ $? -ne 0 ]; then
@@ -72,22 +80,12 @@ fi
 # Package node_modules as a Lambda layer
 # (nodejs/node_modules/ structure required by Lambda layer)
 if [ "$SKIP_LAYER" = false ]; then
+	NODE_JS_DIR="$TMPDIR/nodejs"
     echo -e "${YELLOW}📦 Packaging dependencies as Lambda layer...${NC}"
-    LAYER_TMP=$(mktemp -d)
-    mkdir -p "$LAYER_TMP/nodejs"
-    cp -r node_modules "$LAYER_TMP/nodejs/"
-	# [TODO]
-    # rm -rf "$LAYER_TMP/nodejs/node_modules/@aws-sdk"
-    # rm -rf "$LAYER_TMP/nodejs/node_modules/@smithy"
-    # rm -rf "$LAYER_TMP/nodejs/node_modules/@aws-crypto"
-    # rm -rf "$LAYER_TMP/nodejs/node_modules/aws-sdk"
-    # rm -rf "$LAYER_TMP/nodejs/node_modules/.bin"
-    PREV_DIR=$(pwd)
-    cd "$LAYER_TMP"
-    zip -qr "$PREV_DIR/../$LAYER_ZIP_NAME" nodejs/
+    mkdir -p "$NODE_JS_DIR"
+    cp -r node_modules "$NODE_JS_DIR"
+    zip -qr "$LAYER_ZIP_NAME" "$NODE_JS_DIR"
     LAYER_ZIP_STATUS=$?
-    cd "$PREV_DIR"
-    rm -rf "$LAYER_TMP"
     if [ $LAYER_ZIP_STATUS -ne 0 ]; then
         echo -e "${RED}❌ Error: Failed to create layer zip.${NC}"
         exit 5
@@ -138,7 +136,6 @@ if [ "$SKIP_LAYER" = false ]; then
     if [ $? -ne 0 ]; then
         echo -e "${RED}❌ Error: Layer S3 staging failed!${NC}"
         echo -e "$LAYER_STAGE_OUTPUT"
-        rm -f "$ZIP_NAME" "$LAYER_ZIP_NAME"
         exit 6
     fi
 
@@ -150,11 +147,9 @@ if [ "$SKIP_LAYER" = false ]; then
         --query 'LayerVersionArn' --output text 2>&1)
     LAYER_PUBLISH_STATUS=$?
     aws s3 rm "s3://$DEPLOY_BUCKET/layers/$LAYER_ZIP_NAME" > /dev/null
-    rm -f "$LAYER_ZIP_NAME"
     if [ $LAYER_PUBLISH_STATUS -ne 0 ]; then
         echo -e "${RED}❌ Error: Layer publish failed!${NC}"
         echo -e "$LAYER_ARN"
-        rm -f "$ZIP_NAME"
         exit 6
     fi
     echo -e "${GREEN}✅ Layer published: $LAYER_ARN${NC}"
@@ -166,7 +161,6 @@ if [ "$SKIP_LAYER" = false ]; then
     if [ $? -ne 0 ]; then
         echo -e "${RED}❌ Error: Layer attachment failed!${NC}"
         echo -e "$ATTACH_OUTPUT"
-        rm -f "$ZIP_NAME"
         exit 6
     fi
     echo -e "${GREEN}✅ Layer attached!${NC}"
@@ -184,7 +178,6 @@ if [ ! -z "$FORBIDDEN_FILES" ]; then
     echo -e "${RED}⚠️  WARNING: Forbidden files found in zip!${NC}"
     echo "$FORBIDDEN_FILES"
     echo -e "${RED}Aborting deployment for safety.${NC}"
-    rm "$ZIP_NAME"
     exit 7
 fi
 echo -e "${GREEN}✅ No secrets or SDKs detected in package.${NC}"
@@ -196,7 +189,6 @@ STAGE_OUTPUT=$(aws s3 cp "$ZIP_NAME" "s3://$DEPLOY_BUCKET/deployments/$ZIP_NAME"
 if [ $? -ne 0 ]; then
     echo -e "${RED}❌ Error: S3 staging failed!${NC}"
     echo -e "$STAGE_OUTPUT"
-    rm "$ZIP_NAME"
     exit 8
 fi
 
@@ -210,7 +202,6 @@ if [ $? -ne 0 ]; then
     echo -e "${RED}❌ Error: AWS upload failed!${NC}"
     echo -e "$UPLOAD_OUTPUT"
     aws s3 rm "s3://$DEPLOY_BUCKET/deployments/$ZIP_NAME" > /dev/null
-    rm "$ZIP_NAME"
     exit 8
 fi
 
@@ -226,13 +217,13 @@ PROPAGATION_OUTPUT=$(aws lambda wait function-updated --function-name "$AWS_FUNC
 if [ $? -ne 0 ]; then
     echo -e "${RED}❌ Error: Propagation failed!${NC}"
     echo -e "$PROPAGATION_OUTPUT"
-    rm "$ZIP_NAME"
     exit 9
 fi
 
 echo -e "${GREEN}✅ Propagation successful!${NC}"
 
 # --- Step 8: Smoke Test (Invoke) ---
+RESPONSE_FILE="$TMPDIR/response.json"
 echo -e "${YELLOW}🧪 Running smoke test...${NC}"
 if [ -f "$DIR_NAME/test-input.js" ]; then
     PAYLOAD=$(node $DIR_NAME/test-input.js)
@@ -244,12 +235,12 @@ aws lambda invoke \
     --function-name "$AWS_FUNC_NAME" \
     --payload "$PAYLOAD" \
     --cli-binary-format raw-in-base64-out \
-    response.json > /dev/null
+    $RESPONSE_FILE > /dev/null
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}✅ Test triggered successfully.${NC}"
     echo -e "${YELLOW}📄 Function response:${NC}"
-    cat response.json
+    cat $RESPONSE_FILE
     echo -e ""
 else
     echo -e "${RED}❌ Smoke test failed.${NC}"
@@ -270,7 +261,4 @@ else
     exit 10
 fi
 
-# --- Step 9: Final Cleanup ---
-echo -e "${YELLOW}🧹 Cleaning up temporary files...${NC}"
-rm -f "$ZIP_NAME" "$LAYER_ZIP_NAME" response.json
 echo -e "${GREEN}--- ✨ Deployment complete ---${NC}"
