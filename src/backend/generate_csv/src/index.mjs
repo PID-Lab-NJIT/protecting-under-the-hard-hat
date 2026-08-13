@@ -1,8 +1,8 @@
 // Generates a CSV from all survey response JSON files in S3 and stores it in the csv/ folder
 
 import { S3Client, GetObjectCommand, PutObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
-import { flattenObj, csvEscape } from './util.js';
-import { DISCARD_KEYS, RENAME_KEYS, ORDERED_KEYS, START_KEYS } from './cleaning.js';
+import { flattenObj, csvEscape } from './util.mjs';
+import { DISCARD_KEYS, RENAME_KEYS, ORDERED_KEYS, START_KEYS } from './cleaning.mjs';
 
 const S3_BUCKET = process.env.S3_BUCKET_NAME;
 const s3 = new S3Client({ region: process.env.AWS_REGION });
