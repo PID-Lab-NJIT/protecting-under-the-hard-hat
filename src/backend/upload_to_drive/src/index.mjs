@@ -2,7 +2,7 @@
 
 import { S3Client, GetObjectCommand, PutObjectCommand, ListObjectsV2Command, CopyObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import pLimit from 'p-limit';
-import { authorize, createFolders, uploadJsonToDrive, uploadCsvToDrive } from './drive.js';
+import { authorize, createFolders, uploadJsonToDrive, uploadCsvToDrive } from './drive.mjs';
 
 // env vars
 const GOOGLE_DRIVE_FOLDER_ID = process.env.GOOGLE_DRIVE_FOLDER_ID;
