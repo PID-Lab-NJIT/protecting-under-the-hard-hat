@@ -1,8 +1,8 @@
 {
   "name": "process_response",
   "version": "1.0.0",
-  "description": "Accepts a new survey response and stores it to S3 bucket",
-  "main": "index.js",
+  "description": "Accepts a new survey response and stores it to an S3 bucket",
+  "main": "src/index.mjs",
   "type": "module",
   "author": "Krish A. Patel",
   "license": "ISC",
