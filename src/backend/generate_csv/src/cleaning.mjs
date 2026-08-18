@@ -12,8 +12,12 @@ export const DISCARD_KEYS = [
     "data.test",
     "data.testType",
     "valid",
-    "isTest",
-    "isBranching",
+    "data.isTest",
+    "data.isBranching",
+    "data.query._refresh",
+    "data.stoppedAtQuestion",
+    "data.isPartialAbandonment",
+    "data.isResourceUpdate",
 ];
 
 // 2. Rename columns when flattening. Otherwise, only keep the deepest keys.
@@ -46,6 +50,7 @@ const RENAME_KEYS = {
     "data.isTest": "is_test",
     "data.language": "lang",
     "data.clickedResources": "clicked_resources",
+    "data.toolHelpful": "tool_helpful",
     // merge keys
     "data.sessionId": "session_id",
     "data.sessionID": "session_id",
@@ -140,6 +145,7 @@ export const ORDERED_KEYS = [
     "site_id",
     "lang",
     "clicked_resources",
+    "tool_helpful",
 ];
 
 // 4. Merge with completed = false entries with _start columns.
