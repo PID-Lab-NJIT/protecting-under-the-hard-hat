@@ -67,14 +67,6 @@ async function createFolders(authClient, folderId, path) {
  * @returns {Promise<object>} The credentials object.
  */
 async function getCredentials() {
-    if (!process.env.AWS_LAMBDA_FUNCTION_NAME) {
-        console.log("🛠️ Running locally: Loading JSON from disk");
-        const filePath = join(process.cwd(), 'private/service_account.json');
-        const fileContent = await readFile(filePath, 'utf8');
-        return JSON.parse(fileContent);
-    }
-
-    console.log("☁️ Running in Lambda: Fetching from Secrets Manager");
     const client = new SecretsManagerClient({ region: process.env.AWS_REGION });
     const command = new GetSecretValueCommand({ SecretId: "GoogleServiceAccount" });
 
