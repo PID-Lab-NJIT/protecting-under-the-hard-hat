@@ -68,7 +68,7 @@ async function createFolders(authClient, folderId, path) {
  */
 async function getCredentials() {
     const client = new SecretsManagerClient({ region: process.env.AWS_REGION });
-    const command = new GetSecretValueCommand({ SecretId: "GoogleServiceAccount" });
+    const command = new GetSecretValueCommand({ SecretId: process.env.SERVICE_ACCOUNT_SECRET_ID });
 
     const response = await client.send(command);
     return JSON.parse(response.SecretString);
