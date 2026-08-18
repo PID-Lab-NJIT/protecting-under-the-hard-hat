@@ -90,7 +90,7 @@ async function authorize(scopes) {
         console.log("Service account authenticated successfully.");
         return authClient;
     } catch (e) {
-        console.error("Authentication failed. Please check that 'service_account.json' exists and is valid.");
+        console.error("Authentication failed.");
         throw e;
     }
 }
