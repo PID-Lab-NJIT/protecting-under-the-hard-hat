@@ -167,7 +167,11 @@ async function processDirectory(sourcePrefix, destPrefix) {
     console.log(`[${sourcePrefix}] 6. Building CSV headers...`);
     const allKeys = new Set();
     for (const entry of resolvedData) {
-        for (const key in entry) allKeys.add(key);
+        for (const key in entry) {
+            if (entry[key] != null) {
+                allKeys.add(key);
+            }
+        }
     }
 
     // start with ORDERED_KEYS, then add remaining keys
