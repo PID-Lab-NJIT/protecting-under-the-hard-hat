@@ -183,7 +183,7 @@ if [ ! -z "$FORBIDDEN_FILES" ]; then
     echo -e "${RED}Aborting deployment for safety.${NC}"
     exit 7
 fi
-echo -e "${GREEN}✅ No secrets or SDKs detected in package.${NC}"
+echo -e "${GREEN}✅ No forbidden files detected in package.${NC}"
 
 # --- Step 7: Upload to AWS Lambda (via S3 to avoid 70MB direct upload limit) ---
 echo -e "${YELLOW}☁️  Staging zip in S3...${NC}"
