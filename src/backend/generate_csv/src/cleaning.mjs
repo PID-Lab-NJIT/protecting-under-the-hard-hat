@@ -14,6 +14,8 @@ export const DISCARD_KEYS = [
     "valid",
     "data.isTest",
     "data.isBranching",
+    "data.query.isTest",
+    "data.query.isBranching",
     "data.query._refresh",
     "data.stoppedAtQuestion",
     "data.isPartialAbandonment",
