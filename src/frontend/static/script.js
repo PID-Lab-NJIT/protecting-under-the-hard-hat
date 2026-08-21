@@ -1160,14 +1160,25 @@ class DynamicSurvey {
 
     const grid = this.dom.helpGrid; if (!grid) return;
 
+    // Firearm crisis check: boost crisis resources + show warning banner
+    const firearmCrisis = this.isFirearmCrisis();
+    const crisisFirst = (list) => {
+      if (!firearmCrisis) return list;
+      return list.slice().sort((a, b) => {
+        const aCrisis = (a.risk || 999) === 1 ? 0 : 1;
+        const bCrisis = (b.risk || 999) === 1 ? 0 : 1;
+        if (aCrisis !== bCrisis) return aCrisis - bCrisis;
+        return (a.risk || 999) - (b.risk || 999);
+      });
+    };
+
     let cards = [];
     let grouped = null; // { recommended, others } when relevance partition applies
     if (all) {
       if (this.dom.helpTitle) this.dom.helpTitle.textContent = t('help.allTitle', 'Resources');
       if (this.dom.helpSubtitle) this.dom.helpSubtitle.textContent = t('help.allSubtitle', 'Browse the full list of available resources.');
-      cards = (RESOURCES_DB || [])
-        .slice()
-        .sort((a, b) => (a.risk || 999) - (b.risk || 999));
+      cards = crisisFirst((RESOURCES_DB || []).slice()
+        .sort((a, b) => (a.risk || 999) - (b.risk || 999)));
     } else {
       const topics = this.computeSelectedTopics();
       const copy = this.helpCopyFromResponses(topics);
@@ -1177,11 +1188,22 @@ class DynamicSurvey {
       // Partition (never hide): survey-relevant first, everything else after a divider
       const byRisk = (a, b) => (a.risk || 999) - (b.risk || 999);
       const matches = (r) => (Array.isArray(r.tags) ? r.tags.map(t => String(t).toLowerCase()) : []).some(t => topics.has(t));
-      const recommended = (RESOURCES_DB || []).filter(matches).sort(byRisk);
-      const others = (RESOURCES_DB || []).filter(r => !matches(r)).sort(byRisk);
+      const recommended = crisisFirst((RESOURCES_DB || []).filter(matches).sort(byRisk));
+      const others = crisisFirst((RESOURCES_DB || []).filter(r => !matches(r)).sort(byRisk));
       cards = recommended.concat(others);
       grouped = { recommended, others };
     }
+
+    // Firearm crisis warning banner (prepended to grid)
+    const firearmBanner = firearmCrisis ? `
+      <div class="firearm-crisis-banner">
+        <i class="fas fa-triangle-exclamation"></i>
+        <div>
+          <strong>If you are in crisis or considering suicide, please call or text 988 now.</strong>
+          <p>Firearm access combined with emotional distress significantly increases risk. Help is available right now — crisis lines are listed first below.</p>
+        </div>
+      </div>
+    ` : '';
 
     this._renderedCards = cards; // cache for search + email (spans BOTH groups)
 
@@ -1196,12 +1218,12 @@ class DynamicSurvey {
       `;
 
     if (grouped) {
-      grid.innerHTML = this.groupedCardsHTML(grouped.recommended, grouped.others,
+      grid.innerHTML = firearmBanner + this.groupedCardsHTML(grouped.recommended, grouped.others,
         card => this.helpCardHTML(card), noMatchCard);
     } else {
-      grid.innerHTML = cards.length
+      grid.innerHTML = firearmBanner + (cards.length
         ? cards.map(card => this.helpCardHTML(card)).join('')
-        : noMatchCard;
+        : noMatchCard);
     }
 
     // H2: "See resources anyway" → show the full list
@@ -2022,6 +2044,14 @@ class DynamicSurvey {
     return highest;
   }
 
+  /* Firearm + high-risk check: user answered "Yes" to firearm access
+     AND screened with urgent risk level (depression, substances, gambling) */
+  isFirearmCrisis() {
+    const topics = this.computeSelectedTopics();
+    if (!topics.has('firearm_access')) return false;
+    return this.computeUrgencyLevel() === 'urgent';
+  }
+
   computeSelectedTopicsWithReasons() {
     const topics = new Map(), removes = new Set(), a = this.answers;
     const getOpt = (q, id) => (q.options || []).find(o => String(o.id) === String(id)) || null;
@@ -2389,7 +2419,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Welcome banner visuals
   if (startMedia) {
-    startMedia.style.backgroundImage = "url('../static/assets/logos/PUTHH-Logo.png')";
+    startMedia.style.backgroundImage = "url('../static/assets/logos/PUTHH-Logo-old-with-text.png')";
     startMedia.style.backgroundSize = 'contain';
     startMedia.style.backgroundRepeat = 'no-repeat';
     startMedia.style.backgroundPosition = 'center';
@@ -2463,7 +2493,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const closeResume = () => { resumeOverlay?.classList.remove('show'); document.body.classList.remove('intro-open'); };
 
-  if (hasProgress()) {
+  // Deep-link: ?resources=1 skips intro and goes straight to resources list
+  const urlParams = new URLSearchParams(window.location.search);
+  const deepLinkResources = urlParams.get('resources') === '1';
+
+  if (deepLinkResources) {
+    // Close any overlays that might be open, then show resources
+    modeOverlay?.classList.remove('show');
+    startOverlay?.classList.remove('show');
+    resumeOverlay?.classList.remove('show');
+    document.body.classList.remove('intro-open');
+    showCookieIfNeeded();
+    window.survey.renderHelpResources({ all: true, from: 'start' });
+    window.survey.showHelpPage();
+  } else if (hasProgress()) {
     document.body.classList.add('intro-open');
     resumeOverlay?.classList.add('show');
     closeMode();

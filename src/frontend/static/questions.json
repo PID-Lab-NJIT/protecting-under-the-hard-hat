@@ -2186,6 +2186,48 @@
           }
         }
       }
+    },
+    {
+      "questionNumber": 33,
+      "id": "firearm_access",
+      "text": "Do you have access to a firearm?",
+      "type": "single",
+      "required": true,
+      "options": [
+        {
+          "id": "yes",
+          "label": "Yes",
+          "indicates": [
+            "firearm_access"
+          ]
+        },
+        {
+          "id": "no",
+          "label": "No"
+        },
+        {
+          "id": "prefer_not",
+          "label": "I prefer not to answer"
+        }
+      ],
+      "i18n": {
+        "es": {
+          "text": "¿Tiene acceso a un arma de fuego?",
+          "options": {
+            "yes": "Sí",
+            "no": "No",
+            "prefer_not": "Prefiero no responder"
+          }
+        },
+        "pt": {
+          "text": "Você tem acesso a uma arma de fogo?",
+          "options": {
+            "yes": "Sim",
+            "no": "Não",
+            "prefer_not": "Prefiro não responder"
+          }
+        }
+      }
     }
   ]
 }

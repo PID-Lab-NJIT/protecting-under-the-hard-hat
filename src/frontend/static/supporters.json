@@ -43,7 +43,7 @@
     {
       "name": "International Union of Operating Engineers Local 825",
       "featured": true,
-      "logo": null,
+      "logo": "static/assets/logos/MAP-logo.jpeg",
       "icon": "fas fa-people-carry-box",
       "url": "https://www.iuoe825.org/",
       "description": "Placeholder description — logo to be added."

@@ -2054,3 +2054,37 @@ body.dark-mode .distance-badge {
     font-size: 0.85rem;
   }
 }
+
+/* ===== FIREARM CRISIS BANNER ===== */
+.firearm-crisis-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: linear-gradient(135deg, rgba(204, 0, 0, 0.08), rgba(204, 0, 0, 0.03));
+  border: 2px solid rgba(204, 0, 0, 0.3);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  border-left: 5px solid #cc0000;
+}
+
+.firearm-crisis-banner i {
+  font-size: 1.8rem;
+  color: #cc0000;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.firearm-crisis-banner strong {
+  display: block;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.firearm-crisis-banner p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
