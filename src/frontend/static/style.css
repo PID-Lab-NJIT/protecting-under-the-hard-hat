@@ -1901,6 +1901,30 @@ body.dark-mode .topic-chip {
   font-size: 0.9em;
 }
 
+/* Union/contractor sub-line on local cards (header shows the resource title) */
+.local-union-sub {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin: -6px 0 10px;
+}
+
+.local-union-sub i {
+  font-size: 0.85em;
+}
+
+/* Free-text notes from the resources sheet */
+.local-notes {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin-bottom: 10px;
+}
+
+
 .distance-badge {
   flex-shrink: 0;
   display: inline-flex;

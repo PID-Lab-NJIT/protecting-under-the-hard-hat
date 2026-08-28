@@ -42,10 +42,18 @@ const loadQuestionsJSON = async () => {
   return r.json();
 };
 
-/* Backend submission */
-const SURVEY_ENDPOINT = 'https://nn6mnazknqfj6su7x5cm4svs640nmglc.lambda-url.us-east-2.on.aws/survey';
+/* Backend endpoints — values come from static/config.js (PUTHH_CONFIG), which is
+   loaded before this file. The literals below are only a fallback if config.js
+   is missing (e.g. partial deploy). Note: config.js declares PUTHH_CONFIG with
+   const, so it is NOT a window property — use typeof, not window.PUTHH_CONFIG. */
+const SURVEY_ENDPOINT = (typeof PUTHH_CONFIG !== 'undefined' && PUTHH_CONFIG.SURVEY_ENDPOINT) ||
+  'https://nn6mnazknqfj6su7x5cm4svs640nmglc.lambda-url.us-east-2.on.aws/survey';
 /* Local resources lookup (GET, query params in kebab-case; see src/backend/get_local_resources/spec.md) */
-const LOCAL_RESOURCES_ENDPOINT = 'https://xo4yg2k32agti3frvpgix5sp5m0vemso.lambda-url.us-east-2.on.aws/local-resources';
+const LOCAL_RESOURCES_ENDPOINT = (typeof PUTHH_CONFIG !== 'undefined' && PUTHH_CONFIG.LOCAL_RESOURCES_ENDPOINT) ||
+  'https://xo4yg2k32agti3frvpgix5sp5m0vemso.lambda-url.us-east-2.on.aws/local-resources';
+/* Public survey URL used in emails/share text (config.js) */
+const SURVEY_PUBLIC_URL = (typeof PUTHH_CONFIG !== 'undefined' && PUTHH_CONFIG.PUBLIC_SURVEY_URL) ||
+  'https://pid-lab-njit.github.io/protecting-under-the-hard-hat/questionnaire/';
 async function submitSurvey(payload) {
   const res = await fetch(SURVEY_ENDPOINT, {
     method: 'POST',
@@ -1366,21 +1374,57 @@ class DynamicSurvey {
     });
   }
 
-  /* H1: live search filter over rendered resource cards (national + local) */
+  /* H1: live search filter over rendered resource cards (national + local).
+     Matches against the UNDERLYING DATA, not just rendered text: national
+     cards match title/description/meta/action labels+URLs and their TAGS
+     (e.g. "depression"); local rows match every sheet field (title, union,
+     notes, address, phone, web address, topic names, …). Raw English fields
+     are always searchable, even when the UI language is es/pt. */
   applyResourceSearch() {
     const q = (this.dom.resourceSearch?.value || '').trim().toLowerCase();
-    const filterGrid = (grid) => {
+    const truthy = (v) => v === true || String(v).toLowerCase() === 'true';
+
+    const nationalMatch = (card) => {
+      if (!q) return true;
+      const l = this.localizedResource(card);
+      const hay = [
+        card.title, l.title,
+        card.description, l.description,
+        card.meta, l.meta,
+        ...(Array.isArray(card.actions) ? card.actions : []).map(a => `${a.label || ''} ${a.href || ''}`),
+        ...(Array.isArray(l.actions) ? l.actions : []).map(a => `${a.label || ''} ${a.href || ''}`),
+        ...(Array.isArray(card.tags) ? card.tags : [])
+      ].filter(Boolean).join(' ').toLowerCase();
+      return hay.includes(q);
+    };
+
+    const localRowMatch = (row) => {
+      if (!q) return true;
+      const hay = Object.entries(row).map(([k, v]) => {
+        if (typeof v === 'boolean') return truthy(v) ? k : ''; // topic flags: search the topic name only when supported
+        return v == null ? '' : String(v);
+      }).filter(Boolean).join(' ').toLowerCase();
+      return hay.includes(q);
+    };
+
+    // Cards render in data order (flat or grouped), so map DOM elements to
+    // data rows by position. Skips helper cards (#searchNoMatch, empty-state).
+    const filterGrid = (grid, rows, matcher) => {
       if (!grid) return 0;
       let visibleCount = 0;
+      let idx = 0;
       grid.querySelectorAll('.help-card').forEach(cardEl => {
-        const match = !q || cardEl.textContent.toLowerCase().includes(q);
+        if (cardEl.id === 'searchNoMatch') return;
+        const row = rows[idx++];
+        const match = !q || (row && matcher(row));
         cardEl.style.display = match ? '' : 'none';
         if (match) visibleCount++;
       });
       return visibleCount;
     };
-    const n1 = filterGrid(this.dom.helpGrid);
-    const n2 = filterGrid(this.dom.localGrid);
+
+    const n1 = filterGrid(this.dom.helpGrid, this._renderedCards || [], nationalMatch);
+    const n2 = filterGrid(this.dom.localGrid, (this._localList && this._localList.list) || [], localRowMatch);
 
     // Group chrome (divider + headings) only makes sense for the full,
     // unfiltered relevance view — hide it while a search query is active.
@@ -1508,13 +1552,32 @@ class DynamicSurvey {
     return this._allLocalFetch;
   }
 
+  /* Case-insensitive row field lookup. The local-resources backend has used
+     both 'Union/Contractor' and 'union/contractor' spellings for the same
+     field, so every read goes through this helper. */
+  field(row, name) {
+    if (!row) return undefined;
+    if (row[name] !== undefined) return row[name];
+    const target = String(name).toLowerCase();
+    for (const k of Object.keys(row)) {
+      if (k.toLowerCase() === target) return row[k];
+    }
+    return undefined;
+  }
+
+  /* True when a sheet value is missing or the "N/A" placeholder */
+  isNA(v) {
+    const s = String(v == null ? '' : v).trim();
+    return !s || s.toLowerCase() === 'n/a';
+  }
+
   /* Unique, sorted Union/Contractor names from the cached full list */
   getUnionNames() {
     const list = Array.isArray(this._allLocalResources) ? this._allLocalResources : [];
     const names = new Set();
     list.forEach(r => {
-      const n = String(r['Union/Contractor'] || '').trim();
-      if (n) names.add(n);
+      const n = String(this.field(r, 'Union/Contractor') || '').trim();
+      if (n && !this.isNA(n)) names.add(n);
     });
     return Array.from(names).sort((a, b) => a.localeCompare(b));
   }
@@ -1712,7 +1775,7 @@ class DynamicSurvey {
     let list = base;
     if (this._unionFilter) {
       const want = this._unionFilter.toLowerCase();
-      list = list.filter(r => String(r['Union/Contractor'] || '').trim().toLowerCase() === want);
+      list = list.filter(r => String(this.field(r, 'Union/Contractor') || '').trim().toLowerCase() === want);
     }
 
     // Max-distance cap: client-side only, and only when ZIP results are active.
@@ -1731,7 +1794,13 @@ class DynamicSurvey {
       // Distance = flat proximity sort; Relevance = proximity within each group
       list.sort((a, b) => (a.distance ?? Infinity) - (b.distance ?? Infinity));
     } else {
-      list.sort((a, b) => String(a['Union/Contractor'] || '').localeCompare(String(b['Union/Contractor'] || '')));
+      // Alphabetical by resource title (falls back to union/contractor name)
+      const nameOf = (r) => {
+        const ti = this.field(r, 'title');
+        const un = this.field(r, 'Union/Contractor');
+        return !this.isNA(ti) ? String(ti) : String(un || '');
+      };
+      list.sort((a, b) => nameOf(a).localeCompare(nameOf(b)));
     }
 
     if (this._unionFilter && this.dom.zipStatus && !this._zipResults) {
@@ -1759,35 +1828,70 @@ class DynamicSurvey {
         ['Substances/Opioids', 'fa-pills'],
         ['Abuse/Violence', 'fa-shield-halved'],
         ['Gambling', 'fa-dice'],
+        ['Firearms', 'fa-gun'],
       ];
       const chips = TOPIC_META
-        .filter(([key]) => truthy(r[key]))
+        .filter(([key]) => truthy(this.field(r, key)))
         .map(([key, icon]) => `<span class="topic-chip"><i class="fas ${icon}" aria-hidden="true"></i>${t('ltag.' + key, key)}</span>`);
 
+      // Header: the resource's actual title; union/contractor as a sub-line when present
+      const title = String(this.field(r, 'title') || '').trim();
+      const union = String(this.field(r, 'Union/Contractor') || '').trim();
+      const header = !this.isNA(title)
+        ? title
+        : (!this.isNA(union) ? union : t('local.fallbackName', 'Local resource'));
+      const subline = (!this.isNA(union) && union.toLowerCase() !== header.toLowerCase())
+        ? `<div class="local-union-sub"><i class="fas fa-people-group" aria-hidden="true"></i><span>${union}</span></div>`
+        : '';
+
       const actions = [];
-      const phone = r['phone number'];
-      if (phone && /\d/.test(String(phone))) actions.push(`<a class="chip" href="tel:${String(phone).replace(/[^\d+]/g, '')}"><i class="fas fa-phone"></i> ${phone}</a>`);
-      const email = r['email'];
+      const phone = this.field(r, 'phone number');
+      if (phone && /\d/.test(String(phone))) {
+        const ext = this.field(r, 'extension');
+        const extTxt = !this.isNA(ext) ? ` (${String(ext).trim()})` : '';
+        actions.push(`<a class="chip" href="tel:${String(phone).replace(/[^\d+]/g, '')}"><i class="fas fa-phone"></i> ${String(phone).trim()}${extTxt}</a>`);
+      }
+      const textLine = this.field(r, 'text line');
+      if (textLine && !this.isNA(textLine) && /\d/.test(String(textLine))) {
+        actions.push(`<a class="chip" href="sms:${String(textLine).replace(/[^\d+]/g, '')}"><i class="fas fa-comment-dots"></i> ${t('local.text', 'Text')} ${String(textLine).trim()}</a>`);
+      }
+      const email = this.field(r, 'email');
       if (email && String(email).includes('@')) actions.push(`<a class="chip" href="mailto:${email}"><i class="fas fa-envelope"></i> ${t('local.email', 'Email')}</a>`);
-      const web = r['web address'];
+      const web = this.field(r, 'web address');
       if (web && /^https?:\/\//i.test(String(web))) actions.push(`<a class="chip" href="${web}" target="_blank" rel="noopener noreferrer"><i class="fas fa-globe"></i> ${t('local.website', 'Website')}</a>`);
+      const calRaw = this.field(r, 'calendar/zoom invite');
+      const calUrl = !this.isNA(calRaw) ? String(calRaw).trim() : '';
+      if (/^https?:\/\//i.test(calUrl)) actions.push(`<a class="chip" href="${calUrl}" target="_blank" rel="noopener noreferrer"><i class="fas fa-video"></i> ${t('local.calendar', 'Meeting Link')}</a>`);
 
       const d = miles(r.distance);
       const badge = d != null
         ? `<span class="distance-badge"><i class="fas fa-route" aria-hidden="true"></i> ${tFmt('local.milesAway', '~{d} mi away', { d })}</span>`
         : '';
-      const address = r['physical address']
-        ? `<div class="local-address"><i class="fas fa-location-dot" aria-hidden="true"></i><span>${r['physical address']}</span></div>`
+      const addr = this.field(r, 'physical address');
+      const address = !this.isNA(addr)
+        ? `<div class="local-address"><i class="fas fa-location-dot" aria-hidden="true"></i><span>${addr}</span></div>`
+        : '';
+      const notes = this.field(r, 'notes');
+      const notesHtml = !this.isNA(notes)
+        ? `<div class="local-notes">${notes}</div>`
+        : '';
+      // Calendar/Zoom details: URL handled above as an action chip; free text
+      // (e.g. "Zoom: 822 5160 8337, Passcode: 625319") becomes an info line
+      const calLine = (calUrl && !/^https?:\/\//i.test(calUrl))
+        ? `<div class="local-address"><i class="fas fa-video" aria-hidden="true"></i><span>${calUrl}</span></div>`
         : '';
 
       return `
         <div class="help-card local-card">
           <div class="help-card-header">
-            <h4>${r['Union/Contractor'] || t('local.fallbackName', 'Local resource')}</h4>
+            <h4>${header}</h4>
             ${badge}
           </div>
+          ${subline}
           ${chips.length ? `<div class="topic-chips">${chips.join('')}</div>` : ''}
           ${address}
+          ${notesHtml}
+          ${calLine}
           ${actions.length ? `<div class="help-actions">${actions.join('')}</div>` : ''}
         </div>`;
     };
@@ -1860,7 +1964,7 @@ class DynamicSurvey {
     });
     lines.push('');
     lines.push(t('email.disclaimer', 'This is not a diagnosis. If you are concerned about your wellbeing, consider talking to a qualified professional.'));
-    lines.push(`${t('email.survey', 'Survey:')} https://hardhat.njit.edu/questionnaire`);
+    lines.push(`${t('email.survey', 'Survey:')} ${SURVEY_PUBLIC_URL}`);
 
     const subject = encodeURIComponent(t('email.subject', 'My Wellbeing Survey Results — Protecting Under the Hard Hat'));
     const body = encodeURIComponent(lines.join('\n'));

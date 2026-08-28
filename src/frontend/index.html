@@ -222,6 +222,11 @@
       align-items: center;
     }
 
+    /* Work-in-progress tabs hidden from the public nav; revealed by ?dev=1 */
+    .nav-item.dev-only {
+      display: none !important;
+    }
+
     .tab-btn .caret {
       font-size: 0.6rem;
       margin-left: 6px;
@@ -1038,7 +1043,6 @@
       color: var(--accent);
       font-weight: 600;
       margin-bottom: 12px;
-      text-transform: capitalize;
       letter-spacing: 0.2px;
     }
 
@@ -1773,7 +1777,8 @@
           </div>
         </div>
 
-        <div class="nav-item" id="navSupporters">
+        <!-- WIP: hidden from public nav until finished (add ?dev=1 to URL to reveal) -->
+        <div class="nav-item dev-only" id="navSupporters">
           <button class="tab-btn" data-tab="supporters" data-parent="supporters" onclick="switchTab('supporters')" aria-haspopup="true" aria-expanded="false">
             Supporters <span class="caret"><i class="fas fa-chevron-down"></i></span>
           </button>
@@ -1788,16 +1793,18 @@
         <div class="nav-item">
           <button class="tab-btn" data-tab="resources" onclick="switchTab('resources')">Resources</button>
         </div>
-        <div class="nav-item">
+        <!-- WIP: hidden from public nav until finished (add ?dev=1 to URL to reveal) -->
+        <div class="nav-item dev-only">
           <button class="tab-btn" data-tab="materials" onclick="switchTab('materials')">Order Materials</button>
         </div>
-        <div class="nav-item">
+        <!-- WIP: hidden from public nav until finished (add ?dev=1 to URL to reveal) -->
+        <div class="nav-item dev-only">
           <button class="tab-btn" data-tab="blog" onclick="switchTab('blog')">Blog</button>
         </div>
         <div class="nav-item">
           <button class="tab-btn" data-tab="contact" onclick="switchTab('contact')">Contact</button>
         </div>
-        <a href="questionnaire/" class="tab-btn survey-tab" style="text-decoration: none;">
+        <a href="questionnaire/" target="_blank" rel="noopener noreferrer" class="tab-btn survey-tab" style="text-decoration: none;">
           <i class="fas fa-clipboard-check"></i> Take Survey
         </a>
         <button id="themeToggle" class="theme-toggle-btn" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
@@ -1821,7 +1828,7 @@
         
         <h1 class="hero-title">Protecting Under the Hard Hat</h1>
         
-        <a href="questionnaire/" class="hero-cta">
+        <a href="questionnaire/" target="_blank" rel="noopener noreferrer" class="hero-cta">
           <i class="fas fa-clipboard-check"></i>
           Take the Survey
         </a>
@@ -2122,13 +2129,11 @@
     <section id="resources" class="tab-panel">
       <div class="section-header">
         <h2><span class="diagonal-line">Resources</span></h2>
-        <p>Find mental health and wellbeing resources for construction workers and their families</p>
       </div>
       <div class="single-card-wrap">
         <div class="about-card" style="text-align:center;">
-          <p>Browse the full list of support resources on our questionnaire page — or take the quick survey to get
-            resources matched to you.</p>
-          <a class="hero-cta" href="questionnaire/?resources=1" style="margin-top: 24px;">
+          <p>Browse the full list of support resources.</p>
+          <a class="hero-cta" href="questionnaire/?resources=1" target="_blank" rel="noopener noreferrer" style="margin-top: 24px;">
             <i class="fas fa-hand-holding-heart"></i> View Resources
           </a>
         </div>
@@ -2142,6 +2147,22 @@
         <p>We offer a variety of outreach materials to help spread awareness about mental health and wellbeing in the
           construction industry. From weatherproof vinyl banners to stickers and posters, we have materials to support
           your jobsite, union hall, or organization.</p>
+      </div>
+
+      <div class="materials-form-section">
+        <h3><i class="fas fa-clipboard-list"></i> Request Materials</h3>
+        <p>Fill out the form below to request materials for your jobsite, union hall, or organization. We'll review your
+          request and get back to you with availability and shipping details.</p>
+        <a id="materialsFormLink" href="#" target="_blank" rel="noopener noreferrer" class="hero-cta" style="margin-top: 8px;">
+          <i class="fas fa-up-right-from-square"></i> Open Form in New Tab
+        </a>
+        <iframe id="materialsFormFrame"
+                src=""
+                class="materials-form-iframe"
+                loading="lazy"
+                title="Order Materials Form">
+          Loading…
+        </iframe>
       </div>
 
       <div class="materials-grid">
@@ -2174,51 +2195,6 @@
             <p>Durable stickers with the PUTHH logo for hard hats, equipment, and toolboxes. Show your support on the job.</p>
           </div>
         </div>
-
-        <div class="material-card">
-          <div class="material-card-image">
-            <i class="fas fa-id-card"></i>
-          </div>
-          <div class="material-card-body">
-            <h3>Wallet Cards</h3>
-            <p>Pocket-sized resource cards with crisis line numbers and a QR code to the survey. Easy to carry and share.</p>
-          </div>
-        </div>
-
-        <div class="material-card">
-          <div class="material-card-image">
-            <i class="fas fa-table-cells-large"></i>
-          </div>
-          <div class="material-card-body">
-            <h3>Tabletop Signs</h3>
-            <p>Freestanding acrylic signs for office desks, conference tables, and trailer countertops. Quick reference at a glance.</p>
-          </div>
-        </div>
-
-        <div class="material-card">
-          <div class="material-card-image">
-            <i class="fas fa-book-open"></i>
-          </div>
-          <div class="material-card-body">
-            <h3>Tri-Fold Brochures</h3>
-            <p>Informational brochures with survey details, resource listings, and wellbeing guidance. Ideal for waiting areas and events.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="materials-form-section">
-        <h3><i class="fas fa-clipboard-list"></i> Request Materials</h3>
-        <p>Fill out the form below to request materials for your jobsite, union hall, or organization. We'll review your
-          request and get back to you with availability and shipping details.</p>
-        <a href="https://docs.google.com/forms/d/e/PLACEHOLDER/viewform" target="_blank" rel="noopener noreferrer" class="hero-cta" style="margin-top: 8px;">
-          <i class="fas fa-up-right-from-square"></i> Open Form in New Tab
-        </a>
-        <iframe src="https://docs.google.com/forms/d/e/PLACEHOLDER/viewform?embedded=true"
-                class="materials-form-iframe"
-                loading="lazy"
-                title="Order Materials Form">
-          Loading…
-        </iframe>
       </div>
     </section>
 
@@ -2368,7 +2344,33 @@
   <!-- Footer (NJIT logo + © text removed per request) -->
   <footer class="main-footer"></footer>
 
+  <script src="static/config.js"></script>
   <script>
+    // ===== Config-driven values =====
+    // Google Form (Order Materials): link + embedded iframe from PUTHH_CONFIG
+    // (declared with const in static/config.js → not a window property)
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof PUTHH_CONFIG === 'undefined') return;
+      const formLink = document.getElementById('materialsFormLink');
+      if (formLink) formLink.href = PUTHH_CONFIG.GOOGLE_FORM_URL;
+      const formFrame = document.getElementById('materialsFormFrame');
+      if (formFrame) formFrame.src = PUTHH_CONFIG.GOOGLE_FORM_URL + '?embedded=true';
+    });
+
+    // ===== Dev helpers =====
+    // ?dev=1 reveals WIP tabs (Supporters / Order Materials / Blog).
+    // ?tab=<panel-id> jumps straight to a panel (e.g. ?dev=1&tab=materials for review links).
+    (() => {
+      const url = new URLSearchParams(window.location.search);
+      if (url.get('dev') === '1') {
+        document.querySelectorAll('.nav-item.dev-only').forEach(el => el.classList.remove('dev-only'));
+      }
+      const tab = url.get('tab');
+      if (tab && document.getElementById(tab)) {
+        document.addEventListener('DOMContentLoaded', () => switchTab(tab));
+      }
+    })();
+
     // ===== Nav / Tab Switching (supports nested dropdown panels) =====
     // Panels can declare data-parent="about" / "supporters"; the matching
     // top-level tab button (data-parent) is highlighted for any child panel.

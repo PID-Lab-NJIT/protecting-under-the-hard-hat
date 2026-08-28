@@ -5,6 +5,10 @@ service*account.json
 # scratch files
 scratch.mjs
 
+# agent workspace artifacts (local planning/context, not part of the site)
+plans/
+.workshop/
+
 # task/reference docs
 Send Actionable Items.pdf
 
