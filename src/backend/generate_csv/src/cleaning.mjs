@@ -108,6 +108,13 @@ Object.assign(RENAME_KEYS, {
 
 export { RENAME_KEYS };
 
+// 2b. Rename & merge fields from resource analytics data points onto their matching entry.
+export const ANALYTICS_RENAME_KEYS = {
+    "zip_code": "resources_req_zip_code",
+    "max_radius": "resources_max_radius",
+    "num_resources": "num_resources",
+};
+
 // 3. Order columns. _start columns will be right after their non-start counterparts. Those not listed here are mostly the survey answers themselves, which are at the end.
 export const ORDERED_KEYS = [
     "id",
@@ -146,8 +153,11 @@ export const ORDERED_KEYS = [
     "site",
     "site_id",
     "lang",
-    "clicked_resources",
     "tool_helpful",
+    "clicked_resources",
+    "resources_req_zip_code",
+    "resources_max_radius",
+    "num_resources",
 ];
 
 // 4. Merge with completed = false entries with _start columns.
