@@ -9,6 +9,11 @@ const RESOURCES_BUCKET = process.env.RESOURCES_BUCKET;
 const ANALYTICS_SOURCE_PREFIX = 'data/new/';
 const s3 = new S3Client({ region: process.env.AWS_REGION });
 
+// Hidden (non-enumerable, non-serialized) links from a cleaned entry back to its raw
+// JSON entry and source file, so analytics merges can also be written back to S3.
+const RAW_ENTRY = Symbol('rawEntry');
+const SOURCE_FILE = Symbol('sourceFile');
+
 // Lists and fetches all unmerged resource analytics files once, split into test/real
 // based on the filename suffix or the "is_test" field (whichever says test).
 async function fetchResourceAnalytics() {
@@ -51,8 +56,10 @@ async function fetchResourceAnalytics() {
 }
 
 // Merges resource analytics onto the matching (already session-resolved) survey entries,
-// keyed on session_id, and moves successfully-merged analytics files to data/{yyyy-mm}/.
-async function mergeResourceAnalytics(sourcePrefix, resolvedData, analyticsFiles) {
+// keyed on session_id, writes the same fields back onto the raw JSON entry (marking its
+// source file dirty for rewrite), and moves successfully-merged analytics files to
+// data/{yyyy-mm}/ (or data/unmatched/ if no session_id match was found).
+async function mergeResourceAnalytics(sourcePrefix, resolvedData, analyticsFiles, dirtyFiles) {
     console.log(`[${sourcePrefix}] Merging resource analytics...`);
     const bySessionId = {};
     for (const entry of resolvedData) {
@@ -68,9 +75,13 @@ async function mergeResourceAnalytics(sourcePrefix, resolvedData, analyticsFiles
         if (!match) {
             destKey = `data/unmatched/${fileName}`;
         } else {
+            const rawEntry = match[RAW_ENTRY];
             for (const [srcKey, dest] of Object.entries(ANALYTICS_RENAME_KEYS)) {
-                match[dest] = data[srcKey];
+                const value = data[srcKey];
+                match[dest] = value;
+                if (rawEntry) rawEntry[dest] = value;
             }
+            if (rawEntry?.[SOURCE_FILE]) dirtyFiles.add(rawEntry[SOURCE_FILE]);
             const yyyyMm = fileName.slice(0, 7);
             destKey = `data/${yyyyMm}/${fileName}`;
         }
@@ -116,16 +127,19 @@ async function processDirectory(sourcePrefix, destPrefix, analyticsFiles) {
     console.log(`[${sourcePrefix}] 2. Fetching entries...`);
     const allEntries = [];
     let hasNewData = false;
-    const filesToUpdate = {}; // files containing un-flagged entries, written back after upload
+    const fileEntries = {}; // filePath -> entries array, for every file
+    const dirtyFiles = new Set(); // filePaths needing rewrite (new data and/or analytics merge)
 
     for (const filePath of files) {
         try {
             const response = await s3.send(new GetObjectCommand({ Bucket: SURVEY_BUCKET, Key: filePath }));
             const jsonStr = await response.Body.transformToString();
             const entries = JSON.parse(jsonStr);
+            fileEntries[filePath] = entries;
             let fileHasNewData = false;
 
             for (const entry of entries) {
+                entry[SOURCE_FILE] = filePath;
                 if (!entry.generated_as_csv) {
                     hasNewData = true;
                     fileHasNewData = true;
@@ -134,7 +148,7 @@ async function processDirectory(sourcePrefix, destPrefix, analyticsFiles) {
             }
 
             if (fileHasNewData) {
-                filesToUpdate[filePath] = entries;
+                dirtyFiles.add(filePath);
             }
         } catch (e) {
             console.error(`[${sourcePrefix}] Error fetching file ${filePath}:`, e);
@@ -183,6 +197,7 @@ async function processDirectory(sourcePrefix, destPrefix, analyticsFiles) {
                 cleaned[newKey] = flat[key];
             }
         }
+        cleaned[RAW_ENTRY] = entry;
         masterData.push(cleaned);
     }
 
@@ -235,7 +250,7 @@ async function processDirectory(sourcePrefix, destPrefix, analyticsFiles) {
     }
 
     // 4b. Merge resource analytics onto resolved entries by session_id
-    await mergeResourceAnalytics(sourcePrefix, resolvedData, analyticsFiles);
+    await mergeResourceAnalytics(sourcePrefix, resolvedData, analyticsFiles, dirtyFiles);
 
     // 5. Sort descending by timestamp
     console.log(`[${sourcePrefix}] 5. Sorting entries...`);
@@ -294,9 +309,10 @@ async function processDirectory(sourcePrefix, destPrefix, analyticsFiles) {
         return { message: `[${sourcePrefix}] Error uploading CSV to S3` };
     }
 
-    // 9. Mark all entries in affected files as generated_as_csv
+    // 9. Mark all entries in affected files as generated_as_csv and write back any merged analytics fields
     console.log(`[${sourcePrefix}] 9. Marking entries as generated_as_csv...`);
-    for (const [filePath, entries] of Object.entries(filesToUpdate)) {
+    for (const filePath of dirtyFiles) {
+        const entries = fileEntries[filePath];
         try {
             for (const entry of entries) {
                 entry.generated_as_csv = true;
