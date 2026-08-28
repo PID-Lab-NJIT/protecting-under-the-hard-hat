@@ -74,6 +74,8 @@ Rename and merge these fields (don't merge the ones not mentioned):
 | `max_radius`             | `resources_max_radius`   |
 | `num_resources`          | `num_resources`          |
 
+Merge the fields into the CSV being generated and the original JSON survey data as well.
+
 ### Edge Cases
 
 - If there are no new survey entries but there are new analytics data points, skip the merging entirely.
