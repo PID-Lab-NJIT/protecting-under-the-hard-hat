@@ -62,8 +62,7 @@ No change to the data after merging.
 
 Merge (inner join) the analytics data with the main data on `session_id` depending on if the data point is test or real and after `session_id` pairs get resolved based on complete/incomplete responses.
 
-- If no matching `session_id` found, warn in the console, skip (don't merge the data or move the file), and continue to the next data file.
-- If a matching `session_id` is found but a non-blank `device_id` doesn't match, warn in the console, skip, and continue to the next data file.
+- If no matching `session_id` found, don't merge the data, move the analytics file to `/data/unmatched`, and continue to the next data file.
 
 - If the analytics filename ends in `_test.json` or `"is_test"` is `true`, merge with test data. If not, merge with real data.
 
