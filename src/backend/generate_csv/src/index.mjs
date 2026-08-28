@@ -61,23 +61,20 @@ async function mergeResourceAnalytics(sourcePrefix, resolvedData, analyticsFiles
     }
 
     for (const { key, data } of analyticsFiles) {
-        const match = data.session_id ? bySessionId[data.session_id] : null;
-        if (!match) {
-            console.warn(`[${sourcePrefix}] No matching session_id for resource analytics file ${key}, skipping`);
-            continue;
-        }
-        if (data.device_id && match['device_id'] && data.device_id !== match['device_id']) {
-            console.warn(`[${sourcePrefix}] device_id mismatch for resource analytics file ${key} (session ${data.session_id}), skipping`);
-            continue;
-        }
-
-        for (const [srcKey, destKey] of Object.entries(ANALYTICS_RENAME_KEYS)) {
-            match[destKey] = data[srcKey];
-        }
-
         const fileName = key.slice(ANALYTICS_SOURCE_PREFIX.length);
-        const yyyyMm = fileName.slice(0, 7);
-        const destKey = `data/${yyyyMm}/${fileName}`;
+        const match = data.session_id ? bySessionId[data.session_id] : null;
+
+        let destKey;
+        if (!match) {
+            destKey = `data/unmatched/${fileName}`;
+        } else {
+            for (const [srcKey, dest] of Object.entries(ANALYTICS_RENAME_KEYS)) {
+                match[dest] = data[srcKey];
+            }
+            const yyyyMm = fileName.slice(0, 7);
+            destKey = `data/${yyyyMm}/${fileName}`;
+        }
+
         try {
             await s3.send(new CopyObjectCommand({
                 Bucket: RESOURCES_BUCKET,
