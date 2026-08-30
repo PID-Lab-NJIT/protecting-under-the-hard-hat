@@ -1,24 +1,116 @@
 // Generates a CSV from all survey response JSON files in S3 and stores it in the csv/ folder
 
-import { S3Client, GetObjectCommand, PutObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import { S3Client, GetObjectCommand, PutObjectCommand, CopyObjectCommand, DeleteObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { flattenObj, csvEscape } from './util.mjs';
-import { DISCARD_KEYS, RENAME_KEYS, ORDERED_KEYS, START_KEYS } from './cleaning.mjs';
+import { DISCARD_KEYS, RENAME_KEYS, ORDERED_KEYS, START_KEYS, ANALYTICS_RENAME_KEYS } from './cleaning.mjs';
 
-const S3_BUCKET = process.env.S3_BUCKET_NAME;
+const SURVEY_BUCKET = process.env.SURVEY_BUCKET;
+const RESOURCES_BUCKET = process.env.RESOURCES_BUCKET;
+const ANALYTICS_SOURCE_PREFIX = 'data/new/';
 const s3 = new S3Client({ region: process.env.AWS_REGION });
 
-async function processDirectory(sourcePrefix, destPrefix) {
+// Hidden (non-enumerable, non-serialized) links from a cleaned entry back to its raw
+// JSON entry and source file, so analytics merges can also be written back to S3.
+const RAW_ENTRY = Symbol('rawEntry');
+const SOURCE_FILE = Symbol('sourceFile');
+
+// Lists and fetches all unmerged resource analytics files once, split into test/real
+// based on the filename suffix or the "is_test" field (whichever says test).
+async function fetchResourceAnalytics() {
+    console.log('[analytics] Listing unmerged resource analytics files...');
+    let objects = [];
+    try {
+        let response = await s3.send(new ListObjectsV2Command({ Bucket: RESOURCES_BUCKET, Prefix: ANALYTICS_SOURCE_PREFIX }));
+        objects = response.Contents ?? [];
+
+        while (response.IsTruncated) {
+            response = await s3.send(new ListObjectsV2Command({
+                Bucket: RESOURCES_BUCKET,
+                Prefix: ANALYTICS_SOURCE_PREFIX,
+                ContinuationToken: response.NextContinuationToken,
+            }));
+            objects = objects.concat(response.Contents ?? []);
+        }
+    } catch (e) {
+        console.error('[analytics] Error listing resource analytics files:', e);
+        return { test: [], real: [] };
+    }
+
+    const files = objects.map(item => item.Key).filter(key => key.endsWith('.json'));
+    const test = [];
+    const real = [];
+
+    for (const key of files) {
+        try {
+            const response = await s3.send(new GetObjectCommand({ Bucket: RESOURCES_BUCKET, Key: key }));
+            const jsonStr = await response.Body.transformToString();
+            const data = JSON.parse(jsonStr);
+            const isTest = key.endsWith('_test.json') || data.is_test === true;
+            (isTest ? test : real).push({ key, data });
+        } catch (e) {
+            console.warn(`[analytics] Error fetching/parsing ${key}, skipping:`, e);
+        }
+    }
+
+    return { test, real };
+}
+
+// Merges resource analytics onto the matching (already session-resolved) survey entries,
+// keyed on session_id, writes the same fields back onto the raw JSON entry (marking its
+// source file dirty for rewrite), and moves successfully-merged analytics files to
+// data/{yyyy-mm}/ (or data/unmatched/ if no session_id match was found).
+async function mergeResourceAnalytics(sourcePrefix, resolvedData, analyticsFiles, dirtyFiles) {
+    console.log(`[${sourcePrefix}] Merging resource analytics...`);
+    const bySessionId = {};
+    for (const entry of resolvedData) {
+        const sid = entry['session_id'];
+        if (sid) bySessionId[sid] = entry;
+    }
+
+    for (const { key, data } of analyticsFiles) {
+        const fileName = key.slice(ANALYTICS_SOURCE_PREFIX.length);
+        const match = data.session_id ? bySessionId[data.session_id] : null;
+
+        let destKey;
+        if (!match) {
+            destKey = `data/unmatched/${fileName}`;
+        } else {
+            const rawEntry = match[RAW_ENTRY];
+            for (const [srcKey, dest] of Object.entries(ANALYTICS_RENAME_KEYS)) {
+                const value = data[srcKey];
+                match[dest] = value;
+                if (rawEntry) rawEntry[dest] = value;
+            }
+            if (rawEntry?.[SOURCE_FILE]) dirtyFiles.add(rawEntry[SOURCE_FILE]);
+            const yyyyMm = fileName.slice(0, 7);
+            destKey = `data/${yyyyMm}/${fileName}`;
+        }
+
+        try {
+            await s3.send(new CopyObjectCommand({
+                Bucket: RESOURCES_BUCKET,
+                CopySource: `${RESOURCES_BUCKET}/${key}`,
+                Key: destKey,
+            }));
+            await s3.send(new DeleteObjectCommand({ Bucket: RESOURCES_BUCKET, Key: key }));
+        } catch (e) {
+            console.warn(`[${sourcePrefix}] Error moving resource analytics file ${key} to ${destKey}:`, e);
+        }
+    }
+}
+
+async function processDirectory(sourcePrefix, destPrefix, analyticsFiles) {
     // 1. List all JSON files from S3
     console.log(`[${sourcePrefix}] 1. Listing all data files from S3...`);
     let files = [];
 
     try {
-        let response = await s3.send(new ListObjectsV2Command({ Bucket: S3_BUCKET, Prefix: sourcePrefix }));
+        let response = await s3.send(new ListObjectsV2Command({ Bucket: SURVEY_BUCKET, Prefix: sourcePrefix }));
         let objects = response.Contents ?? [];
 
         while (response.IsTruncated) {
             response = await s3.send(new ListObjectsV2Command({
-                Bucket: S3_BUCKET,
+                Bucket: SURVEY_BUCKET,
                 Prefix: sourcePrefix,
                 ContinuationToken: response.NextContinuationToken,
             }));
@@ -35,16 +127,19 @@ async function processDirectory(sourcePrefix, destPrefix) {
     console.log(`[${sourcePrefix}] 2. Fetching entries...`);
     const allEntries = [];
     let hasNewData = false;
-    const filesToUpdate = {}; // files containing un-flagged entries, written back after upload
+    const fileEntries = {}; // filePath -> entries array, for every file
+    const dirtyFiles = new Set(); // filePaths needing rewrite (new data and/or analytics merge)
 
     for (const filePath of files) {
         try {
-            const response = await s3.send(new GetObjectCommand({ Bucket: S3_BUCKET, Key: filePath }));
+            const response = await s3.send(new GetObjectCommand({ Bucket: SURVEY_BUCKET, Key: filePath }));
             const jsonStr = await response.Body.transformToString();
             const entries = JSON.parse(jsonStr);
+            fileEntries[filePath] = entries;
             let fileHasNewData = false;
 
             for (const entry of entries) {
+                entry[SOURCE_FILE] = filePath;
                 if (!entry.generated_as_csv) {
                     hasNewData = true;
                     fileHasNewData = true;
@@ -53,7 +148,7 @@ async function processDirectory(sourcePrefix, destPrefix) {
             }
 
             if (fileHasNewData) {
-                filesToUpdate[filePath] = entries;
+                dirtyFiles.add(filePath);
             }
         } catch (e) {
             console.error(`[${sourcePrefix}] Error fetching file ${filePath}:`, e);
@@ -102,6 +197,7 @@ async function processDirectory(sourcePrefix, destPrefix) {
                 cleaned[newKey] = flat[key];
             }
         }
+        cleaned[RAW_ENTRY] = entry;
         masterData.push(cleaned);
     }
 
@@ -153,6 +249,9 @@ async function processDirectory(sourcePrefix, destPrefix) {
         }
     }
 
+    // 4b. Merge resource analytics onto resolved entries by session_id
+    await mergeResourceAnalytics(sourcePrefix, resolvedData, analyticsFiles, dirtyFiles);
+
     // 5. Sort descending by timestamp
     console.log(`[${sourcePrefix}] 5. Sorting entries...`);
     resolvedData.sort((a, b) => {
@@ -200,7 +299,7 @@ async function processDirectory(sourcePrefix, destPrefix) {
     const csvKey = `${destPrefix}${new Date().toISOString()}.csv`;
     try {
         await s3.send(new PutObjectCommand({
-            Bucket: S3_BUCKET,
+            Bucket: SURVEY_BUCKET,
             Key: csvKey,
             ContentType: 'text/csv',
             Body: csv,
@@ -210,15 +309,16 @@ async function processDirectory(sourcePrefix, destPrefix) {
         return { message: `[${sourcePrefix}] Error uploading CSV to S3` };
     }
 
-    // 9. Mark all entries in affected files as generated_as_csv
+    // 9. Mark all entries in affected files as generated_as_csv and write back any merged analytics fields
     console.log(`[${sourcePrefix}] 9. Marking entries as generated_as_csv...`);
-    for (const [filePath, entries] of Object.entries(filesToUpdate)) {
+    for (const filePath of dirtyFiles) {
+        const entries = fileEntries[filePath];
         try {
             for (const entry of entries) {
                 entry.generated_as_csv = true;
             }
             await s3.send(new PutObjectCommand({
-                Bucket: S3_BUCKET,
+                Bucket: SURVEY_BUCKET,
                 Key: filePath,
                 ContentType: 'application/json',
                 Body: JSON.stringify(entries),
@@ -229,14 +329,15 @@ async function processDirectory(sourcePrefix, destPrefix) {
         }
     }
 
-    console.log(`[${sourcePrefix}] CSV uploaded to s3://${S3_BUCKET}/${csvKey}`);
-    return { message: `CSV uploaded to s3://${S3_BUCKET}/${csvKey}` };
+    console.log(`[${sourcePrefix}] CSV uploaded to s3://${SURVEY_BUCKET}/${csvKey}`);
+    return { message: `CSV uploaded to s3://${SURVEY_BUCKET}/${csvKey}` };
 }
 
 export const handler = async () => {
+    const { test: testAnalytics, real: realAnalytics } = await fetchResourceAnalytics();
     const [prodResult, testResult] = await Promise.all([
-        processDirectory('json/', 'csv/'),
-        processDirectory('test_json/', 'test_csv/'),
+        processDirectory('json/', 'csv/', realAnalytics),
+        processDirectory('test_json/', 'test_csv/', testAnalytics),
     ]);
     return { prod: prodResult, test: testResult };
 };
