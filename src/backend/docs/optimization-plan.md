@@ -147,13 +147,13 @@ but confirm after deploying).
   }
   ```
 
-- [ ] **1.3** Parallelize the copy+delete pair per analytics file in
+- [x] **1.3** Parallelize the copy+delete pair per analytics file in
   `mergeResourceAnalytics` ([index.mjs:89-98](generate_csv/src/index.mjs#L89-L98)).
   Note the copy and delete *within* one file must stay sequential (can't delete
   before the copy confirms), but different files are independent:
 
   ```js
-  await Promise.all(analyticsFiles.map(({ key, data }) => limit(async () => {
+  await Promise.allSettled(analyticsFiles.map(({ key, data }) => limit(async () => {
       const fileName = key.slice(ANALYTICS_SOURCE_PREFIX.length);
       const match = data.session_id ? bySessionId[data.session_id] : null;
 
@@ -363,7 +363,7 @@ that's a bug-hunt, not a perf task — flagging it here only so it isn't lost).
 | 0 | 0.3 runtime version check | Not started | |
 | 1 | 1.1 parallelize analytics fetch | Done | Switched to Promise.allSettled so one failed fetch doesn't abort the batch |
 | 1 | 1.2 parallelize survey file fetch | Done | Kept Promise.all (not allSettled) since a partial fetch must still abort the whole run |
-| 1 | 1.3 parallelize analytics move (copy+delete) | Not started | |
+| 1 | 1.3 parallelize analytics move (copy+delete) | Done | Used Promise.allSettled; per-item try/catch already isolates failures so this is mostly for consistency/explicitness |
 | 1 | 1.4 parallelize dirty-file writeback | Not started | |
 | 1 | 1.5 measure improvement | Not started | Compare against 0.2 baseline |
 | 2 | 2.1 parallelize CSV upload loop | Not started | |
