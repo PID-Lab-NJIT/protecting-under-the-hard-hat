@@ -121,14 +121,21 @@ but confirm after deploying).
   run (`return { message: ... }` inside the loop) — preserve that behavior:
 
   ```js
-  const results = await Promise.all(files.map(filePath => limit(async () => {
+  const settled = await Promise.allSettled(files.map(filePath => limit(async () => {
       const response = await s3.send(new GetObjectCommand({ Bucket: SURVEY_BUCKET, Key: filePath }));
       const jsonStr = await response.Body.transformToString();
       return { filePath, entries: JSON.parse(jsonStr) };
   })));
-  // if any promise rejected, Promise.all above throws — wrap the whole block in
-  // try/catch (as the surrounding code already does) to preserve the existing
-  // "abort on first fetch error" behavior and error message.
+
+  // allSettled (rather than a nested try/catch per item) lets us name the failing
+  // filePath in the abort message without wrapping/unwrapping an Error just for context.
+  const failedIndex = settled.findIndex(r => r.status === 'rejected');
+  if (failedIndex !== -1) {
+      const filePath = files[failedIndex];
+      console.error(`[${sourcePrefix}] Error fetching file ${filePath}:`, settled[failedIndex].reason);
+      return { message: `[${sourcePrefix}] Error fetching file ${filePath}` };
+  }
+  const results = settled.map(r => r.value);
 
   const allEntries = [];
   let hasNewData = false;
@@ -362,7 +369,7 @@ that's a bug-hunt, not a perf task — flagging it here only so it isn't lost).
 | 0 | 0.2 baseline durations | Not started | Fill in avg Billed Duration + Max Memory here |
 | 0 | 0.3 runtime version check | Not started | |
 | 1 | 1.1 parallelize analytics fetch | Done | Switched to Promise.allSettled so one failed fetch doesn't abort the batch |
-| 1 | 1.2 parallelize survey file fetch | Done | Kept Promise.all (not allSettled) since a partial fetch must still abort the whole run |
+| 1 | 1.2 parallelize survey file fetch | Done | Aborts on first fetch failure (no partial data); switched to Promise.allSettled + findIndex to name the failing filePath in the log/message without nested try/catch |
 | 1 | 1.3 parallelize analytics move (copy+delete) | Done | Used Promise.allSettled; per-item try/catch already isolates failures so this is mostly for consistency/explicitness |
 | 1 | 1.4 parallelize dirty-file writeback | Not started | |
 | 1 | 1.5 measure improvement | Not started | Compare against 0.2 baseline |

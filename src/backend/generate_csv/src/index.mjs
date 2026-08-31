@@ -142,21 +142,19 @@ async function processDirectory(sourcePrefix, destPrefix, analyticsFiles) {
     const fileEntries = {}; // filePath: entries
     const dirtyFiles = new Set(); // filePaths needing rewrite (new data and/or analytics merge)
 
-    let fetchResults;
-    try {
-        fetchResults = await Promise.all(files.map(filePath => limit(async () => {
-            try {
-                const response = await s3.send(new GetObjectCommand({ Bucket: SURVEY_BUCKET, Key: filePath }));
-                const jsonStr = await response.Body.transformToString();
-                return { filePath, entries: JSON.parse(jsonStr) };
-            } catch (e) {
-                throw new Error(`Error fetching file ${filePath}`, { cause: e });
-            }
-        })));
-    } catch (e) {
-        console.error(`[${sourcePrefix}] ${e.message}:`, e.cause);
-        return { message: `[${sourcePrefix}] ${e.message}` };
+    const settled = await Promise.allSettled(files.map(filePath => limit(async () => {
+        const response = await s3.send(new GetObjectCommand({ Bucket: SURVEY_BUCKET, Key: filePath }));
+        const jsonStr = await response.Body.transformToString();
+        return { filePath, entries: JSON.parse(jsonStr) };
+    })));
+
+    const failedIndex = settled.findIndex(r => r.status === 'rejected');
+    if (failedIndex !== -1) {
+        const filePath = files[failedIndex];
+        console.error(`[${sourcePrefix}] Error fetching file ${filePath}:`, settled[failedIndex].reason);
+        return { message: `[${sourcePrefix}] Error fetching file ${filePath}` };
     }
+    const fetchResults = settled.map(r => r.value);
 
     for (const { filePath, entries } of fetchResults) {
         fileEntries[filePath] = entries;
