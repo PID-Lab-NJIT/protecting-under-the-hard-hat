@@ -44,7 +44,7 @@ Do this before changing anything, so later phases have a before/after number
 instead of a guess. You said things are "fine for now" — this phase exists to
 confirm that and catch anything surprising cheaply.
 
-- [ ] **0.1** For each of the 5 functions, record current config:
+- [x] **0.1** For each of the 5 functions, record current config:
   ```bash
   for fn in processResponse getLocalResources downloadFromDrive generateCsv uploadToDrive; do
     echo "== $fn =="
@@ -52,7 +52,7 @@ confirm that and catch anything surprising cheaply.
       --query '{Runtime:Runtime,Memory:MemorySize,Timeout:Timeout,Layers:Layers[*].Arn}'
   done
   ```
-- [ ] **0.2** Pull last 20 durations for `generateCsv` specifically (it's the target):
+- [x] **0.2** Pull last 20 durations for `generateCsv` specifically (it's the target):
   ```bash
   aws logs filter-log-events --log-group-name /aws/lambda/generateCsv \
     --filter-pattern "REPORT" --max-items 20 \
@@ -60,7 +60,7 @@ confirm that and catch anything surprising cheaply.
   ```
   Each `REPORT` line has `Duration`, `Billed Duration`, `Max Memory Used`. Note
   these in the progress table (`Baseline` row) so Phase 1's effect is measurable.
-- [ ] **0.3** Confirm Node.js runtime version across functions (`nodejs18.x` /
+- [SKIP] **0.3** Confirm Node.js runtime version across functions (`nodejs18.x` /
   `20.x` / `22.x` from 0.1). If any function is still on `nodejs18.x`, bumping to
   `nodejs22.x` is a free win (faster cold start, newer V8) — schedule it as a
   quick config-only change (`aws lambda update-function-configuration --runtime nodejs22.x`)
@@ -87,7 +87,7 @@ automatically by however `node_modules` gets bundled into the layer (check
 `deploy.sh` step 4 — it zips `node_modules` wholesale, so this should be automatic,
 but confirm after deploying).
 
-- [ ] **1.1** Parallelize analytics file fetching in `fetchResourceAnalytics`
+- [x] **1.1** Parallelize analytics file fetching in `fetchResourceAnalytics`
   (currently: one `GetObjectCommand` per file, awaited sequentially in a `for`
   loop — [index.mjs:43-53](generate_csv/src/index.mjs#L43-L53)):
 
@@ -95,25 +95,25 @@ but confirm after deploying).
   import pLimit from 'p-limit';
   const limit = pLimit(10); // tune after Phase 0 baseline; 10 is a safe starting point
 
-  const results = await Promise.all(files.map(key => limit(async () => {
-      try {
-          const response = await s3.send(new GetObjectCommand({ Bucket: RESOURCES_BUCKET, Key: key }));
-          const jsonStr = await response.Body.transformToString();
-          const data = JSON.parse(jsonStr);
-          const isTest = key.endsWith('_test.json') || data.is_test === true;
-          return { key, data, isTest };
-      } catch (e) {
-          console.warn(`[analytics] Error fetching/parsing ${key}, skipping:`, e);
-          return null;
-      }
+  const results = await Promise.allSettled(files.map(key => limit(async () => {
+      const response = await s3.send(new GetObjectCommand({ Bucket: RESOURCES_BUCKET, Key: key }));
+      const jsonStr = await response.Body.transformToString();
+      const data = JSON.parse(jsonStr);
+      const isTest = key.endsWith('_test.json') || data.is_test === true;
+      return { key, data, isTest };
   })));
 
   const test = [], real = [];
   for (const r of results) {
-      if (!r) continue;
-      (r.isTest ? test : real).push({ key: r.key, data: r.data });
+      if (r.status === 'rejected') {
+          console.warn('[analytics] Error fetching/parsing analytics file, skipping:', r.reason);
+          continue;
+      }
+      (r.value.isTest ? test : real).push({ key: r.value.key, data: r.value.data });
   }
   ```
+  Using `allSettled` (rather than `all`) means one failed fetch never aborts the
+  whole batch — each file's success/failure is independent.
 
 - [ ] **1.2** Parallelize survey file fetching in `processDirectory` step 2
   ([index.mjs:133-157](generate_csv/src/index.mjs#L133-L157)). This one is
@@ -361,7 +361,7 @@ that's a bug-hunt, not a perf task — flagging it here only so it isn't lost).
 | 0 | 0.1 config snapshot | Not started | |
 | 0 | 0.2 baseline durations | Not started | Fill in avg Billed Duration + Max Memory here |
 | 0 | 0.3 runtime version check | Not started | |
-| 1 | 1.1 parallelize analytics fetch | Not started | |
+| 1 | 1.1 parallelize analytics fetch | Done | Switched to Promise.allSettled so one failed fetch doesn't abort the batch |
 | 1 | 1.2 parallelize survey file fetch | Not started | |
 | 1 | 1.3 parallelize analytics move (copy+delete) | Not started | |
 | 1 | 1.4 parallelize dirty-file writeback | Not started | |

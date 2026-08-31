@@ -1,6 +1,7 @@
 // Generates a CSV from all survey response JSON files in S3 and stores it in the csv/ folder
 
 import { S3Client, GetObjectCommand, PutObjectCommand, CopyObjectCommand, DeleteObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import pLimit from 'p-limit';
 import { flattenObj, csvEscape } from './util.mjs';
 import { DISCARD_KEYS, RENAME_KEYS, ORDERED_KEYS, START_KEYS, ANALYTICS_RENAME_KEYS } from './cleaning.mjs';
 
@@ -8,6 +9,7 @@ const SURVEY_BUCKET = process.env.SURVEY_BUCKET;
 const RESOURCES_BUCKET = process.env.RESOURCES_BUCKET;
 const ANALYTICS_SOURCE_PREFIX = 'data/new/';
 const s3 = new S3Client({ region: process.env.AWS_REGION });
+const limit = pLimit(10); // tune after Phase 0 baseline; 10 is a safe starting point
 
 // Hidden (non-enumerable, non-serialized) links from a cleaned entry back to its raw
 // JSON entry and source file, so analytics merges can also be written back to S3.
@@ -37,19 +39,23 @@ async function fetchResourceAnalytics() {
     }
 
     const files = objects.map(item => item.Key).filter(key => key.endsWith('.json'));
+
+    const results = await Promise.allSettled(files.map(key => limit(async () => {
+        const response = await s3.send(new GetObjectCommand({ Bucket: RESOURCES_BUCKET, Key: key }));
+        const jsonStr = await response.Body.transformToString();
+        const data = JSON.parse(jsonStr);
+        const isTest = key.endsWith('_test.json') || data.is_test === true;
+        return { key, data, isTest };
+    })));
+
     const test = [];
     const real = [];
-
-    for (const key of files) {
-        try {
-            const response = await s3.send(new GetObjectCommand({ Bucket: RESOURCES_BUCKET, Key: key }));
-            const jsonStr = await response.Body.transformToString();
-            const data = JSON.parse(jsonStr);
-            const isTest = key.endsWith('_test.json') || data.is_test === true;
-            (isTest ? test : real).push({ key, data });
-        } catch (e) {
-            console.warn(`[analytics] Error fetching/parsing ${key}, skipping:`, e);
+    for (const r of results) {
+        if (r.status === 'rejected') {
+            console.warn('[analytics] Error fetching/parsing analytics file, skipping:', r.reason);
+            continue;
         }
+        (r.value.isTest ? test : real).push({ key: r.value.key, data: r.value.data });
     }
 
     return { test, real };
