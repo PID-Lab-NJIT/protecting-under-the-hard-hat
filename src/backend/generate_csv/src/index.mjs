@@ -133,32 +133,36 @@ async function processDirectory(sourcePrefix, destPrefix, analyticsFiles) {
     console.log(`[${sourcePrefix}] 2. Fetching entries...`);
     const allEntries = [];
     let hasNewData = false;
-    const fileEntries = {}; // filePath -> entries array, for every file
+    const fileEntries = {}; // filePath: entries
     const dirtyFiles = new Set(); // filePaths needing rewrite (new data and/or analytics merge)
 
-    for (const filePath of files) {
-        try {
+    let fetchResults;
+    try {
+        fetchResults = await Promise.all(files.map(filePath => limit(async () => {
             const response = await s3.send(new GetObjectCommand({ Bucket: SURVEY_BUCKET, Key: filePath }));
             const jsonStr = await response.Body.transformToString();
-            const entries = JSON.parse(jsonStr);
-            fileEntries[filePath] = entries;
-            let fileHasNewData = false;
+            return { filePath, entries: JSON.parse(jsonStr) };
+        })));
+    } catch (e) {
+        console.error(`[${sourcePrefix}] Error fetching file:`, e);
+        return { message: `[${sourcePrefix}] Error fetching file` };
+    }
 
-            for (const entry of entries) {
-                entry[SOURCE_FILE] = filePath;
-                if (!entry.generated_as_csv) {
-                    hasNewData = true;
-                    fileHasNewData = true;
-                }
-                allEntries.push(entry);
-            }
+    for (const { filePath, entries } of fetchResults) {
+        fileEntries[filePath] = entries;
+        let fileHasNewData = false;
 
-            if (fileHasNewData) {
-                dirtyFiles.add(filePath);
+        for (const entry of entries) {
+            entry[SOURCE_FILE] = filePath;
+            if (!entry.generated_as_csv) {
+                hasNewData = true;
+                fileHasNewData = true;
             }
-        } catch (e) {
-            console.error(`[${sourcePrefix}] Error fetching file ${filePath}:`, e);
-            return { message: `[${sourcePrefix}] Error fetching file ${filePath}` };
+            allEntries.push(entry);
+        }
+
+        if (fileHasNewData) {
+            dirtyFiles.add(filePath);
         }
     }
 

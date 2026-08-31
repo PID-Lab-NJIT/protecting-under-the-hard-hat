@@ -115,7 +115,7 @@ but confirm after deploying).
   Using `allSettled` (rather than `all`) means one failed fetch never aborts the
   whole batch — each file's success/failure is independent.
 
-- [ ] **1.2** Parallelize survey file fetching in `processDirectory` step 2
+- [x] **1.2** Parallelize survey file fetching in `processDirectory` step 2
   ([index.mjs:133-157](generate_csv/src/index.mjs#L133-L157)). This one is
   slightly trickier because a single fetch failure currently aborts the whole
   run (`return { message: ... }` inside the loop) — preserve that behavior:
@@ -362,7 +362,7 @@ that's a bug-hunt, not a perf task — flagging it here only so it isn't lost).
 | 0 | 0.2 baseline durations | Not started | Fill in avg Billed Duration + Max Memory here |
 | 0 | 0.3 runtime version check | Not started | |
 | 1 | 1.1 parallelize analytics fetch | Done | Switched to Promise.allSettled so one failed fetch doesn't abort the batch |
-| 1 | 1.2 parallelize survey file fetch | Not started | |
+| 1 | 1.2 parallelize survey file fetch | Done | Kept Promise.all (not allSettled) since a partial fetch must still abort the whole run |
 | 1 | 1.3 parallelize analytics move (copy+delete) | Not started | |
 | 1 | 1.4 parallelize dirty-file writeback | Not started | |
 | 1 | 1.5 measure improvement | Not started | Compare against 0.2 baseline |
