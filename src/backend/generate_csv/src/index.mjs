@@ -329,22 +329,25 @@ async function processDirectory(sourcePrefix, destPrefix, analyticsFiles) {
 
     // 9. Mark all entries in affected files as generated_as_csv and write back any merged analytics fields
     console.log(`[${sourcePrefix}] 9. Marking entries as generated_as_csv...`);
-    for (const filePath of dirtyFiles) {
+    const dirtyFilesArr = [...dirtyFiles];
+    const writeBackSettled = await Promise.allSettled(dirtyFilesArr.map(filePath => limit(async () => {
         const entries = fileEntries[filePath];
-        try {
-            for (const entry of entries) {
-                entry.generated_as_csv = true;
-            }
-            await s3.send(new PutObjectCommand({
-                Bucket: SURVEY_BUCKET,
-                Key: filePath,
-                ContentType: 'application/json',
-                Body: JSON.stringify(entries),
-            }));
-        } catch (e) {
-            console.error(`[${sourcePrefix}] Error marking entries in ${filePath}:`, e);
-            return { message: `[${sourcePrefix}] Error marking entries in ${filePath}` };
+        for (const entry of entries) {
+            entry.generated_as_csv = true;
         }
+        await s3.send(new PutObjectCommand({
+            Bucket: SURVEY_BUCKET,
+            Key: filePath,
+            ContentType: 'application/json',
+            Body: JSON.stringify(entries),
+        }));
+    })));
+
+    const failedWriteBackIndex = writeBackSettled.findIndex(r => r.status === 'rejected');
+    if (failedWriteBackIndex !== -1) {
+        const filePath = dirtyFilesArr[failedWriteBackIndex];
+        console.error(`[${sourcePrefix}] Error marking entries in ${filePath}:`, writeBackSettled[failedWriteBackIndex].reason);
+        return { message: `[${sourcePrefix}] Error marking entries in ${filePath}` };
     }
 
     console.log(`[${sourcePrefix}] CSV uploaded to s3://${SURVEY_BUCKET}/${csvKey}`);

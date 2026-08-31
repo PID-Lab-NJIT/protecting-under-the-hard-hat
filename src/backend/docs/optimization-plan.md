@@ -189,10 +189,33 @@ but confirm after deploying).
   Note: `dirtyFiles.add(...)` from concurrent callbacks is safe — `Set.add` is
   synchronous and there's no `await` between the read and the add in each callback.
 
-- [ ] **1.4** Parallelize the step-9 "mark as generated + write back" S3 puts
-  ([index.mjs:314-330](generate_csv/src/index.mjs#L314-L330)) the same way,
-  preserving the existing abort-on-error behavior via `Promise.all` + surrounding
-  try/catch.
+- [x] **1.4** Parallelize the step-9 "mark as generated + write back" S3 puts
+  ([index.mjs:330-348](generate_csv/src/index.mjs#L330-L348)), preserving the
+  existing abort-on-first-error behavior. Same pattern as 1.2 — `Promise.allSettled`
+  + `findIndex` to name the failing filePath, no nested try/catch:
+
+  ```js
+  const dirtyFilesArr = [...dirtyFiles];
+  const writeBackSettled = await Promise.allSettled(dirtyFilesArr.map(filePath => limit(async () => {
+      const entries = fileEntries[filePath];
+      for (const entry of entries) {
+          entry.generated_as_csv = true;
+      }
+      await s3.send(new PutObjectCommand({
+          Bucket: SURVEY_BUCKET,
+          Key: filePath,
+          ContentType: 'application/json',
+          Body: JSON.stringify(entries),
+      }));
+  })));
+
+  const failedWriteBackIndex = writeBackSettled.findIndex(r => r.status === 'rejected');
+  if (failedWriteBackIndex !== -1) {
+      const filePath = dirtyFilesArr[failedWriteBackIndex];
+      console.error(`[${sourcePrefix}] Error marking entries in ${filePath}:`, writeBackSettled[failedWriteBackIndex].reason);
+      return { message: `[${sourcePrefix}] Error marking entries in ${filePath}` };
+  }
+  ```
 
 - [ ] **1.5** Re-run Phase 0.2's log query, compare `Billed Duration` before/after
   in the progress table. At <500 total entries, expect this alone to cut
@@ -371,7 +394,7 @@ that's a bug-hunt, not a perf task — flagging it here only so it isn't lost).
 | 1 | 1.1 parallelize analytics fetch | Done | Switched to Promise.allSettled so one failed fetch doesn't abort the batch |
 | 1 | 1.2 parallelize survey file fetch | Done | Aborts on first fetch failure (no partial data); switched to Promise.allSettled + findIndex to name the failing filePath in the log/message without nested try/catch |
 | 1 | 1.3 parallelize analytics move (copy+delete) | Done | Used Promise.allSettled; per-item try/catch already isolates failures so this is mostly for consistency/explicitness |
-| 1 | 1.4 parallelize dirty-file writeback | Not started | |
+| 1 | 1.4 parallelize dirty-file writeback | Done | Same allSettled + findIndex pattern as 1.2, no nested try/catch |
 | 1 | 1.5 measure improvement | Not started | Compare against 0.2 baseline |
 | 2 | 2.1 parallelize CSV upload loop | Not started | |
 | 3 | 3.0 decide A/B/C | Not started | |
