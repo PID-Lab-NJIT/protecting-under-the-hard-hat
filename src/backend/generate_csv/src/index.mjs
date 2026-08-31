@@ -145,13 +145,17 @@ async function processDirectory(sourcePrefix, destPrefix, analyticsFiles) {
     let fetchResults;
     try {
         fetchResults = await Promise.all(files.map(filePath => limit(async () => {
-            const response = await s3.send(new GetObjectCommand({ Bucket: SURVEY_BUCKET, Key: filePath }));
-            const jsonStr = await response.Body.transformToString();
-            return { filePath, entries: JSON.parse(jsonStr) };
+            try {
+                const response = await s3.send(new GetObjectCommand({ Bucket: SURVEY_BUCKET, Key: filePath }));
+                const jsonStr = await response.Body.transformToString();
+                return { filePath, entries: JSON.parse(jsonStr) };
+            } catch (e) {
+                throw new Error(`Error fetching file ${filePath}`, { cause: e });
+            }
         })));
     } catch (e) {
-        console.error(`[${sourcePrefix}] Error fetching file:`, e);
-        return { message: `[${sourcePrefix}] Error fetching file` };
+        console.error(`[${sourcePrefix}] ${e.message}:`, e.cause);
+        return { message: `[${sourcePrefix}] ${e.message}` };
     }
 
     for (const { filePath, entries } of fetchResults) {
