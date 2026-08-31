@@ -15,8 +15,8 @@ Format:
 Examples:
 
 ```plaintext
-2026-08-28T16:41:38.320Z_3b780e8b-47a4-4de1-b723-732987ccc29c_test.json
-2025-12-05T17:42:19.515Z_7cad15bb-283e-4104-850a-2216bf2655bb.json
+2026-08-28T16-41-38.320Z_3b780e8b-47a4-4de1-b723-732987ccc29c_test.json
+2025-12-05T17-42-19.515Z_7cad15bb-283e-4104-850a-2216bf2655bb.json
 ```
 
 ### Filepaths

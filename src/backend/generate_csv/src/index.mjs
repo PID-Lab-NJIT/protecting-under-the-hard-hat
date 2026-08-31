@@ -1,6 +1,7 @@
 // Generates a CSV from all survey response JSON files in S3 and stores it in the csv/ folder
 
 import { S3Client, GetObjectCommand, PutObjectCommand, CopyObjectCommand, DeleteObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import pLimit from 'p-limit';
 import { flattenObj, csvEscape } from './util.mjs';
 import { DISCARD_KEYS, RENAME_KEYS, ORDERED_KEYS, START_KEYS, ANALYTICS_RENAME_KEYS } from './cleaning.mjs';
 
@@ -8,6 +9,7 @@ const SURVEY_BUCKET = process.env.SURVEY_BUCKET;
 const RESOURCES_BUCKET = process.env.RESOURCES_BUCKET;
 const ANALYTICS_SOURCE_PREFIX = 'data/new/';
 const s3 = new S3Client({ region: process.env.AWS_REGION });
+const limit = pLimit(10); // tune after Phase 0 baseline; 10 is a safe starting point
 
 // Hidden (non-enumerable, non-serialized) links from a cleaned entry back to its raw
 // JSON entry and source file, so analytics merges can also be written back to S3.
@@ -37,19 +39,23 @@ async function fetchResourceAnalytics() {
     }
 
     const files = objects.map(item => item.Key).filter(key => key.endsWith('.json'));
+
+    const results = await Promise.allSettled(files.map(key => limit(async () => {
+        const response = await s3.send(new GetObjectCommand({ Bucket: RESOURCES_BUCKET, Key: key }));
+        const jsonStr = await response.Body.transformToString();
+        const data = JSON.parse(jsonStr);
+        const isTest = key.endsWith('_test.json') || data.is_test === true;
+        return { key, data, isTest };
+    })));
+
     const test = [];
     const real = [];
-
-    for (const key of files) {
-        try {
-            const response = await s3.send(new GetObjectCommand({ Bucket: RESOURCES_BUCKET, Key: key }));
-            const jsonStr = await response.Body.transformToString();
-            const data = JSON.parse(jsonStr);
-            const isTest = key.endsWith('_test.json') || data.is_test === true;
-            (isTest ? test : real).push({ key, data });
-        } catch (e) {
-            console.warn(`[analytics] Error fetching/parsing ${key}, skipping:`, e);
+    for (const r of results) {
+        if (r.status === 'rejected') {
+            console.warn('[analytics] Error fetching/parsing analytics file, skipping:', r.reason);
+            continue;
         }
+        (r.value.isTest ? test : real).push({ key: r.value.key, data: r.value.data });
     }
 
     return { test, real };
@@ -67,7 +73,7 @@ async function mergeResourceAnalytics(sourcePrefix, resolvedData, analyticsFiles
         if (sid) bySessionId[sid] = entry;
     }
 
-    for (const { key, data } of analyticsFiles) {
+    const results = await Promise.allSettled(analyticsFiles.map(({ key, data }) => limit(async () => {
         const fileName = key.slice(ANALYTICS_SOURCE_PREFIX.length);
         const match = data.session_id ? bySessionId[data.session_id] : null;
 
@@ -95,6 +101,12 @@ async function mergeResourceAnalytics(sourcePrefix, resolvedData, analyticsFiles
             await s3.send(new DeleteObjectCommand({ Bucket: RESOURCES_BUCKET, Key: key }));
         } catch (e) {
             console.warn(`[${sourcePrefix}] Error moving resource analytics file ${key} to ${destKey}:`, e);
+        }
+    })));
+
+    for (const r of results) {
+        if (r.status === 'rejected') {
+            console.warn(`[${sourcePrefix}] Error merging resource analytics file, skipping:`, r.reason);
         }
     }
 }
@@ -127,32 +139,38 @@ async function processDirectory(sourcePrefix, destPrefix, analyticsFiles) {
     console.log(`[${sourcePrefix}] 2. Fetching entries...`);
     const allEntries = [];
     let hasNewData = false;
-    const fileEntries = {}; // filePath -> entries array, for every file
+    const fileEntries = {}; // filePath: entries
     const dirtyFiles = new Set(); // filePaths needing rewrite (new data and/or analytics merge)
 
-    for (const filePath of files) {
-        try {
-            const response = await s3.send(new GetObjectCommand({ Bucket: SURVEY_BUCKET, Key: filePath }));
-            const jsonStr = await response.Body.transformToString();
-            const entries = JSON.parse(jsonStr);
-            fileEntries[filePath] = entries;
-            let fileHasNewData = false;
+    const settled = await Promise.allSettled(files.map(filePath => limit(async () => {
+        const response = await s3.send(new GetObjectCommand({ Bucket: SURVEY_BUCKET, Key: filePath }));
+        const jsonStr = await response.Body.transformToString();
+        return { filePath, entries: JSON.parse(jsonStr) };
+    })));
 
-            for (const entry of entries) {
-                entry[SOURCE_FILE] = filePath;
-                if (!entry.generated_as_csv) {
-                    hasNewData = true;
-                    fileHasNewData = true;
-                }
-                allEntries.push(entry);
-            }
+    const failedIndex = settled.findIndex(r => r.status === 'rejected');
+    if (failedIndex !== -1) {
+        const filePath = files[failedIndex];
+        console.error(`[${sourcePrefix}] Error fetching file ${filePath}:`, settled[failedIndex].reason);
+        return { message: `[${sourcePrefix}] Error fetching file ${filePath}` };
+    }
+    const fetchResults = settled.map(r => r.value);
 
-            if (fileHasNewData) {
-                dirtyFiles.add(filePath);
+    for (const { filePath, entries } of fetchResults) {
+        fileEntries[filePath] = entries;
+        let fileHasNewData = false;
+
+        for (const entry of entries) {
+            entry[SOURCE_FILE] = filePath;
+            if (!entry.generated_as_csv) {
+                hasNewData = true;
+                fileHasNewData = true;
             }
-        } catch (e) {
-            console.error(`[${sourcePrefix}] Error fetching file ${filePath}:`, e);
-            return { message: `[${sourcePrefix}] Error fetching file ${filePath}` };
+            allEntries.push(entry);
+        }
+
+        if (fileHasNewData) {
+            dirtyFiles.add(filePath);
         }
     }
 
@@ -311,22 +329,25 @@ async function processDirectory(sourcePrefix, destPrefix, analyticsFiles) {
 
     // 9. Mark all entries in affected files as generated_as_csv and write back any merged analytics fields
     console.log(`[${sourcePrefix}] 9. Marking entries as generated_as_csv...`);
-    for (const filePath of dirtyFiles) {
+    const dirtyFilesArr = [...dirtyFiles];
+    const writeBackSettled = await Promise.allSettled(dirtyFilesArr.map(filePath => limit(async () => {
         const entries = fileEntries[filePath];
-        try {
-            for (const entry of entries) {
-                entry.generated_as_csv = true;
-            }
-            await s3.send(new PutObjectCommand({
-                Bucket: SURVEY_BUCKET,
-                Key: filePath,
-                ContentType: 'application/json',
-                Body: JSON.stringify(entries),
-            }));
-        } catch (e) {
-            console.error(`[${sourcePrefix}] Error marking entries in ${filePath}:`, e);
-            return { message: `[${sourcePrefix}] Error marking entries in ${filePath}` };
+        for (const entry of entries) {
+            entry.generated_as_csv = true;
         }
+        await s3.send(new PutObjectCommand({
+            Bucket: SURVEY_BUCKET,
+            Key: filePath,
+            ContentType: 'application/json',
+            Body: JSON.stringify(entries),
+        }));
+    })));
+
+    const failedWriteBackIndex = writeBackSettled.findIndex(r => r.status === 'rejected');
+    if (failedWriteBackIndex !== -1) {
+        const filePath = dirtyFilesArr[failedWriteBackIndex];
+        console.error(`[${sourcePrefix}] Error marking entries in ${filePath}:`, writeBackSettled[failedWriteBackIndex].reason);
+        return { message: `[${sourcePrefix}] Error marking entries in ${filePath}` };
     }
 
     console.log(`[${sourcePrefix}] CSV uploaded to s3://${SURVEY_BUCKET}/${csvKey}`);
