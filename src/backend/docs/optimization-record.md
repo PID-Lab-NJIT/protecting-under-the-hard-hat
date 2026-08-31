@@ -59,58 +59,60 @@ Output:
 Output
 
 ```
-REPORT RequestId: 2a266eed-05b1-4ae3-93de-bee628192cc5  Duration: 6348.12 ms    Billed Duration: 6734 ms        Memory Size: 128 MB     Max Memory Used: 109 MB Init Duration: 385.63 ms
-        REPORT RequestId: f92d1557-3fbd-43b6-b5bb-842881431d4d  Duration: 5665.62 ms    Billed Duration: 6002 ms        Memory Size: 128 MB     Max Memory Used: 107 MB Init Duration: 335.57 ms
-        REPORT RequestId: e968f370-adbd-485a-a01b-f0c7c381b805  Duration: 5475.95 ms    Billed Duration: 5774 ms        Memory Size: 128 MB     Max Memory Used: 108 MB Init Duration: 297.23 ms
+REPORT RequestId: 108683d4-1566-4914-acf8-2a7825869838  Duration: 10441.42 ms   Billed Duration: 10442 ms       Memory Size: 128 MB     Max Memory Used: 112 MB
+REPORT RequestId: 3144013c-2c91-436f-b23f-9272228917c1  Duration: 20000.00 ms   Billed Duration: 20000 ms       Memory Size: 128 MB     Max Memory Used: 112 MB        Status: timeout
+REPORT RequestId: 2c96302b-70d6-4d9e-825d-0a9966295766  Duration: 9962.87 ms    Billed Duration: 9963 ms        Memory Size: 128 MB     Max Memory Used: 113 MB
 
-REPORT RequestId: 33d7fa46-ab99-416a-ba28-dd9b42dce4bc  Duration: 6305.40 ms    Billed Duration: 6684 ms        Memory Size: 128 MB     Max Memory Used: 108 MB Init Duration: 377.78 ms
+REPORT RequestId: 57be87e8-ca0f-4231-b33c-b0630db0f928  Duration: 3813.96 ms    Billed Duration: 4171 ms        Memory Size: 128 MB     Max Memory Used: 107 MB        Init Duration: 356.74 ms
 
-REPORT RequestId: f07679d0-c204-4a7b-bf0c-aa96eb632f29  Duration: 5635.15 ms    Billed Duration: 5925 ms        Memory Size: 128 MB     Max Memory Used: 107 MB Init Duration: 289.33 ms
+REPORT RequestId: 47e1855a-55fb-469b-aa1a-55a5ed9400bb  Duration: 3736.69 ms    Billed Duration: 4009 ms        Memory Size: 128 MB     Max Memory Used: 107 MB        Init Duration: 271.82 ms
 
-REPORT RequestId: f6fbfccf-1a5c-47de-8f87-44e32d05986f  Duration: 5756.52 ms    Billed Duration: 6048 ms        Memory Size: 128 MB     Max Memory Used: 109 MB Init Duration: 290.71 ms
-
-REPORT RequestId: 82fec0e9-81df-45b0-bd97-1efc609d4185  Duration: 5936.45 ms    Billed Duration: 6210 ms        Memory Size: 128 MB     Max Memory Used: 108 MB Init Duration: 272.80 ms
-
-REPORT RequestId: ac348bcf-8ec4-4de3-84e5-1b40b19c06b0  Duration: 5646.15 ms    Billed Duration: 5959 ms        Memory Size: 128 MB     Max Memory Used: 109 MB Init Duration: 312.48 ms
-
-REPORT RequestId: f0b33b6b-cee6-4a6c-8a17-83ac531c2bce  Duration: 5936.07 ms    Billed Duration: 6226 ms        Memory Size: 128 MB     Max Memory Used: 110 MB Init Duration: 289.66 ms
-
-REPORT RequestId: 6e4c9355-8aa1-4ff5-8e14-7ec5a9abf6b3  Duration: 5615.71 ms    Billed Duration: 5897 ms        Memory Size: 128 MB     Max Memory Used: 108 MB Init Duration: 280.60 ms
-
-REPORT RequestId: 2c8fdda8-0178-4507-a371-a2b3ec1c9429  Duration: 7577.90 ms    Billed Duration: 7896 ms        Memory Size: 128 MB     Max Memory Used: 114 MB Init Duration: 317.87 ms
-
-REPORT RequestId: 71c8a532-3581-4da3-bfc4-e95d52658be0  Duration: 3734.56 ms    Billed Duration: 4025 ms        Memory Size: 128 MB     Max Memory Used: 107 MB Init Duration: 290.40 ms
-        INIT_REPORT Init Duration: 148.12 ms    Phase: init     Status: error   Error Type: Runtime.ImportModuleError
-        INIT_REPORT Init Duration: 109.22 ms    Phase: invoke   Status: error   Error Type: Runtime.ImportModuleError
-        REPORT RequestId: 48722ed1-2b26-44aa-a15c-8daf61f24e56  Duration: 122.39 ms     Billed Duration: 123 ms Memory Size: 128 MB     Max Memory Used: 78 MB  Status: error   Error Type: Runtime.ImportModuleError
-        INIT_REPORT Init Duration: 124.34 ms    Phase: init     Status: error   Error Type: Runtime.Unknown
-        INIT_REPORT Init Duration: 92.27 ms     Phase: invoke   Status: error   Error Type: Runtime.Unknown
-        REPORT RequestId: a80bb1e5-3de5-4905-b05e-d126b483f079  Duration: 104.60 ms     Billed Duration: 105 ms Memory Size: 128 MB     Max Memory Used: 80 MB  Status: error   Error Type: Runtime.Unknown
-        REPORT RequestId: d9fa7d10-e3fd-4472-80aa-87b6e465322a  Duration: 3527.09 ms    Billed Duration: 3879 ms        Memory Size: 128 MB     Max Memory Used: 106 MB Init Duration: 351.45 ms
-        REPORT RequestId: 409f54c1-b3e8-448b-a997-3c5b70824f79  Duration: 1816.39 ms    Billed Duration: 1817 ms        Memory Size: 128 MB     Max Memory Used: 106 MB
+REPORT RequestId: 36af9264-63d8-48ac-b7a2-a83d71a7934b  Duration: 7553.06 ms    Billed Duration: 7913 ms        Memory Size: 128 MB     Max Memory Used: 111 MB        Init Duration: 359.89 ms
 ```
 
 Extracted durations (not including init):
 
 ```
-6348.12
-5665.62
-5475.95
-6305.40
-5635.15
-5756.52
-5936.45
-5646.15
-5936.07
-5615.71
-7577.90
-3734.56
-122.39
-104.60
-3527.09
-1816.39
+10441.42
+20000.00
+9962.87
+3813.96
+3736.69
+7553.06
 ```
 
-Min (not including errors): **1816.39**
-Max: **7577.90**
-Avg: **75,204.07**
+**Min (not including errors)**: 3736.69
+**Max**: 20,000.00
+**Avg**: 9251.23
+
+## Phase 1 — `generate_csv` concurrency (no architecture change)
+
+### 1.5: Runtime after optimization
+
+Output:
+
+```
+REPORT RequestId: 2a41935a-f5fa-4c5f-98ba-433a67d84931  Duration: 8551.66 ms    Billed Duration: 9003 ms        Memory Size: 128 MB        Max Memory Used: 111 MB Init Duration: 451.23 ms
+REPORT RequestId: d3a1bf19-da90-448b-8d4e-d04648bacb8d  Duration: 4015.50 ms    Billed Duration: 4357 ms        Memory Size: 128 MB        Max Memory Used: 107 MB Init Duration: 340.92 ms
+REPORT RequestId: c938674c-3459-4ddc-876d-137ba3c428c5  Duration: 2167.26 ms    Billed Duration: 2168 ms        Memory Size: 128 MB        Max Memory Used: 111 MB
+REPORT RequestId: 476eef4c-4df1-4ba9-86d7-6b966027b6f0  Duration: 1343.95 ms    Billed Duration: 1344 ms        Memory Size: 128 MB        Max Memory Used: 112 MB
+REPORT RequestId: 927739c9-b51a-4694-aadf-5e50dd547268  Duration: 1441.77 ms    Billed Duration: 1442 ms        Memory Size: 128 MB        Max Memory Used: 112 MB
+REPORT RequestId: 0e50c5e5-403d-403b-821e-9635e58b4488  Duration: 1140.15 ms    Billed Duration: 1141 ms        Memory Size: 128 MB        Max Memory Used: 112 MB
+```
+
+Extracted durations (not including init):
+
+```
+8551.66
+4015.50
+2167.26
+1343.95
+1441.77
+1140.15
+```
+
+**Min**: 1140.15
+**Max**: 8551.66
+**Avg**: 3110.05
+
+**Average gain**: 0.6638230808 (66.38%)
