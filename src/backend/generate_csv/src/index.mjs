@@ -73,7 +73,7 @@ async function mergeResourceAnalytics(sourcePrefix, resolvedData, analyticsFiles
         if (sid) bySessionId[sid] = entry;
     }
 
-    await Promise.allSettled(analyticsFiles.map(({ key, data }) => limit(async () => {
+    const results = await Promise.allSettled(analyticsFiles.map(({ key, data }) => limit(async () => {
         const fileName = key.slice(ANALYTICS_SOURCE_PREFIX.length);
         const match = data.session_id ? bySessionId[data.session_id] : null;
 
@@ -103,6 +103,12 @@ async function mergeResourceAnalytics(sourcePrefix, resolvedData, analyticsFiles
             console.warn(`[${sourcePrefix}] Error moving resource analytics file ${key} to ${destKey}:`, e);
         }
     })));
+
+    for (const r of results) {
+        if (r.status === 'rejected') {
+            console.warn(`[${sourcePrefix}] Error merging resource analytics file, skipping:`, r.reason);
+        }
+    }
 }
 
 async function processDirectory(sourcePrefix, destPrefix, analyticsFiles) {
