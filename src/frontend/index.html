@@ -1383,6 +1383,64 @@
       line-height: 1.5;
     }
 
+    /* Email line: mailto link + copy-to-clipboard button */
+    .contact-email-line {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .contact-email-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      overflow-wrap: anywhere;
+    }
+
+    .contact-email-link:hover {
+      text-decoration: underline;
+    }
+
+    .copy-email-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      font-size: 0.78rem;
+      font-family: inherit;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: var(--bg-primary);
+      border: 1px solid var(--text-secondary);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .copy-email-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .copy-email-btn.copied {
+      color: #22c55e;
+      border-color: #22c55e;
+    }
+
+    /* Note under the contact form submit button */
+    .form-note {
+      margin: 14px 0 0;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .form-note i {
+      margin-right: 4px;
+      color: var(--accent);
+    }
+
     .map-placeholder {
       width: 100%;
       height: 160px;
@@ -2292,17 +2350,12 @@
             </div>
             <div>
               <h4>Email Us</h4>
-              <p>contact@hardhatwellbeing.org</p>
-            </div>
-          </div>
-
-          <div class="contact-detail">
-            <div class="contact-icon">
-              <i class="fas fa-phone"></i>
-            </div>
-            <div>
-              <h4>Call Us</h4>
-              <p>1-800-123-4567</p>
+              <p class="contact-email-line">
+                <a id="contactEmailLink" class="contact-email-link" href="mailto:info@protectingunderthehardhat.org">info@protectingunderthehardhat.org</a>
+                <button type="button" id="copyEmailBtn" class="copy-email-btn" aria-label="Copy email address" title="Copy email address">
+                  <i class="fas fa-copy" aria-hidden="true"></i><span>Copy</span>
+                </button>
+              </p>
             </div>
           </div>
         </div>
@@ -2328,12 +2381,16 @@
             <button type="submit" class="submit-btn">
               <i class="fas fa-paper-plane"></i> Send Message
             </button>
+            <p class="form-note">
+              <i class="fas fa-info-circle" aria-hidden="true"></i>
+              Submitting opens your email app with your message prefilled.
+            </p>
           </form>
 
           <div class="form-success" id="contactSuccess">
-            <i class="fas fa-check-circle"></i>
-            <h4>Message Sent!</h4>
-            <p>Thank you for reaching out. We'll get back to you soon.</p>
+            <i class="fas fa-envelope-open-text"></i>
+            <h4>Your email app should open</h4>
+            <p>Press Send in your email app to deliver your message to us.</p>
           </div>
         </div>
       </div>
@@ -2355,6 +2412,44 @@
       if (formLink) formLink.href = PUTHH_CONFIG.GOOGLE_FORM_URL;
       const formFrame = document.getElementById('materialsFormFrame');
       if (formFrame) formFrame.src = PUTHH_CONFIG.GOOGLE_FORM_URL + '?embedded=true';
+
+      // Contact email: wire mailto link from config (markup holds a hardcoded fallback)
+      const emailLink = document.getElementById('contactEmailLink');
+      if (emailLink && PUTHH_CONFIG.CONTACT_EMAIL) {
+        emailLink.href = 'mailto:' + PUTHH_CONFIG.CONTACT_EMAIL;
+        emailLink.textContent = PUTHH_CONFIG.CONTACT_EMAIL;
+      }
+
+      // Copy email address to clipboard with "Copied!" feedback
+      const copyBtn = document.getElementById('copyEmailBtn');
+      if (copyBtn) copyBtn.addEventListener('click', async () => {
+        const addr = (emailLink && emailLink.textContent.trim()) || 'info@protectingunderthehardhat.org';
+        let copied = false;
+        try {
+          await navigator.clipboard.writeText(addr); // secure context: https (Pages) or localhost
+          copied = true;
+        } catch {
+          // Legacy fallback for older browsers / non-secure contexts
+          try {
+            const ta = document.createElement('textarea');
+            ta.value = addr;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            copied = document.execCommand('copy');
+            ta.remove();
+          } catch { /* clipboard unavailable */ }
+        }
+        copyBtn.classList.add('copied');
+        copyBtn.innerHTML = copied
+          ? '<i class="fas fa-check" aria-hidden="true"></i><span>Copied!</span>'
+          : '<i class="fas fa-times" aria-hidden="true"></i><span>Copy failed</span>';
+        setTimeout(() => {
+          copyBtn.classList.remove('copied');
+          copyBtn.innerHTML = '<i class="fas fa-copy" aria-hidden="true"></i><span>Copy</span>';
+        }, 2000);
+      });
     });
 
     // ===== Dev helpers =====
@@ -2580,20 +2675,30 @@
       }, 5000);
     }
 
-    // Handle Contact Form Submit
+    // Handle Contact Form Submit — static site: compose a mailto in the
+    // visitor's email app (no backend). Message sends when they press Send.
     function handleContactSubmit(event) {
       event.preventDefault();
 
-      // Show success message
+      const name = (document.getElementById('contactName').value || '').trim();
+      const email = (document.getElementById('contactEmail').value || '').trim();
+      const message = (document.getElementById('contactMessage').value || '').trim();
+      const to = (typeof PUTHH_CONFIG !== 'undefined' && PUTHH_CONFIG.CONTACT_EMAIL) || 'info@protectingunderthehardhat.org';
+
+      const subject = encodeURIComponent('PUTHH website message from ' + (name || 'a visitor'));
+      const body = encodeURIComponent(message + '\n\n— ' + (name || '') + (email ? '\n' + email : ''));
+      window.location.href = 'mailto:' + to + '?subject=' + subject + '&body=' + body;
+
+      // Show guidance message (mail app opens on top; user still has to press Send there)
       document.getElementById('contactSuccess').classList.add('show');
 
       // Reset form
       event.target.reset();
 
-      // Hide success after 5 seconds
+      // Hide message after 8 seconds
       setTimeout(() => {
         document.getElementById('contactSuccess').classList.remove('show');
-      }, 5000);
+      }, 8000);
     }
 
     // ===== Dark mode (default light; shared key with questionnaire) =====

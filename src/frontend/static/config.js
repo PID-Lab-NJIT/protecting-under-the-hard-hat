@@ -8,5 +8,7 @@ const PUTHH_CONFIG = {
   // Google Form: Order Materials (iframe appends ?embedded=true)
   GOOGLE_FORM_URL: 'https://docs.google.com/forms/d/e/1FAIpQLSdoVaKiy5ox6ErtL_uhSqXdXOWeDPP8hORkZtJDy7H_0FN2Sw/viewform',
   // Public-facing survey URL used in share/email text
-  PUBLIC_SURVEY_URL: 'https://pid-lab-njit.github.io/protecting-under-the-hard-hat/questionnaire/'
+  PUBLIC_SURVEY_URL: 'https://pid-lab-njit.github.io/protecting-under-the-hard-hat/questionnaire/',
+  // Contact email (mailto target for Contact tab form + copy button)
+  CONTACT_EMAIL: 'info@protectingunderthehardhat.org'
 };
