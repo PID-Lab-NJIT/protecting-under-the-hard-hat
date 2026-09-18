@@ -2639,3 +2639,53 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.survey.initUI();
   });
 });
+
+/* ===== MATERIALS CAROUSEL & BANNER TOGGLE GLOBAL FUNCTIONS ===== */
+window.materialsCarouselState = {
+  banners: 0,
+  posters: 0,
+  stickers: 0
+};
+
+window.setMaterialsCarouselSlide = function(carouselId, slideIndex) {
+  const carousel = document.getElementById(`carousel-${carouselId}`);
+  if (!carousel) return;
+  const track = carousel.querySelector('.materials-carousel-track');
+  const slides = carousel.querySelectorAll('.materials-slide');
+  const dots = document.querySelectorAll(`#dots-${carouselId} .dot`);
+  if (!track || !slides.length) return;
+
+  const numSlides = slides.length;
+  const idx = ((slideIndex % numSlides) + numSlides) % numSlides;
+  window.materialsCarouselState[carouselId] = idx;
+
+  track.style.transform = `translateX(-${idx * 100}%)`;
+  slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+
+  // Sync Vinyl Banner size toggle buttons if carouselId is 'banners'
+  if (carouselId === 'banners') {
+    const toggleBtns = document.querySelectorAll('#bannerMaterialCard .size-toggle-btn');
+    toggleBtns.forEach((b, i) => b.classList.toggle('active', i === idx));
+  }
+};
+
+window.moveMaterialsCarousel = function(carouselId, direction) {
+  const current = window.materialsCarouselState[carouselId] || 0;
+  window.setMaterialsCarouselSlide(carouselId, current + direction);
+};
+
+window.setBannerSizeToggle = function(sizeIndex) {
+  window.setMaterialsCarouselSlide('banners', sizeIndex);
+};
+
+// Auto-spin materials carousels every 6 seconds
+setInterval(() => {
+  ['banners', 'posters', 'stickers'].forEach(id => {
+    if (document.getElementById(`carousel-${id}`)) {
+      window.moveMaterialsCarousel(id, 1);
+    }
+  });
+}, 6000);
+
+

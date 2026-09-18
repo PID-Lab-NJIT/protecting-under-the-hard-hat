@@ -2014,40 +2014,49 @@
       <div class="team-section" style="border-top: none; margin-top: 0; padding-top: 0;">
         <!-- Leaders row (alphabetical: Roni Barak Ventura, Chris Lalevee, Therese Edwards) -->
         <div class="team-row">
-          <div class="team-card">
+          <div class="team-card" onclick="openBioModal(this)" role="button" tabindex="0" title="Click to view full bio">
             <div class="headshot-frame">
               <img src="static/assets/headshots/RoniBarakVentura.webp" alt="Roni Barak Ventura">
+              <div class="headshot-overlay-badge"><i class="fas fa-expand"></i> Full Bio</div>
             </div>
             <div class="team-info">
               <h4>Roni Barak Ventura</h4>
               <p class="team-role">Assistant Professor</p>
               <p class="team-bio">School of Applied Engineering and Technology, Newark College of Engineering, New Jersey Institute of Technology</p>
-              <button class="bio-toggle" onclick="toggleBio(this)" aria-expanded="false">Bio <i class="fas fa-chevron-down"></i></button>
-              <div class="bio-content">Dr. Roni Barak Ventura is an Assistant Professor in the School of Applied Engineering and Technology at NJIT. Her research focuses on human-centered engineering approaches to health and wellbeing. <em>(Placeholder — full bio to be provided.)</em></div>
+              <button type="button" class="bio-btn-full" onclick="event.stopPropagation(); openBioModal(this);">
+                <span>View Full Bio</span>
+              </button>
+              <div class="bio-content" style="display:none;">Dr. Roni Barak Ventura is an Assistant Professor in the School of Applied Engineering and Technology at NJIT. Her research focuses on human-centered engineering approaches to health and wellbeing. <em>(Placeholder — full bio to be provided.)</em></div>
             </div>
           </div>
-          <div class="team-card">
+          <div class="team-card" onclick="openBioModal(this)" role="button" tabindex="0" title="Click to view full bio">
             <div class="headshot-frame">
               <img src="static/assets/headshots/ChrisLalevee.jpg" alt="Chris Lalevee">
+              <div class="headshot-overlay-badge"><i class="fas fa-expand"></i> Full Bio</div>
             </div>
             <div class="team-info">
               <h4>Chris Lalevee</h4>
               <p class="team-role">Member Assistance Coordinator</p>
               <p class="team-bio">International Union of Operating Engineers Local 825</p>
-              <button class="bio-toggle" onclick="toggleBio(this)" aria-expanded="false">Bio <i class="fas fa-chevron-down"></i></button>
-              <div class="bio-content">Bio coming soon. Chris serves as Member Assistance Coordinator for International Union of Operating Engineers Local 825, supporting members and their families. <em>(Placeholder — full bio to be provided.)</em></div>
+              <button type="button" class="bio-btn-full" onclick="event.stopPropagation(); openBioModal(this);">
+                <span>View Full Bio</span>
+              </button>
+              <div class="bio-content" style="display:none;">Bio coming soon. Chris serves as Member Assistance Coordinator for International Union of Operating Engineers Local 825, supporting members and their families. <em>(Placeholder — full bio to be provided.)</em></div>
             </div>
           </div>
-          <div class="team-card">
+          <div class="team-card" onclick="openBioModal(this)" role="button" tabindex="0" title="Click to view full bio">
             <div class="headshot-frame">
               <img src="static/assets/headshots/placeholder.svg" alt="Therese Edwards">
+              <div class="headshot-overlay-badge"><i class="fas fa-expand"></i> Full Bio</div>
             </div>
             <div class="team-info">
               <h4>Therese Edwards</h4>
               <p class="team-role">Health and Wellness Coordinator</p>
               <p class="team-bio">International Union of Operating Engineers Local 825 Funds</p>
-              <button class="bio-toggle" onclick="toggleBio(this)" aria-expanded="false">Bio <i class="fas fa-chevron-down"></i></button>
-              <div class="bio-content">Bio coming soon. Therese serves as Health and Wellness Coordinator for International Union of Operating Engineers Local 825 Funds. <em>(Placeholder — full bio to be provided.)</em></div>
+              <button type="button" class="bio-btn-full" onclick="event.stopPropagation(); openBioModal(this);">
+                <span>View Full Bio</span>
+              </button>
+              <div class="bio-content" style="display:none;">Bio coming soon. Therese serves as Health and Wellness Coordinator for International Union of Operating Engineers Local 825 Funds. <em>(Placeholder — full bio to be provided.)</em></div>
             </div>
           </div>
         </div>
@@ -2056,37 +2065,46 @@
 
         <!-- Students row (alphabetical) -->
         <div class="team-row">
-          <div class="team-card">
+          <div class="team-card" onclick="openBioModal(this)" role="button" tabindex="0" title="Click to view full bio">
             <div class="headshot-frame">
               <img src="static/assets/headshots/AndrewCouto.webp" alt="Andrew Couto">
+              <div class="headshot-overlay-badge"><i class="fas fa-expand"></i> Full Bio</div>
             </div>
             <div class="team-info">
               <h4>Andrew Couto</h4>
               <p class="team-role">Student Researcher</p>
-              <button class="bio-toggle" onclick="toggleBio(this)" aria-expanded="false">Bio <i class="fas fa-chevron-down"></i></button>
-              <div class="bio-content">B.Sc. Civil Engineering, expected 2028. Research interests: construction, data science, and health and safety.</div>
+              <button type="button" class="bio-btn-full" onclick="event.stopPropagation(); openBioModal(this);">
+                <span>View Full Bio</span>
+              </button>
+              <div class="bio-content" style="display:none;">B.Sc. Civil Engineering, expected 2028. Research interests: construction, data science, and health and safety.</div>
             </div>
           </div>
-          <div class="team-card">
+          <div class="team-card" onclick="openBioModal(this)" role="button" tabindex="0" title="Click to view full bio">
             <div class="headshot-frame">
               <img src="static/assets/headshots/FrancoGiovannetti.webp" alt="Franco Giovannetti">
+              <div class="headshot-overlay-badge"><i class="fas fa-expand"></i> Full Bio</div>
             </div>
             <div class="team-info">
               <h4>Franco Giovannetti</h4>
               <p class="team-role">Student Researcher</p>
-              <button class="bio-toggle" onclick="toggleBio(this)" aria-expanded="false">Bio <i class="fas fa-chevron-down"></i></button>
-              <div class="bio-content">B.Sc. Computer Science, expected 2029. Research interests: data science, health and safety, and web design.</div>
+              <button type="button" class="bio-btn-full" onclick="event.stopPropagation(); openBioModal(this);">
+                <span>View Full Bio</span>
+              </button>
+              <div class="bio-content" style="display:none;">B.Sc. Computer Science, expected 2029. Research interests: data science, health and safety, and web design.</div>
             </div>
           </div>
-          <div class="team-card">
+          <div class="team-card" onclick="openBioModal(this)" role="button" tabindex="0" title="Click to view full bio">
             <div class="headshot-frame">
               <img src="static/assets/headshots/KrishPatel.webp" alt="Krish Patel">
+              <div class="headshot-overlay-badge"><i class="fas fa-expand"></i> Full Bio</div>
             </div>
             <div class="team-info">
               <h4>Krish Patel</h4>
               <p class="team-role">Student Researcher</p>
-              <button class="bio-toggle" onclick="toggleBio(this)" aria-expanded="false">Bio <i class="fas fa-chevron-down"></i></button>
-              <div class="bio-content">B.Sc. Computer Science and B.Sc. Applied Physics, expected 2028. Research interests: data science, health and safety, and web design.</div>
+              <button type="button" class="bio-btn-full" onclick="event.stopPropagation(); openBioModal(this);">
+                <span>View Full Bio</span>
+              </button>
+              <div class="bio-content" style="display:none;">B.Sc. Computer Science and B.Sc. Applied Physics, expected 2028. Research interests: data science, health and safety, and web design.</div>
             </div>
           </div>
         </div>
@@ -2207,8 +2225,140 @@
           your jobsite, union hall, or organization.</p>
       </div>
 
-      <div class="materials-form-section">
-        <h3><i class="fas fa-clipboard-list"></i> Request Materials</h3>
+      <!-- MATERIALS PREVIEW CARDS (MOVED TO TOP) -->
+      <div class="materials-grid">
+        <!-- VINYL BANNERS CARD -->
+        <div class="material-card" id="bannerMaterialCard">
+          <div class="material-card-header">
+            <h3><i class="fas fa-flag"></i> Vinyl Banners</h3>
+            <div class="banner-size-toggle" role="radiogroup" aria-label="Vinyl Banner Size Selection">
+              <button type="button" class="size-toggle-btn active" data-size="0" onclick="setBannerSizeToggle(0)">Small (3'×5')</button>
+              <button type="button" class="size-toggle-btn" data-size="1" onclick="setBannerSizeToggle(1)">Large (4'×10')</button>
+            </div>
+          </div>
+          
+          <div class="materials-carousel" id="carousel-banners">
+            <button type="button" class="materials-carousel-btn prev" onclick="moveMaterialsCarousel('banners', -1)" aria-label="Previous banner size"><i class="fas fa-chevron-left"></i></button>
+            <div class="materials-carousel-viewport">
+              <div class="materials-carousel-track">
+                <!-- Slide 0: Small Banner -->
+                <div class="materials-slide active">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Small Size</span>
+                    <i class="fas fa-flag"></i>
+                    <span class="spec-label">3' × 5' Banner</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Weatherproof 13oz vinyl with brass grommets every 2 feet. Perfect for jobsite fences, trailers, and indoor hall displays.</p>
+                  </div>
+                </div>
+                <!-- Slide 1: Large Banner -->
+                <div class="materials-slide">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Large Size</span>
+                    <i class="fas fa-flag"></i>
+                    <span class="spec-label">4' × 10' Banner</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Heavy-duty outdoor vinyl banner with reinforced hemmed edges and corner webbing. High visibility for main gates and perimeter fences.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="materials-carousel-btn next" onclick="moveMaterialsCarousel('banners', 1)" aria-label="Next banner size"><i class="fas fa-chevron-right"></i></button>
+          </div>
+          <div class="materials-carousel-dots" id="dots-banners">
+            <button type="button" class="dot active" onclick="setMaterialsCarouselSlide('banners', 0)" aria-label="Slide 1"></button>
+            <button type="button" class="dot" onclick="setMaterialsCarouselSlide('banners', 1)" aria-label="Slide 2"></button>
+          </div>
+        </div>
+
+        <!-- POSTERS CARD -->
+        <div class="material-card">
+          <div class="material-card-header">
+            <h3><i class="fas fa-rectangle-list"></i> Posters</h3>
+          </div>
+          <div class="materials-carousel" id="carousel-posters">
+            <button type="button" class="materials-carousel-btn prev" onclick="moveMaterialsCarousel('posters', -1)" aria-label="Previous poster size"><i class="fas fa-chevron-left"></i></button>
+            <div class="materials-carousel-viewport">
+              <div class="materials-carousel-track">
+                <!-- Slide 0: Standard Poster -->
+                <div class="materials-slide active">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Standard Size</span>
+                    <i class="fas fa-file-invoice"></i>
+                    <span class="spec-label">11" × 17" Poster</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>High-visibility gloss cardstock posters for break rooms, bulletin boards, and trailer walls. Features 988 Helpline & QR code.</p>
+                  </div>
+                </div>
+                <!-- Slide 1: Large Poster -->
+                <div class="materials-slide">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Large Format</span>
+                    <i class="fas fa-newspaper"></i>
+                    <span class="spec-label">18" × 24" Poster</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Large format jobsite poster highlighting mental health awareness, warning signs, and local 24/7 support hotlines.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="materials-carousel-btn next" onclick="moveMaterialsCarousel('posters', 1)" aria-label="Next poster size"><i class="fas fa-chevron-right"></i></button>
+          </div>
+          <div class="materials-carousel-dots" id="dots-posters">
+            <button type="button" class="dot active" onclick="setMaterialsCarouselSlide('posters', 0)" aria-label="Slide 1"></button>
+            <button type="button" class="dot" onclick="setMaterialsCarouselSlide('posters', 1)" aria-label="Slide 2"></button>
+          </div>
+        </div>
+
+        <!-- STICKERS CARD -->
+        <div class="material-card">
+          <div class="material-card-header">
+            <h3><i class="fas fa-note-sticky"></i> Stickers</h3>
+          </div>
+          <div class="materials-carousel" id="carousel-stickers">
+            <button type="button" class="materials-carousel-btn prev" onclick="moveMaterialsCarousel('stickers', -1)" aria-label="Previous sticker style"><i class="fas fa-chevron-left"></i></button>
+            <div class="materials-carousel-viewport">
+              <div class="materials-carousel-track">
+                <!-- Slide 0: Hard Hat Decal -->
+                <div class="materials-slide active">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Hard Hat Decal</span>
+                    <i class="fas fa-stamp"></i>
+                    <span class="spec-label">2" Round Sticker</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Durable, weatherproof vinyl decal designed for hard hats. UV-resistant finish withstands tough jobsite conditions.</p>
+                  </div>
+                </div>
+                <!-- Slide 1: Toolbox Sticker -->
+                <div class="materials-slide">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Toolbox Sticker</span>
+                    <i class="fas fa-box-archive"></i>
+                    <span class="spec-label">3" × 4" Sticker</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Heavy-duty vinyl sticker featuring the PUTHH logo and helpline information for toolboxes, gangboxes, and equipment.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="materials-carousel-btn next" onclick="moveMaterialsCarousel('stickers', 1)" aria-label="Next sticker style"><i class="fas fa-chevron-right"></i></button>
+          </div>
+          <div class="materials-carousel-dots" id="dots-stickers">
+            <button type="button" class="dot active" onclick="setMaterialsCarouselSlide('stickers', 0)" aria-label="Slide 1"></button>
+            <button type="button" class="dot" onclick="setMaterialsCarouselSlide('stickers', 1)" aria-label="Slide 2"></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- GOOGLE FORM ORDER SECTION -->
+      <div class="materials-form-section" style="margin-top: 40px;">
+        <h3><i class="fas fa-clipboard-list"></i> Request Materials Form</h3>
         <p>Fill out the form below to request materials for your jobsite, union hall, or organization. We'll review your
           request and get back to you with availability and shipping details.</p>
         <a id="materialsFormLink" href="#" target="_blank" rel="noopener noreferrer" class="hero-cta" style="margin-top: 8px;">
@@ -2221,38 +2371,6 @@
                 title="Order Materials Form">
           Loading…
         </iframe>
-      </div>
-
-      <div class="materials-grid">
-        <div class="material-card">
-          <div class="material-card-image">
-            <i class="fas fa-flag"></i>
-          </div>
-          <div class="material-card-body">
-            <h3>Vinyl Banners</h3>
-            <p>Weatherproof, outdoor-rated vinyl banners for jobsites, fences, and union halls. Available in multiple sizes.</p>
-          </div>
-        </div>
-
-        <div class="material-card">
-          <div class="material-card-image">
-            <i class="fas fa-rectangle-list"></i>
-          </div>
-          <div class="material-card-body">
-            <h3>Posters</h3>
-            <p>Informational posters for break rooms, bulletin boards, and trailer walls. Covers crisis lines, survey info, and wellbeing tips.</p>
-          </div>
-        </div>
-
-        <div class="material-card">
-          <div class="material-card-image">
-            <i class="fas fa-note-sticky"></i>
-          </div>
-          <div class="material-card-body">
-            <h3>Hard Hat Stickers</h3>
-            <p>Durable stickers with the PUTHH logo for hard hats, equipment, and toolboxes. Show your support on the job.</p>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -2701,6 +2819,54 @@
       }, 8000);
     }
 
+    // ===== Full Screen Bio Modal =====
+    function openBioModal(btn) {
+      const card = btn.closest('.team-card');
+      if (!card) return;
+      const img = card.querySelector('.headshot-frame img');
+      const name = card.querySelector('h4')?.textContent || '';
+      const role = card.querySelector('.team-role')?.textContent || '';
+      const affiliation = card.querySelector('.team-bio')?.textContent || '';
+      const bioContent = card.querySelector('.bio-content')?.innerHTML || '';
+
+      document.getElementById('bioModalImg').src = img ? img.src : 'static/assets/headshots/placeholder.svg';
+      document.getElementById('bioModalImg').alt = name;
+      document.getElementById('bioModalName').textContent = name;
+      document.getElementById('bioModalRole').textContent = role;
+      document.getElementById('bioModalAffiliation').textContent = affiliation;
+      document.getElementById('bioModalBody').innerHTML = bioContent;
+
+      const overlay = document.getElementById('bioModalOverlay');
+      if (overlay) {
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeBioModal() {
+      const overlay = document.getElementById('bioModalOverlay');
+      if (overlay) {
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+    }
+
+    // Modal backdrop click & Escape key listener
+    document.addEventListener('click', (e) => {
+      const overlay = document.getElementById('bioModalOverlay');
+      if (overlay && overlay.classList.contains('active') && e.target === overlay) {
+        closeBioModal();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeBioModal();
+      }
+    });
+
     // ===== Dark mode (default light; shared key with questionnaire) =====
     function applyTheme(theme) {
       const dark = theme === 'dark';
@@ -2734,6 +2900,26 @@
     // Update indicator on resize
     window.addEventListener('resize', updateTabIndicator);
   </script>
+
+  <!-- FULL SCREEN BIO MODAL OVERLAY -->
+  <div id="bioModalOverlay" class="bio-modal-overlay" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="bio-modal-container">
+      <button type="button" id="bioModalCloseBtn" class="bio-modal-close" onclick="closeBioModal()" aria-label="Close Bio Panel">
+        <i class="fas fa-xmark"></i>
+      </button>
+      <div class="bio-modal-header">
+        <img id="bioModalImg" src="static/assets/headshots/placeholder.svg" alt="" class="bio-modal-headshot">
+        <div class="bio-modal-title-group">
+          <h3 id="bioModalName">Member Name</h3>
+          <div id="bioModalRole" class="bio-modal-role">Role</div>
+          <div id="bioModalAffiliation" class="bio-modal-affiliation">Organization</div>
+        </div>
+      </div>
+      <div id="bioModalBody" class="bio-modal-body">
+        Bio details...
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
