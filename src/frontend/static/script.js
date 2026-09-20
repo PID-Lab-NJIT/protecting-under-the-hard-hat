@@ -1346,6 +1346,7 @@ class DynamicSurvey {
   /* Shared help-card renderer */
   helpCardHTML(card) {
     const l = this.localizedResource(card);
+    const tagsAttr = Array.isArray(card.tags) ? card.tags.join(' ') : '';
     const actions = l.actions.map(a => {
       const icon = a.icon || (a.kind === 'sms' ? 'fas fa-comment-dots' : a.kind === 'web' ? 'fas fa-globe' : 'fas fa-phone');
       const href = a.href || '#';
@@ -1353,7 +1354,7 @@ class DynamicSurvey {
       return `<a class="chip" href="${href}" ${blank}><i class="${icon}"></i> ${a.label}</a>`;
     }).join('');
     return `
-        <div class="help-card" data-title="${(l.title || card.title || '').replace(/"/g, '&quot;')}">
+        <div class="help-card" data-title="${(l.title || card.title || '').replace(/"/g, '&quot;')}" data-tags="${tagsAttr}">
             <h4>${l.title}</h4>
             ${l.description ? `<div class="help-description">${l.description}</div>` : ''}
             ${l.meta ? `<div class="help-meta">${l.meta}</div>` : ''}
@@ -1481,16 +1482,15 @@ class DynamicSurvey {
     let matchingResources = [];
 
     if (q) {
-      // 1. Topics & Tags
+      // 1. Topics & Tags — use the actual tags present in resources.json
+      // plus friendly aliases for common searches
       const topicCandidates = [
-        { label: 'Alcohol & Substance Use', value: 'alcohol' },
-        { label: 'Anxiety & Stress', value: 'anxiety' },
         { label: 'Depression & Mood', value: 'depression' },
-        { label: 'Crisis & Suicide Prevention', value: 'crisis' },
+        { label: 'Alcohol & Substance Use', value: 'alcohol' },
         { label: 'Substance Use & Recovery', value: 'substances' },
-        { label: 'Veterans & Service Members', value: 'veteran' },
-        { label: 'Union & Member Assistance (MAP)', value: 'union' }
+        { label: 'Abuse & Violence', value: 'abuse' },
       ];
+      // Also dynamically pick up any tags in RESOURCES_DB not already listed
       (RESOURCES_DB || []).forEach(r => {
         (r.tags || []).forEach(tVal => {
           if (tVal && !topicCandidates.some(c => c.value === tVal)) {
@@ -1816,7 +1816,9 @@ class DynamicSurvey {
         } else {
           if (q && !cardText.includes(q)) match = false;
           if (tagChips.length > 0) {
-            const hasTagMatch = tagChips.some(tc => cardText.includes(tc));
+            // Match against data-tags attribute (space-separated tag values set in helpCardHTML)
+            const cardTags = (cardEl.dataset.tags || '').toLowerCase().split(' ').filter(Boolean);
+            const hasTagMatch = tagChips.every(tc => cardTags.includes(tc));
             if (!hasTagMatch) match = false;
           }
           if (unionChips.length > 0) {
