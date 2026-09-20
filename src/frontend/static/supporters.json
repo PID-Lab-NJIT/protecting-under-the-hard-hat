@@ -3,10 +3,10 @@
     {
       "name": "Associated Construction Contractors of New Jersey (ACCNJ)",
       "featured": true,
-      "logo": null,
+      "logo": "static/assets/logos/Associations/ACCNJ.png",
       "icon": "fas fa-building-columns",
       "url": "https://www.accnj.org/",
-      "description": "Placeholder description — logo to be added."
+      "description": "Statewide trade association representing union construction contractors."
     }
   ],
   "contractors": [
@@ -15,21 +15,21 @@
       "logo": null,
       "icon": "fas fa-helmet-safety",
       "url": null,
-      "description": "Placeholder — logo and link to be added."
+      "description": "General Contractor."
     },
     {
       "name": "Skanska",
       "logo": null,
       "icon": "fas fa-helmet-safety",
       "url": null,
-      "description": "Placeholder — logo and link to be added."
+      "description": "General Contractor."
     },
     {
       "name": "Waters and Bugbee",
-      "logo": null,
+      "logo": "static/assets/logos/Contractors/Waters & Bugbee.jpeg",
       "icon": "fas fa-helmet-safety",
       "url": null,
-      "description": "Placeholder — logo and link to be added."
+      "description": "Heavy Highway and Utility Contractor."
     },
     {
       "name": "Weeks Marine",
@@ -43,30 +43,30 @@
     {
       "name": "International Union of Operating Engineers Local 825",
       "featured": true,
-      "logo": "static/assets/logos/MAP-logo.jpeg",
+      "logo": "static/assets/logos/Unions/MAP-logo.jpeg",
       "icon": "fas fa-people-carry-box",
       "url": "https://www.iuoe825.org/",
-      "description": "Placeholder description — logo to be added."
+      "description": "Member Assistance Program supporting operating engineers and their families."
     }
   ],
   "testimonies": [
     {
-      "name": "Sample Supporter",
-      "affiliation": "IUOE Local 825 (placeholder)",
-      "headshot": "static/assets/headshots/placeholder.svg",
-      "quote": "This initiative opened the door for real conversations about mental health on our job sites. (Placeholder testimony)"
+      "name": "Joe Schwed, CSP, CHST",
+      "affiliation": "Head of Health, Safety and Wellbeing at JFK Terminal 1",
+      "headshot": "static/assets/headshots/JoeSchwed.jpg",
+      "quote": "Mental health and well-being are just as important as any other aspect of safety on our projects. I've always supported efforts that encourage workers to speak up, look out for one another, and get help when they need it. Protecting Under the Hard Hat builds on that commitment by providing workers and their families with resources they can access and use when it matters most."
     },
     {
-      "name": "Sample Contractor",
-      "affiliation": "General Contractor (placeholder)",
-      "headshot": "static/assets/headshots/placeholder.svg",
-      "quote": "The survey and resources made it easy for our crews to find help without stigma. (Placeholder testimony)"
+      "name": "Ed Campbell",
+      "affiliation": "Foreman at Waters & Bugbee, Construction and General Laborers' Union Local 172",
+      "headshot": "static/assets/headshots/EdCampbell.jpg",
+      "quote": "I think it is a good initiative where if we can answer something anonymously and get the resources that we need it can really help the construction industry."
     },
     {
-      "name": "Sample Worker",
-      "affiliation": "Construction Worker (placeholder)",
-      "headshot": "static/assets/headshots/placeholder.svg",
-      "quote": "I didn't know where to start until a coworker showed me this site. It pointed me to the right people. (Placeholder testimony)"
+      "name": "Isaiah Mayo",
+      "affiliation": "Worker at Waters & Bugbee, Construction and General Laborers' Union Local 172",
+      "headshot": "static/assets/headshots/IsaiahMayo.jpg",
+      "quote": "Every voice needs an ear."
     }
   ]
 }

@@ -378,23 +378,21 @@ class DynamicSurvey {
       whyContent: document.getElementById('whyContent'),
       whySection: document.getElementById('whySection'),
       resourceSearch: document.getElementById('resourceSearch'),
+      unifiedSearchWrap: document.querySelector('.unified-search-bar-wrap'),
+      searchChipsContainer: document.getElementById('searchChipsContainer'),
+      searchDropdown: document.getElementById('searchDropdown'),
+      zipPopoverBtn: document.getElementById('zipPopoverBtn'),
+      zipPopoverMenu: document.getElementById('zipPopoverMenu'),
+      maxDistanceSlider: document.getElementById('maxDistanceSlider'),
+      distanceValueLabel: document.getElementById('distanceValueLabel'),
+      distanceSliderWrap: document.getElementById('distanceSliderWrap'),
+      sliderLockTooltip: document.getElementById('sliderLockTooltip'),
       zipInput: document.getElementById('zipInput'),
       zipSearchBtn: document.getElementById('zipSearchBtn'),
       zipClearBtn: document.getElementById('zipClearBtn'),
       zipStatus: document.getElementById('zipStatus'),
       localSection: document.getElementById('localResourcesSection'),
       localGrid: document.getElementById('localGrid'),
-      unionInput: document.getElementById('unionFilterInput'),
-      unionClearBtn: document.getElementById('unionClearBtn'),
-      unionList: document.getElementById('unionFilterList'),
-      localSortWrap: document.getElementById('localSortWrap'),
-      localSortTrigger: document.getElementById('localSortTrigger'),
-      localSortValue: document.getElementById('localSortValue'),
-      localSortList: document.getElementById('localSortList'),
-      distanceRow: document.getElementById('distanceRow'),
-      maxDistanceSlider: document.getElementById('maxDistanceSlider'),
-      maxDistanceValue: document.getElementById('maxDistanceValue'),
-      maxDistanceHint: document.getElementById('maxDistanceHint'),
       nationalTitle: document.getElementById('nationalTitle'),
       emailResultsBtn: document.getElementById('emailResultsBtn'),
       exitRampBtn: document.getElementById('exitRampBtn'),
@@ -402,6 +400,8 @@ class DynamicSurvey {
     };
 
     this.clickedResources = []; // Array preserves order and duplicates (e.g. A→B→A)
+    this.selectedSearchChips = [];
+    this.directMatchedResourceTitle = null;
 
     this.bindGlobalEvents();
     this.initUI();
@@ -416,45 +416,121 @@ class DynamicSurvey {
       this.toggleWhySection();
     });
 
-    // H1: live search filter on resource cards
-    this.dom.resourceSearch?.addEventListener('input', () => this.applyResourceSearch());
+    // Unified search filter & typeahead dropdown listeners
+    this.dom.resourceSearch?.addEventListener('input', () => {
+      if (this.directMatchedResourceTitle && (this.dom.resourceSearch.value.trim().toLowerCase() !== this.directMatchedResourceTitle.toLowerCase())) {
+        this.directMatchedResourceTitle = null;
+      }
+      this.closeZipPopover();
+      this.onUnifiedSearchInput();
+      this.applyResourceSearch();
+    });
+    this.dom.resourceSearch?.addEventListener('focus', () => {
+      this.closeZipPopover();
+      this.onUnifiedSearchInput();
+    });
+    this.dom.resourceSearch?.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') this.closeSearchDropdown();
+    });
 
-    // H7: localized resources via ZIP
-    this.dom.zipSearchBtn?.addEventListener('click', () => this.lookupLocalResources());
-    this.dom.zipInput?.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); this.lookupLocalResources(); } });
-    this.dom.zipClearBtn?.addEventListener('click', () => this.clearLocalResources());
-
-    // Union/Contractor client-side filter (typeahead over the full resource list)
+    // ZIP & Distance Popover listeners
     this._allLocalResources = null;      // cached full list (max-radius=-1)
     this._allLocalFetch = null;          // in-flight fetch promise (dedupe)
-    this._unionFilter = '';              // selected union/contractor ('' = none)
     this._localSort = 'relevance';       // 'relevance' | 'name' | 'distance'
-    this._maxDistanceMiles = 50;         // slider value; applied only when ZIP results exist
-    this.dom.unionInput?.addEventListener('input', () => this.onUnionInput());
-    this.dom.unionInput?.addEventListener('focus', () => this.onUnionInput());
-    this.dom.unionInput?.addEventListener('keydown', (e) => this.onUnionKeydown(e));
-    this.dom.unionClearBtn?.addEventListener('click', () => this.clearUnionFilter());
-    this.dom.localSortTrigger?.addEventListener('click', (e) => {
+    this._maxDistanceMiles = 25;         // default 25 miles
+
+    this.dom.zipPopoverBtn?.addEventListener('click', (e) => {
       e.stopPropagation();
-      this.toggleSortMenu();
+      this.toggleZipPopover();
     });
-    this.dom.localSortTrigger?.addEventListener('keydown', (e) => this.onSortTriggerKeydown(e));
-    this.dom.localSortList?.addEventListener('click', (e) => {
-      const item = e.target.closest('.custom-select-item');
-      if (item) this.selectSort(item.dataset.value);
+    this.dom.zipSearchBtn?.addEventListener('click', () => {
+      this.lookupLocalResources();
+      this.closeZipPopover();
     });
-    this.dom.localSortList?.addEventListener('keydown', (e) => this.onSortListKeydown(e));
-    this.dom.maxDistanceSlider?.addEventListener('input', () => {
-      this._maxDistanceMiles = Number(this.dom.maxDistanceSlider.value) || 50;
-      this.updateDistanceSliderLabel();
+    this.dom.zipInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        this.lookupLocalResources();
+        this.closeZipPopover();
+      }
+    });
+    this.dom.zipClearBtn?.addEventListener('click', () => {
+      this.clearLocalResources();
+      this.updateZipPopoverLabel();
+    });
+    this.dom.maxDistanceSlider?.addEventListener('input', (e) => {
+      // Guard: ignore if slider is still locked (and provide visual feedback)
+      if (this.dom.distanceSliderWrap?.classList.contains('zip-locked')) {
+        // Revert the visual slider to the default or last valid value
+        e.target.value = this._maxDistanceMiles || 50;
+        sliderLockedFeedback(e);
+        return;
+      }
+      const rawVal = Number(this.dom.maxDistanceSlider.value) || 25;
+      if (rawVal >= 105) {
+        this._maxDistanceMiles = 99999;
+        if (this.dom.distanceValueLabel) this.dom.distanceValueLabel.textContent = 'Any Distance';
+      } else {
+        this._maxDistanceMiles = rawVal;
+        if (this.dom.distanceValueLabel) this.dom.distanceValueLabel.textContent = `${rawVal} Miles`;
+      }
+      this.updateZipPopoverLabel();
       this.refreshLocalResults();
+      this.applyResourceSearch();
     });
-    // Click/tap anywhere on the track jumps the thumb there AND begins dragging
-    // in the same gesture (native range behaviour is inconsistent across browsers).
-    this.setupSliderJumpDrag(this.dom.maxDistanceSlider);
+
+    // Intercept slider interaction when locked — shake + show tooltip + focus input
+    const sliderLockedFeedback = (e) => {
+      const wrap = this.dom.distanceSliderWrap;
+      if (!wrap || !wrap.classList.contains('zip-locked')) return;
+      if (e && typeof e.preventDefault === 'function' && e.type !== 'input') {
+        e.preventDefault();
+      }
+      const slider = this.dom.maxDistanceSlider;
+      const tooltip = this.dom.sliderLockTooltip;
+      // Shake the slider
+      if (slider) {
+        slider.classList.remove('shaking');
+        void slider.offsetWidth; // reflow to restart animation
+        slider.classList.add('shaking');
+        slider.addEventListener('animationend', () => slider.classList.remove('shaking'), { once: true });
+      }
+      // Highlight & focus ZIP input
+      if (this.dom.zipInput) {
+        this.dom.zipInput.classList.remove('shaking', 'input-attention');
+        void this.dom.zipInput.offsetWidth;
+        this.dom.zipInput.classList.add('shaking', 'input-attention');
+        this.dom.zipInput.focus();
+        setTimeout(() => this.dom.zipInput.classList.remove('shaking', 'input-attention'), 1200);
+      }
+      // Show bright tooltip
+      if (tooltip) {
+        tooltip.classList.add('visible');
+        clearTimeout(this._sliderTooltipTimer);
+        this._sliderTooltipTimer = setTimeout(() => tooltip.classList.remove('visible'), 2200);
+      }
+    };
+    this.dom.distanceSliderWrap?.addEventListener('mousedown', sliderLockedFeedback);
+    this.dom.distanceSliderWrap?.addEventListener('touchstart', sliderLockedFeedback, { passive: false });
+    this.dom.distanceSliderWrap?.addEventListener('click', sliderLockedFeedback);
+
+    // Unlock slider as user types — requires a full valid 5-digit ZIP
+    this.dom.zipInput?.addEventListener('input', () => {
+      // Strip non-numeric characters
+      const raw = this.dom.zipInput.value;
+      const numeric = raw.replace(/\D/g, '');
+      if (numeric !== raw) this.dom.zipInput.value = numeric;
+      this.updateSliderLockState();
+      
+      // Auto-search if 5 digits are entered!
+      if (/^\d{5}$/.test(numeric)) {
+        this.lookupLocalResources();
+      }
+    });
+
     document.addEventListener('click', (e) => {
-      if (!e.target.closest('.union-filter')) this.closeUnionList();
-      if (!e.target.closest('.custom-select')) this.closeSortMenu();
+      if (!e.target.closest('.unified-search-bar-wrap')) this.closeSearchDropdown();
+      if (!e.target.closest('#zipPopoverBtn') && !e.target.closest('#zipPopoverMenu')) this.closeZipPopover();
     });
 
     // Warm the union/contractor list in the background so the typeahead is
@@ -1277,7 +1353,7 @@ class DynamicSurvey {
       return `<a class="chip" href="${href}" ${blank}><i class="${icon}"></i> ${a.label}</a>`;
     }).join('');
     return `
-        <div class="help-card">
+        <div class="help-card" data-title="${(l.title || card.title || '').replace(/"/g, '&quot;')}">
             <h4>${l.title}</h4>
             ${l.description ? `<div class="help-description">${l.description}</div>` : ''}
             ${l.meta ? `<div class="help-meta">${l.meta}</div>` : ''}
@@ -1380,63 +1456,435 @@ class DynamicSurvey {
      (e.g. "depression"); local rows match every sheet field (title, union,
      notes, address, phone, web address, topic names, …). Raw English fields
      are always searchable, even when the UI language is es/pt. */
-  applyResourceSearch() {
-    const q = (this.dom.resourceSearch?.value || '').trim().toLowerCase();
-    const truthy = (v) => v === true || String(v).toLowerCase() === 'true';
+  unionMatchesQuery(unionName, q) {
+    if (!unionName || !q) return false;
+    return String(unionName).toLowerCase().includes(q);
+  }
 
-    const nationalMatch = (card) => {
-      if (!q) return true;
-      const l = this.localizedResource(card);
-      const hay = [
-        card.title, l.title,
-        card.description, l.description,
-        card.meta, l.meta,
-        ...(Array.isArray(card.actions) ? card.actions : []).map(a => `${a.label || ''} ${a.href || ''}`),
-        ...(Array.isArray(l.actions) ? l.actions : []).map(a => `${a.label || ''} ${a.href || ''}`),
-        ...(Array.isArray(card.tags) ? card.tags : [])
-      ].filter(Boolean).join(' ').toLowerCase();
-      return hay.includes(q);
-    };
+  /* Unified Search & Categorized Typeahead Dropdown */
+  async onUnifiedSearchInput() {
+    const input = this.dom.resourceSearch;
+    if (!input) return;
+    const q = input.value.trim().toLowerCase();
 
-    const localRowMatch = (row) => {
-      if (!q) return true;
-      const hay = Object.entries(row).map(([k, v]) => {
-        if (typeof v === 'boolean') return truthy(v) ? k : ''; // topic flags: search the topic name only when supported
-        return v == null ? '' : String(v);
-      }).filter(Boolean).join(' ').toLowerCase();
-      return hay.includes(q);
-    };
+    // Mutual exclusivity: typing closes the ZIP popover
+    this.closeZipPopover();
 
-    // Cards render in data order (flat or grouped), so map DOM elements to
-    // data rows by position. Skips helper cards (#searchNoMatch, empty-state).
-    const filterGrid = (grid, rows, matcher) => {
-      if (!grid) return 0;
-      let visibleCount = 0;
-      let idx = 0;
-      grid.querySelectorAll('.help-card').forEach(cardEl => {
-        if (cardEl.id === 'searchNoMatch') return;
-        const row = rows[idx++];
-        const match = !q || (row && matcher(row));
-        cardEl.style.display = match ? '' : 'none';
-        if (match) visibleCount++;
+    // Ensure full local resources list is cached for union names and direct resources
+    await this.ensureAllLocalResources();
+
+    const hasActiveChips = (this.selectedSearchChips && this.selectedSearchChips.length > 0);
+    const hasActiveZip = Boolean(this.activeZipCode);
+
+    let matchingTopics = [];
+    let matchingUnions = [];
+    let matchingResources = [];
+
+    if (q) {
+      // 1. Topics & Tags
+      const topicCandidates = [
+        { label: 'Alcohol & Substance Use', value: 'alcohol' },
+        { label: 'Anxiety & Stress', value: 'anxiety' },
+        { label: 'Depression & Mood', value: 'depression' },
+        { label: 'Crisis & Suicide Prevention', value: 'crisis' },
+        { label: 'Substance Use & Recovery', value: 'substances' },
+        { label: 'Veterans & Service Members', value: 'veteran' },
+        { label: 'Union & Member Assistance (MAP)', value: 'union' }
+      ];
+      (RESOURCES_DB || []).forEach(r => {
+        (r.tags || []).forEach(tVal => {
+          if (tVal && !topicCandidates.some(c => c.value === tVal)) {
+            topicCandidates.push({ label: String(tVal).charAt(0).toUpperCase() + String(tVal).slice(1), value: String(tVal) });
+          }
+        });
       });
-      return visibleCount;
-    };
+      matchingTopics = topicCandidates.filter(t => 
+        !this.selectedSearchChips.some(c => c.type === 'tag' && (c.val === t.value || c.label.toLowerCase() === t.label.toLowerCase())) &&
+        (t.label.toLowerCase().includes(q) || t.value.toLowerCase().includes(q))
+      ).slice(0, 4);
 
-    const n1 = filterGrid(this.dom.helpGrid, this._renderedCards || [], nationalMatch);
-    const n2 = filterGrid(this.dom.localGrid, (this._localList && this._localList.list) || [], localRowMatch);
+      // 2. Unions & Contractors
+      const unionNames = this.getUnionNames();
+      matchingUnions = unionNames.filter(u => 
+        !this.selectedSearchChips.some(c => c.type === 'union' && c.val.toLowerCase() === u.toLowerCase()) &&
+        this.unionMatchesQuery(u, q)
+      ).slice(0, 4);
 
-    // Group chrome (divider + headings) only makes sense for the full,
-    // unfiltered relevance view — hide it while a search query is active.
-    [this.dom.helpGrid, this.dom.localGrid].forEach(grid => {
-      grid?.querySelectorAll('.resource-divider, .resource-group-heading').forEach(el => {
-        el.style.display = q ? 'none' : '';
+      // 3. Direct Resources
+      const resourceCandidates = [];
+      (RESOURCES_DB || []).forEach(r => {
+        if (r.title && r.title.toLowerCase().includes(q)) {
+          resourceCandidates.push({ label: r.title, value: r.title, isLocal: false });
+        }
+      });
+      (this._allLocalResources || []).forEach(r => {
+        const title = this.field(r, 'Title') || this.field(r, 'Resource') || this.field(r, 'Name');
+        if (title && String(title).toLowerCase().includes(q)) {
+          if (!resourceCandidates.some(c => c.label === String(title))) {
+            resourceCandidates.push({ label: String(title), value: String(title), isLocal: true });
+          }
+        }
+      });
+      matchingResources = resourceCandidates.slice(0, 4);
+    }
+
+    if (!q && !hasActiveChips && !hasActiveZip) {
+      this.closeSearchDropdown();
+      return;
+    }
+
+    this.renderSearchDropdown({
+      topics: matchingTopics,
+      unions: matchingUnions,
+      resources: matchingResources
+    });
+  }
+
+  renderSearchDropdown({ topics, unions, resources }) {
+    const dd = this.dom.searchDropdown;
+    if (!dd) return;
+
+    let html = '';
+
+    // Pinned Active Filters header in Dropdown
+    const hasChips = (this.selectedSearchChips && this.selectedSearchChips.length > 0);
+    const hasZip = Boolean(this.activeZipCode);
+    if (hasChips || hasZip) {
+      html += `<div class="search-dropdown-pinned-container">
+        <div class="search-dropdown-group-title pinned-title"><i class="fas fa-filter"></i> Pinned Active Filters</div>
+        <div class="search-dropdown-pinned-chips">`;
+      if (hasZip) {
+        html += `<span class="search-chip pinned-chip">
+          <i class="fas fa-location-dot"></i> ZIP: ${this.activeZipCode} (${this.maxDistanceMiles || 25} mi)
+          <button type="button" class="remove-chip-btn-dropdown" data-action="remove-zip" aria-label="Remove ZIP filter">×</button>
+        </span>`;
+      }
+      (this.selectedSearchChips || []).forEach((chip, idx) => {
+        html += `<span class="search-chip pinned-chip">
+          <i class="fas ${chip.type === 'union' ? 'fa-helmet-safety' : 'fa-tag'}"></i> ${chip.label}
+          <button type="button" class="remove-chip-btn-dropdown" data-action="remove-chip" data-index="${idx}" aria-label="Remove filter">×</button>
+        </span>`;
+      });
+      html += `</div></div>`;
+    }
+
+    if (topics && topics.length) {
+      html += `<div class="search-dropdown-group-title"><i class="fas fa-tag"></i> Topics & Tags</div>`;
+      topics.forEach(t => {
+        html += `<button type="button" class="search-dropdown-item" data-type="tag" data-val="${t.value.replace(/"/g, '&quot;')}" data-label="${t.label.replace(/"/g, '&quot;')}">
+          <span class="item-text">${t.label}</span>
+          <span class="item-badge">Topic</span>
+        </button>`;
+      });
+    }
+
+    if (unions && unions.length) {
+      html += `<div class="search-dropdown-group-title"><i class="fas fa-helmet-safety"></i> Unions & Contractors</div>`;
+      unions.forEach(u => {
+        html += `<button type="button" class="search-dropdown-item" data-type="union" data-val="${u.replace(/"/g, '&quot;')}" data-label="${u.replace(/"/g, '&quot;')}">
+          <span class="item-text">${u}</span>
+          <span class="item-badge">Union</span>
+        </button>`;
+      });
+    }
+
+    if (resources && resources.length) {
+      html += `<div class="search-dropdown-group-title"><i class="fas fa-hand-holding-heart"></i> Direct Resources</div>`;
+      resources.forEach(r => {
+        html += `<button type="button" class="search-dropdown-item" data-type="resource" data-val="${r.value.replace(/"/g, '&quot;')}" data-label="${r.label.replace(/"/g, '&quot;')}">
+          <span class="item-text">${r.label}</span>
+          <span class="item-badge">${r.isLocal ? 'Local' : 'National'}</span>
+        </button>`;
+      });
+    }
+
+    // If query exists but no matches, show empty state rather than silently closing
+    const hasQuery = this.dom.resourceSearch && this.dom.resourceSearch.value.trim().length > 0;
+    if (!html) {
+      if (hasQuery) {
+        const q = this.dom.resourceSearch.value.trim();
+        html = `<div class="search-empty-state"><i class="fas fa-search"></i> <em>No items found for "${q}".</em></div>`;
+      } else {
+        this.closeSearchDropdown();
+        return;
+      }
+    }
+
+    dd.innerHTML = html;
+    dd.style.display = 'block';
+    // Next frame: add .is-visible so the CSS opacity/transform transition fires
+    requestAnimationFrame(() => dd.classList.add('is-visible'));
+    if (this.dom.unifiedSearchWrap) {
+      this.dom.unifiedSearchWrap.classList.add('dropdown-open');
+    }
+
+    // Handle clicks on pinned chips remove buttons inside dropdown
+    dd.querySelectorAll('.remove-chip-btn-dropdown').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const action = btn.dataset.action;
+        if (action === 'remove-zip') {
+          this.clearLocalResources();
+        } else if (action === 'remove-chip') {
+          const idx = parseInt(btn.dataset.index, 10);
+          if (!isNaN(idx)) {
+            this.selectedSearchChips.splice(idx, 1);
+            this.renderSearchChips();
+            this.applyResourceSearch();
+          }
+        }
+        this.onUnifiedSearchInput();
       });
     });
 
-    // "No matches" hint with "see resources anyway" (H2 in search context)
+    dd.querySelectorAll('.search-dropdown-item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const type = btn.dataset.type;
+        const val = btn.dataset.val;
+        const label = btn.dataset.label;
+
+        if (type === 'tag' || type === 'union') {
+          this.addSearchChip({ type, val, label });
+          if (this.dom.resourceSearch) this.dom.resourceSearch.value = '';
+        } else if (type === 'resource') {
+          this.directMatchedResourceTitle = label;
+          if (this.dom.resourceSearch) this.dom.resourceSearch.value = label;
+        }
+        this.closeSearchDropdown();
+        this.applyResourceSearch();
+      });
+    });
+  }
+
+  closeSearchDropdown() {
+    const dd = this.dom.searchDropdown;
+    if (dd) {
+      dd.classList.remove('is-visible');
+      // Wait for the CSS transition to finish before hiding
+      setTimeout(() => {
+        if (!dd.classList.contains('is-visible')) {
+          dd.style.display = 'none';
+          dd.innerHTML = '';
+        }
+      }, 190);
+    }
+    if (this.dom.unifiedSearchWrap) {
+      this.dom.unifiedSearchWrap.classList.remove('dropdown-open');
+    }
+  }
+
+  addSearchChip({ type, val, label }) {
+    if (this.selectedSearchChips.some(c => c.type === type && c.val === val)) return;
+    this.selectedSearchChips.push({ type, val, label });
+    this.renderSearchChips();
+  }
+
+  removeSearchChip(index) {
+    this.selectedSearchChips.splice(index, 1);
+    this.renderSearchChips();
+    this.applyResourceSearch();
+  }
+
+  renderSearchChips() {
+    const container = this.dom.searchChipsContainer;
+    if (!container) return;
+    if (!this.selectedSearchChips.length) {
+      container.style.display = 'none';
+      container.innerHTML = '';
+      return;
+    }
+    container.style.display = 'flex';
+    container.innerHTML = this.selectedSearchChips.map((c, i) => `
+      <span class="search-chip">
+        <i class="${c.type === 'union' ? 'fas fa-helmet-safety' : 'fas fa-tag'}"></i>
+        <span class="chip-text">${c.label}</span>
+        <button type="button" class="chip-remove-btn" data-index="${i}" aria-label="Remove filter">&times;</button>
+      </span>
+    `).join('');
+
+    container.querySelectorAll('.chip-remove-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = Number(btn.dataset.index);
+        this.removeSearchChip(idx);
+      });
+    });
+  }
+
+  /* Inline ZIP & Distance Popover Controls */
+  toggleZipPopover() {
+    const menu = this.dom.zipPopoverMenu;
+    const btn = this.dom.zipPopoverBtn;
+    if (!menu) return;
+    const isOpen = menu.classList.contains('is-visible');
+    if (!isOpen) {
+      this.closeSearchDropdown();
+      menu.style.display = 'block';
+      requestAnimationFrame(() => menu.classList.add('is-visible'));
+      if (btn) btn.setAttribute('aria-expanded', 'true');
+      if (this.dom.unifiedSearchWrap) this.dom.unifiedSearchWrap.classList.add('zip-open');
+      // Sync slider lock state with current ZIP input value
+      this.updateSliderLockState();
+    } else {
+      this.closeZipPopover();
+    }
+  }
+
+  closeZipPopover() {
+    const menu = this.dom.zipPopoverMenu;
+    if (menu) {
+      menu.classList.remove('is-visible');
+      setTimeout(() => {
+        if (!menu.classList.contains('is-visible')) {
+          menu.style.display = 'none';
+        }
+      }, 190);
+    }
+    if (this.dom.zipPopoverBtn) {
+      this.dom.zipPopoverBtn.setAttribute('aria-expanded', 'false');
+    }
+    if (this.dom.unifiedSearchWrap) {
+      this.dom.unifiedSearchWrap.classList.remove('zip-open');
+    }
+  }
+
+  updateZipPopoverLabel() {
+    const btn = this.dom.zipPopoverBtn;
+    if (!btn) return;
+    const textSpan = btn.querySelector('.popover-btn-text');
+    if (!textSpan) return;
+
+    const zip = (this.dom.zipInput?.value || '').trim();
+    if (zip && /^\d{5}$/.test(zip)) {
+      const distStr = this._maxDistanceMiles >= 99999 ? '∞' : `${this._maxDistanceMiles} mi`;
+      textSpan.textContent = `📍 ${zip} (${distStr})`;
+      btn.classList.add('has-zip');
+    } else {
+      textSpan.textContent = 'ZIP & Distance';
+      btn.classList.remove('has-zip');
+    }
+  }
+
+  updateSliderLockState() {
+    const wrap = this.dom.distanceSliderWrap;
+    if (!wrap) return;
+    const zip = (this.dom.zipInput?.value || '').trim();
+    // Only unlock when exactly 5 numeric digits are present
+    const hasValidZip = /^\d{5}$/.test(zip);
+    if (hasValidZip) {
+      wrap.classList.remove('zip-locked');
+    } else {
+      wrap.classList.add('zip-locked');
+      // Hide tooltip if it was visible
+      if (this.dom.sliderLockTooltip) {
+        this.dom.sliderLockTooltip.classList.remove('visible');
+      }
+    }
+  }
+
+  clearAllFilters() {
+    if (this.dom.resourceSearch) this.dom.resourceSearch.value = '';
+    this.selectedSearchChips = [];
+    this.directMatchedResourceTitle = null;
+    this.renderSearchChips();
+    this.closeSearchDropdown();
+    this.applyResourceSearch();
+  }
+
+  /* Unified applyResourceSearch: evaluates card DOM elements directly by data-title attribute */
+  applyResourceSearch() {
+    const q = (this.dom.resourceSearch?.value || '').trim().toLowerCase();
+    const directTitle = (this.directMatchedResourceTitle || '').trim().toLowerCase();
+    const tagChips = this.selectedSearchChips.filter(c => c.type === 'tag').map(c => c.val.toLowerCase());
+    const unionChips = this.selectedSearchChips.filter(c => c.type === 'union').map(c => c.val.toLowerCase());
+
+    const hasFilter = !!(q || directTitle || tagChips.length || unionChips.length);
+
+    let n1 = 0, n2 = 0;
+
+    // 1. National helpGrid cards
+    if (this.dom.helpGrid) {
+      this.dom.helpGrid.querySelectorAll('.help-card').forEach(cardEl => {
+        if (cardEl.id === 'searchNoMatch') return;
+        const cardTitle = (cardEl.dataset.title || cardEl.querySelector('h4')?.textContent || '').trim().toLowerCase();
+        const cardText = cardEl.textContent.toLowerCase();
+
+        let match = true;
+
+        if (directTitle) {
+          match = (cardTitle === directTitle || cardTitle.includes(directTitle));
+        } else {
+          if (q && !cardText.includes(q)) match = false;
+          if (tagChips.length > 0) {
+            const hasTagMatch = tagChips.some(tc => cardText.includes(tc));
+            if (!hasTagMatch) match = false;
+          }
+          if (unionChips.length > 0) {
+            const hasUnionMatch = unionChips.some(uc => cardText.includes(uc));
+            if (!hasUnionMatch) match = false;
+          }
+        }
+
+        cardEl.style.display = match ? '' : 'none';
+        if (match) n1++;
+      });
+    }
+
+    // 2. Local grid cards
+    if (this.dom.localGrid) {
+      this.dom.localGrid.querySelectorAll('.help-card').forEach(cardEl => {
+        if (cardEl.id === 'searchNoMatch') return;
+        const cardTitle = (cardEl.dataset.title || cardEl.querySelector('h4')?.textContent || '').trim().toLowerCase();
+        const cardUnion = (cardEl.dataset.union || '').toLowerCase();
+        const cardText = cardEl.textContent.toLowerCase();
+
+        let match = true;
+
+        if (directTitle) {
+          match = (cardTitle === directTitle || cardTitle.includes(directTitle));
+        } else {
+          if (q && !cardText.includes(q) && !this.unionMatchesQuery(cardUnion, q) && !this.unionMatchesQuery(cardTitle, q)) match = false;
+          if (tagChips.length > 0) {
+            const hasTagMatch = tagChips.some(tc => cardText.includes(tc));
+            if (!hasTagMatch) match = false;
+          }
+          if (unionChips.length > 0) {
+            const hasUnionMatch = unionChips.some(uc => cardUnion.includes(uc) || cardText.includes(uc) || this.unionMatchesQuery(cardUnion, uc));
+            if (!hasUnionMatch) match = false;
+          }
+        }
+
+        cardEl.style.display = match ? '' : 'none';
+        if (match) n2++;
+      });
+    }
+
+    // 3. Hide group headings/dividers when filtering
+    [this.dom.helpGrid, this.dom.localGrid].forEach(grid => {
+      grid?.querySelectorAll('.resource-divider, .resource-group-heading').forEach(el => {
+        el.style.display = hasFilter ? 'none' : '';
+      });
+    });
+
+    // 4. Update ZIP status notice with filter count if local results exist
+    if (this._zipResults && this.dom.zipStatus) {
+      const totalLocal = (this._localList?.list || []).length;
+      const place = this._zipResults.place || '';
+      const miles = (m) => Math.round(m / 1609.34);
+      const list = this._localList?.list || [];
+      const dist = list[0]?.distance != null
+        ? tFmt('zip.foundDist', ' — nearest is ~{d} mi away', { d: miles(list[0].distance) })
+        : '';
+      if (hasFilter && totalLocal > 0) {
+        this.dom.zipStatus.textContent = tFmt('zip.foundFiltered', 'Found {n} local resource(s) near {place}{dist} ({showing} matching active filters).', { n: totalLocal, place, dist, showing: n2 });
+      } else if (totalLocal > 0) {
+        this.dom.zipStatus.textContent = tFmt('zip.found', 'Found {n} local resource(s) near {place}{dist}. National resources are listed below.', { n: totalLocal, place, dist });
+      }
+    }
+
+    // 5. Handle "No matches" hint
     let hint = document.getElementById('searchNoMatch');
-    if (n1 + n2 === 0 && q) {
+    if (n1 + n2 === 0 && hasFilter) {
       if (!hint) {
         hint = document.createElement('div');
         hint.id = 'searchNoMatch';
@@ -1448,8 +1896,7 @@ class DynamicSurvey {
           </div>`;
         this.dom.helpGrid?.appendChild(hint);
         hint.querySelector('#searchSeeAllBtn')?.addEventListener('click', () => {
-          if (this.dom.resourceSearch) this.dom.resourceSearch.value = '';
-          this.renderHelpResources({ all: true, from: this.helpOrigin });
+          this.clearAllFilters();
         });
       }
       hint.style.display = '';
@@ -1471,6 +1918,7 @@ class DynamicSurvey {
 
     if (!/^\d{5}$/.test(zip)) {
       setStatus(t('zip.invalid', 'Please enter a valid 5-digit ZIP code.'), true);
+      this.updateSliderLockState();
       return;
     }
 
@@ -1492,41 +1940,39 @@ class DynamicSurvey {
       const list = Array.isArray(data.resources) ? data.resources : [];
       const place = data.zip_code_info ? `${data.zip_code_info.city}, ${data.zip_code_info.state}` : zip;
 
-      if (list.length === 0) {
-        // Nothing within 100 miles → disclose + national resources
-        this._zipResults = null;
-        this.syncSortOptions();
-        this.refreshLocalResults();
-        setStatus(tFmt('zip.none', 'No local resources were found within 100 miles of {place}. Showing national resources instead.', { place }));
-        this.renderHelpResources({ all: true, from: this.helpOrigin });
-        if (this.dom.zipClearBtn) this.dom.zipClearBtn.style.display = 'none';
-        return;
-      }
-
       this._zipResults = { list, place };
-      // Keep the Relevance grouped view as the default; distances still order
-      // the cards within each group (see refreshLocalResults) and the user can
-      // switch to a flat Distance sort via the dropdown.
+      this.updateSliderLockState();
       this.syncSortOptions();
       this.refreshLocalResults();
-      const miles = (m) => Math.round(m / 1609.34);
-      const dist = list[0]?.distance != null
-        ? tFmt('zip.foundDist', ' — nearest is ~{d} mi away', { d: miles(list[0].distance) })
-        : '';
-      setStatus(tFmt('zip.found', 'Found {n} local resource(s) near {place}{dist}. National resources are listed below.', { n: list.length, place, dist }));
+
+      if (list.length === 0) {
+        setStatus(tFmt('zip.none', 'No local resources were found within 100 miles of {place}. Showing national resources below.', { place }));
+        this.renderHelpResources({ all: true, from: this.helpOrigin });
+      } else {
+        const miles = (m) => Math.round(m / 1609.34);
+        const dist = list[0]?.distance != null
+          ? tFmt('zip.foundDist', ' — nearest is ~{d} mi away', { d: miles(list[0].distance) })
+          : '';
+        setStatus(tFmt('zip.found', 'Found {n} local resource(s) near {place}{dist}. National resources are listed below.', { n: list.length, place, dist }));
+      }
+
       if (this.dom.zipClearBtn) this.dom.zipClearBtn.style.display = '';
+      this.updateZipPopoverLabel();
     } catch (e) {
       console.error('Local resources lookup failed:', e);
-      this._zipResults = null;
-      this.clearLocalResources(false);
-      setStatus(t('zip.error', 'Oops there was an error. Here are all the resources.'), true);
+      // Retain _zipResults so slider stays active and interactive even if API offline
+      this._zipResults = { list: [], place: zip };
+      this.updateSliderLockState();
+      this.syncSortOptions();
+      this.refreshLocalResults();
+      setStatus(tFmt('zip.none', 'No local resources were found for ZIP {place}. Showing national resources below.', { place: zip }), false);
       this.renderHelpResources({ all: true, from: this.helpOrigin });
+      if (this.dom.zipClearBtn) this.dom.zipClearBtn.style.display = '';
+      this.updateZipPopoverLabel();
     } finally {
       if (this.dom.zipSearchBtn) this.dom.zipSearchBtn.disabled = false;
     }
   }
-
-  /* ===== Union/Contractor client-side filter (typeahead over all resources) ===== */
 
   /* Fetch the full resource list once (max-radius=-1 → no ZIP, no distance) and cache it. */
   async ensureAllLocalResources() {
@@ -1546,15 +1992,12 @@ class DynamicSurvey {
       }))
       .catch(e => {
         console.error('Failed to load full resource list:', e);
-        this._allLocalFetch = null; // allow retry
+        this._allLocalFetch = null;
         return null;
       });
     return this._allLocalFetch;
   }
 
-  /* Case-insensitive row field lookup. The local-resources backend has used
-     both 'Union/Contractor' and 'union/contractor' spellings for the same
-     field, so every read goes through this helper. */
   field(row, name) {
     if (!row) return undefined;
     if (row[name] !== undefined) return row[name];
@@ -1565,13 +2008,11 @@ class DynamicSurvey {
     return undefined;
   }
 
-  /* True when a sheet value is missing or the "N/A" placeholder */
   isNA(v) {
     const s = String(v == null ? '' : v).trim();
     return !s || s.toLowerCase() === 'n/a';
   }
 
-  /* Unique, sorted Union/Contractor names from the cached full list */
   getUnionNames() {
     const list = Array.isArray(this._allLocalResources) ? this._allLocalResources : [];
     const names = new Set();
@@ -1656,20 +2097,20 @@ class DynamicSurvey {
     this.refreshLocalResults();
   }
 
-  /* Enable the distance sort option + max-distance slider only when ZIP
-     results (with distance) exist. Relevance is always available. */
+  /* Enable the distance sort option only when ZIP results (with distance) exist.
+     The slider itself is ONLY locked/unlocked by updateSliderLockState() — never here. */
   syncSortOptions() {
     const hasDistance = !!(this._zipResults?.list?.some(r => r.distance != null));
     const distItem = this.dom.localSortList?.querySelector('.custom-select-item[data-value="distance"]');
     if (distItem) distItem.setAttribute('aria-disabled', String(!hasDistance));
     if (!hasDistance && this._localSort === 'distance') this._localSort = 'relevance';
     this.syncSortSelection();
-    // Max-distance slider mirrors the same gate
+    // Always ensure slider and row are visually enabled — zip-locked class handles the locked state
     const slider = this.dom.maxDistanceSlider;
     const row = this.dom.distanceRow;
-    if (slider) slider.disabled = !hasDistance;
-    if (row) row.classList.toggle('disabled', !hasDistance);
-    if (this.dom.maxDistanceHint) this.dom.maxDistanceHint.style.display = hasDistance ? 'none' : '';
+    if (slider) slider.disabled = false;
+    if (row) row.classList.remove('disabled');
+    if (this.dom.maxDistanceHint) this.dom.maxDistanceHint.style.display = 'none';
     this.updateDistanceSliderLabel();
   }
 
@@ -1768,7 +2209,8 @@ class DynamicSurvey {
 
     if (!base) {
       // Nothing to show → hide the local section (pre-filter behavior)
-      this.clearLocalResources(false);
+      if (this.dom.localSection) this.dom.localSection.style.display = 'none';
+      if (this.dom.nationalTitle) this.dom.nationalTitle.style.display = 'none';
       return;
     }
 
@@ -1882,7 +2324,7 @@ class DynamicSurvey {
         : '';
 
       return `
-        <div class="help-card local-card">
+        <div class="help-card local-card" data-title="${header.replace(/"/g, '&quot;')}" data-union="${(union || '').replace(/"/g, '&quot;')}">
           <div class="help-card-header">
             <h4>${header}</h4>
             ${badge}
@@ -1897,8 +2339,11 @@ class DynamicSurvey {
     };
 
     const emptyHTML = `
-        <div class="help-card">
-          <h4>${t('union.noResults', 'No resources for this filter.')}</h4>
+        <div class="help-card empty-search-card" style="grid-column: 1 / -1;">
+          <p style="font-style: italic; color: var(--text-muted); margin: 0; padding: 1.5rem; text-align: center;">
+            <i class="fas fa-search" style="margin-right: 0.5rem; opacity: 0.7;"></i>
+            ${t('zip.noneMatched', 'No local items matched your search criteria.')}
+          </p>
         </div>`;
 
     if (this._localSort === 'relevance' && list.length) {
@@ -1926,6 +2371,7 @@ class DynamicSurvey {
   }
 
   clearLocalResources(resetStatus = true) {
+    if (this.dom.zipInput) this.dom.zipInput.value = '';
     if (this.dom.localGrid) this.dom.localGrid.innerHTML = '';
     if (this.dom.localSection) this.dom.localSection.style.display = 'none';
     if (this.dom.nationalTitle) this.dom.nationalTitle.style.display = 'none';
@@ -1935,6 +2381,9 @@ class DynamicSurvey {
     // Reset the max-distance slider to its default for the next ZIP search
     this._maxDistanceMiles = 50;
     if (this.dom.maxDistanceSlider) this.dom.maxDistanceSlider.value = '50';
+    if (this.dom.distanceValueLabel) this.dom.distanceValueLabel.textContent = '50 Miles';
+    this.updateSliderLockState();
+    this.updateZipPopoverLabel();
     this.syncSortOptions();
     if (resetStatus && this.dom.zipStatus) { this.dom.zipStatus.textContent = ''; this.dom.zipStatus.classList.remove('error'); }
     // An active union/contractor filter keeps working from the cached full list

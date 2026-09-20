@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Protecting Under the Hard Hat</title>
   <link rel="icon" type="image/png" href="static/assets/logos/PUTHH-Logo.png" />
-  <link rel="stylesheet" href="static/style.css" />
+  <link rel="stylesheet" href="static/style.css?v=9" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     /* ===== TAB NAVIGATION STYLES ===== */
@@ -376,6 +376,14 @@
     .team-row .team-card {
       width: 300px;
       padding-top: 28px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .team-card .team-info {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
     }
 
     .team-row-label {
@@ -531,6 +539,15 @@
       line-height: 0;
       vertical-align: -0.35em;
       margin-right: 4px;
+    }
+
+    .testimony-quote::after {
+      content: '\201D';
+      color: var(--accent);
+      font-size: 2rem;
+      line-height: 0;
+      vertical-align: -0.35em;
+      margin-left: 4px;
     }
 
     .testimony-name {
@@ -1997,7 +2014,7 @@
           </div>
           <div class="partner-card">
             <div class="partner-logo-img">
-              <img src="static/assets/logos/MAP-logo.jpeg" alt="IUOE 825 MAP logo">
+              <img src="static/assets/logos/Unions/MAP-logo.jpeg" alt="IUOE 825 MAP logo">
             </div>
             <div class="partner-name">IUOE 825 MAP</div>
           </div>
@@ -2026,7 +2043,7 @@
               <button type="button" class="bio-btn-full" onclick="event.stopPropagation(); openBioModal(this);">
                 <span>View Full Bio</span>
               </button>
-              <div class="bio-content" style="display:none;">Dr. Roni Barak Ventura is an Assistant Professor in the School of Applied Engineering and Technology at NJIT. Her research focuses on human-centered engineering approaches to health and wellbeing. <em>(Placeholder — full bio to be provided.)</em></div>
+              <div class="bio-content" style="display:none;"><p>Dr. Roni Barak Ventura is an Assistant Professor in the School of Applied Engineering and Technology at the New Jersey Institute of Technology (NJIT). Her research focuses on designing human-centered technologies that promote health, well-being, and social good. By combining engineering, artificial intelligence, and human-computer interaction, she develops technologies that are not only effective but also relatable, trustworthy, and responsive to people's needs.</p><p>Her work spans digital health, rehabilitation engineering, and assistive technologies, including the development of telerehabilitation systems and other innovative tools to improve access to care. Through Protecting Under the Hard Hat, she works with construction industry partners to apply these engineering approaches to support construction workers and their families, creating evidence-based technologies that connect people with mental health, substance use, and wellness resources.</p><p>Dr. Barak Ventura's work is informed by both scientific research and her personal experience with depression and recovery, strengthening her commitment to reducing stigma and making it easier for people to seek help. Her broader research also uses data science and causal inference to better understand complex public health challenges and evaluate interventions and policies that improve health and well-being.</p></div>
             </div>
           </div>
           <div class="team-card" onclick="openBioModal(this)" role="button" tabindex="0" title="Click to view full bio">
@@ -2041,12 +2058,12 @@
               <button type="button" class="bio-btn-full" onclick="event.stopPropagation(); openBioModal(this);">
                 <span>View Full Bio</span>
               </button>
-              <div class="bio-content" style="display:none;">Bio coming soon. Chris serves as Member Assistance Coordinator for International Union of Operating Engineers Local 825, supporting members and their families. <em>(Placeholder — full bio to be provided.)</em></div>
+              <div class="bio-content" style="display:none;"><p>Chris Lalevee is a Business Agent and Member Assistance Program (MAP) Coordinator for the International Union of Operating Engineers (IUOE) Local 825, representing thousands of heavy equipment operators throughout New Jersey and New York's Hudson Valley. A second-generation Operating Engineer and former crane operator, Chris transitioned from the field into union leadership, where he champions the health, safety, and well-being of construction workers.</p><p>Drawing on his own lived experience, Chris developed Local 825's confidential Member Assistance Program to connect members and their families with resources for mental health, substance use, and other personal challenges. He is also a founding member of the Alliance for Naloxone Safety in the Workplace, working with labor organizations, contractors, and industry leaders to promote overdose prevention, workplace naloxone programs, and supportive workplace policies.</p><p>A nationally recognized speaker and advocate, Chris collaborates with industry partners to integrate mental health, addiction recovery, overdose prevention, and suicide prevention into everyday construction safety, helping create workplaces where workers feel supported and empowered to seek help.</p></div>
             </div>
           </div>
           <div class="team-card" onclick="openBioModal(this)" role="button" tabindex="0" title="Click to view full bio">
             <div class="headshot-frame">
-              <img src="static/assets/headshots/placeholder.svg" alt="Therese Edwards">
+              <img src="static/assets/headshots/ThereseEdwards.png" alt="Therese Edwards">
               <div class="headshot-overlay-badge"><i class="fas fa-expand"></i> Full Bio</div>
             </div>
             <div class="team-info">
@@ -2056,7 +2073,7 @@
               <button type="button" class="bio-btn-full" onclick="event.stopPropagation(); openBioModal(this);">
                 <span>View Full Bio</span>
               </button>
-              <div class="bio-content" style="display:none;">Bio coming soon. Therese serves as Health and Wellness Coordinator for International Union of Operating Engineers Local 825 Funds. <em>(Placeholder — full bio to be provided.)</em></div>
+              <div class="bio-content" style="display:none;">Therese serves as Health and Wellness Coordinator for International Union of Operating Engineers Local 825 Funds.</div>
             </div>
           </div>
         </div>
@@ -2076,7 +2093,7 @@
               <button type="button" class="bio-btn-full" onclick="event.stopPropagation(); openBioModal(this);">
                 <span>View Full Bio</span>
               </button>
-              <div class="bio-content" style="display:none;">B.Sc. Civil Engineering, expected 2028. Research interests: construction, data science, and health and safety.</div>
+              <div class="bio-content" style="display:none;"><p>Andrew Couto is a third-year civil engineering major at the New Jersey Institute of Technology, with minors in applied mathematics and business. On Protecting Under the Hard Hat, he designed the project's promotional materials, helped develop the worker survey, and contributes to the writing of the team's research publications. Outside the project, Andrew serves as president of NJIT's student chapter of the American Society of Civil Engineers and is a volunteer firefighter in his hometown.</p></div>
             </div>
           </div>
           <div class="team-card" onclick="openBioModal(this)" role="button" tabindex="0" title="Click to view full bio">
@@ -2104,7 +2121,7 @@
               <button type="button" class="bio-btn-full" onclick="event.stopPropagation(); openBioModal(this);">
                 <span>View Full Bio</span>
               </button>
-              <div class="bio-content" style="display:none;">B.Sc. Computer Science and B.Sc. Applied Physics, expected 2028. Research interests: data science, health and safety, and web design.</div>
+              <div class="bio-content" style="display:none;"><p>Krish Amitkumar Patel is an undergraduate student at the Albert Dorman Honors College (ADHC) of the New Jersey Institute of Technology (NJIT). He studies Computer Science and Applied Physics with minors in Design of the User Experience and Computational Mathematics. His career aspirations include full-stack engineering, AI engineering, and software development. He hopes to approach his education and career with an interdisciplinary mindset, combining a holistic set of skills to inform his endeavors. He is the backend engineer for this website.</p></div>
             </div>
           </div>
         </div>
@@ -2232,16 +2249,17 @@
           <div class="material-card-header">
             <h3><i class="fas fa-flag"></i> Vinyl Banners</h3>
             <div class="banner-size-toggle" role="radiogroup" aria-label="Vinyl Banner Size Selection">
-              <button type="button" class="size-toggle-btn active" data-size="0" onclick="setBannerSizeToggle(0)">Small (3'×5')</button>
-              <button type="button" class="size-toggle-btn" data-size="1" onclick="setBannerSizeToggle(1)">Large (4'×10')</button>
+              <button type="button" class="size-toggle-btn active" id="bannerBtnSmall" onclick="setBannerSizeMode('small')">Small (3'×5')</button>
+              <button type="button" class="size-toggle-btn" id="bannerBtnLarge" onclick="setBannerSizeMode('large')">Large (4'×10')</button>
             </div>
           </div>
           
           <div class="materials-carousel" id="carousel-banners">
-            <button type="button" class="materials-carousel-btn prev" onclick="moveMaterialsCarousel('banners', -1)" aria-label="Previous banner size"><i class="fas fa-chevron-left"></i></button>
-            <div class="materials-carousel-viewport">
+            <button type="button" class="materials-carousel-btn prev" onclick="moveMaterialsCarousel('banners', -1)" aria-label="Previous banner slide"><i class="fas fa-chevron-left"></i></button>
+            
+            <!-- Small Size Slide Track -->
+            <div class="materials-carousel-viewport banner-track-view" id="bannerViewSmall">
               <div class="materials-carousel-track">
-                <!-- Slide 0: Small Banner -->
                 <div class="materials-slide active">
                   <div class="material-card-image">
                     <span class="slide-badge">Small Size</span>
@@ -2249,23 +2267,49 @@
                     <span class="spec-label">3' × 5' Banner</span>
                   </div>
                   <div class="material-card-body">
-                    <p>Weatherproof 13oz vinyl with brass grommets every 2 feet. Perfect for jobsite fences, trailers, and indoor hall displays.</p>
+                    <p>Weatherproof vinyl banners for jobsites, fences, and union halls.</p>
                   </div>
                 </div>
-                <!-- Slide 1: Large Banner -->
                 <div class="materials-slide">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Small Size</span>
+                    <i class="fas fa-person-digging"></i>
+                    <span class="spec-label">3' × 5' Jobsite Fence Banner</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Weatherproof vinyl banners for jobsites, fences, and union halls.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Large Size Slide Track -->
+            <div class="materials-carousel-viewport banner-track-view" id="bannerViewLarge" style="display:none;">
+              <div class="materials-carousel-track">
+                <div class="materials-slide active">
                   <div class="material-card-image">
                     <span class="slide-badge">Large Size</span>
                     <i class="fas fa-flag"></i>
                     <span class="spec-label">4' × 10' Banner</span>
                   </div>
                   <div class="material-card-body">
-                    <p>Heavy-duty outdoor vinyl banner with reinforced hemmed edges and corner webbing. High visibility for main gates and perimeter fences.</p>
+                    <p>Weatherproof vinyl banners for jobsites, fences, and union halls.</p>
+                  </div>
+                </div>
+                <div class="materials-slide">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Large Size</span>
+                    <i class="fas fa-building-shield"></i>
+                    <span class="spec-label">4' × 10' Main Entrance Banner</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Weatherproof vinyl banners for jobsites, fences, and union halls.</p>
                   </div>
                 </div>
               </div>
             </div>
-            <button type="button" class="materials-carousel-btn next" onclick="moveMaterialsCarousel('banners', 1)" aria-label="Next banner size"><i class="fas fa-chevron-right"></i></button>
+
+            <button type="button" class="materials-carousel-btn next" onclick="moveMaterialsCarousel('banners', 1)" aria-label="Next banner slide"><i class="fas fa-chevron-right"></i></button>
           </div>
           <div class="materials-carousel-dots" id="dots-banners">
             <button type="button" class="dot active" onclick="setMaterialsCarouselSlide('banners', 0)" aria-label="Slide 1"></button>
@@ -2279,7 +2323,7 @@
             <h3><i class="fas fa-rectangle-list"></i> Posters</h3>
           </div>
           <div class="materials-carousel" id="carousel-posters">
-            <button type="button" class="materials-carousel-btn prev" onclick="moveMaterialsCarousel('posters', -1)" aria-label="Previous poster size"><i class="fas fa-chevron-left"></i></button>
+            <button type="button" class="materials-carousel-btn prev" onclick="moveMaterialsCarousel('posters', -1)" aria-label="Previous poster slide"><i class="fas fa-chevron-left"></i></button>
             <div class="materials-carousel-viewport">
               <div class="materials-carousel-track">
                 <!-- Slide 0: Standard Poster -->
@@ -2290,7 +2334,7 @@
                     <span class="spec-label">11" × 17" Poster</span>
                   </div>
                   <div class="material-card-body">
-                    <p>High-visibility gloss cardstock posters for break rooms, bulletin boards, and trailer walls. Features 988 Helpline & QR code.</p>
+                    <p>Informational posters for break rooms, bulletin boards, and trailer walls.</p>
                   </div>
                 </div>
                 <!-- Slide 1: Large Poster -->
@@ -2301,12 +2345,12 @@
                     <span class="spec-label">18" × 24" Poster</span>
                   </div>
                   <div class="material-card-body">
-                    <p>Large format jobsite poster highlighting mental health awareness, warning signs, and local 24/7 support hotlines.</p>
+                    <p>Informational posters for break rooms, bulletin boards, and trailer walls.</p>
                   </div>
                 </div>
               </div>
             </div>
-            <button type="button" class="materials-carousel-btn next" onclick="moveMaterialsCarousel('posters', 1)" aria-label="Next poster size"><i class="fas fa-chevron-right"></i></button>
+            <button type="button" class="materials-carousel-btn next" onclick="moveMaterialsCarousel('posters', 1)" aria-label="Next poster slide"><i class="fas fa-chevron-right"></i></button>
           </div>
           <div class="materials-carousel-dots" id="dots-posters">
             <button type="button" class="dot active" onclick="setMaterialsCarouselSlide('posters', 0)" aria-label="Slide 1"></button>
@@ -2320,7 +2364,7 @@
             <h3><i class="fas fa-note-sticky"></i> Stickers</h3>
           </div>
           <div class="materials-carousel" id="carousel-stickers">
-            <button type="button" class="materials-carousel-btn prev" onclick="moveMaterialsCarousel('stickers', -1)" aria-label="Previous sticker style"><i class="fas fa-chevron-left"></i></button>
+            <button type="button" class="materials-carousel-btn prev" onclick="moveMaterialsCarousel('stickers', -1)" aria-label="Previous sticker slide"><i class="fas fa-chevron-left"></i></button>
             <div class="materials-carousel-viewport">
               <div class="materials-carousel-track">
                 <!-- Slide 0: Hard Hat Decal -->
@@ -2331,7 +2375,7 @@
                     <span class="spec-label">2" Round Sticker</span>
                   </div>
                   <div class="material-card-body">
-                    <p>Durable, weatherproof vinyl decal designed for hard hats. UV-resistant finish withstands tough jobsite conditions.</p>
+                    <p>Durable stickers for hard hats, equipment, and toolboxes.</p>
                   </div>
                 </div>
                 <!-- Slide 1: Toolbox Sticker -->
@@ -2342,12 +2386,12 @@
                     <span class="spec-label">3" × 4" Sticker</span>
                   </div>
                   <div class="material-card-body">
-                    <p>Heavy-duty vinyl sticker featuring the PUTHH logo and helpline information for toolboxes, gangboxes, and equipment.</p>
+                    <p>Durable stickers for hard hats, equipment, and toolboxes.</p>
                   </div>
                 </div>
               </div>
             </div>
-            <button type="button" class="materials-carousel-btn next" onclick="moveMaterialsCarousel('stickers', 1)" aria-label="Next sticker style"><i class="fas fa-chevron-right"></i></button>
+            <button type="button" class="materials-carousel-btn next" onclick="moveMaterialsCarousel('stickers', 1)" aria-label="Next sticker slide"><i class="fas fa-chevron-right"></i></button>
           </div>
           <div class="materials-carousel-dots" id="dots-stickers">
             <button type="button" class="dot active" onclick="setMaterialsCarouselSlide('stickers', 0)" aria-label="Slide 1"></button>
@@ -2861,14 +2905,54 @@
       }
     });
 
-    // ===== Materials Carousel & Size Toggle Handlers =====
+    // ===== Materials Carousel & Size Toggle Handlers (Synchronized) =====
     window.materialsCarouselState = { banners: 0, posters: 0, stickers: 0 };
+    window.bannerSizeMode = 'small';
+    window.masterMaterialsTimer = null;
 
-    window.setMaterialsCarouselSlide = function(carouselId, slideIndex) {
+    window.resetMasterMaterialsTimer = function() {
+      if (window.masterMaterialsTimer) {
+        clearInterval(window.masterMaterialsTimer);
+      }
+      window.masterMaterialsTimer = setInterval(() => {
+        ['banners', 'posters', 'stickers'].forEach(id => {
+          if (document.getElementById('carousel-' + id)) {
+            window.moveMaterialsCarousel(id, 1, false);
+          }
+        });
+      }, 6000);
+    };
+
+    window.setBannerSizeMode = function(mode) {
+      window.bannerSizeMode = mode;
+      const smallBtn = document.getElementById('bannerBtnSmall');
+      const largeBtn = document.getElementById('bannerBtnLarge');
+      const smallView = document.getElementById('bannerViewSmall');
+      const largeView = document.getElementById('bannerViewLarge');
+
+      if (smallBtn && largeBtn && smallView && largeView) {
+        const isSmall = mode === 'small';
+        smallBtn.classList.toggle('active', isSmall);
+        largeBtn.classList.toggle('active', !isSmall);
+        smallView.style.display = isSmall ? 'block' : 'none';
+        largeView.style.display = isSmall ? 'none' : 'block';
+        window.setMaterialsCarouselSlide('banners', 0, true);
+      }
+    };
+
+    window.setMaterialsCarouselSlide = function(carouselId, slideIndex, isManual = true) {
       const carousel = document.getElementById('carousel-' + carouselId);
       if (!carousel) return;
-      const track = carousel.querySelector('.materials-carousel-track');
-      const slides = carousel.querySelectorAll('.materials-slide');
+
+      let viewport = carousel.querySelector('.materials-carousel-viewport');
+      if (carouselId === 'banners') {
+        const activeMode = window.bannerSizeMode || 'small';
+        viewport = document.getElementById(activeMode === 'small' ? 'bannerViewSmall' : 'bannerViewLarge');
+      }
+      if (!viewport) return;
+
+      const track = viewport.querySelector('.materials-carousel-track');
+      const slides = viewport.querySelectorAll('.materials-slide');
       const dots = document.querySelectorAll('#dots-' + carouselId + ' .dot');
       if (!track || !slides.length) return;
 
@@ -2880,30 +2964,18 @@
       slides.forEach((s, i) => s.classList.toggle('active', i === idx));
       dots.forEach((d, i) => d.classList.toggle('active', i === idx));
 
-      // Sync Vinyl Banner size toggle buttons if carouselId is 'banners'
-      if (carouselId === 'banners') {
-        const toggleBtns = document.querySelectorAll('#bannerMaterialCard .size-toggle-btn');
-        toggleBtns.forEach((b, i) => b.classList.toggle('active', i === idx));
+      if (isManual !== false) {
+        window.resetMasterMaterialsTimer();
       }
     };
 
-    window.moveMaterialsCarousel = function(carouselId, direction) {
+    window.moveMaterialsCarousel = function(carouselId, direction, isManual = true) {
       const current = window.materialsCarouselState[carouselId] || 0;
-      window.setMaterialsCarouselSlide(carouselId, current + direction);
+      window.setMaterialsCarouselSlide(carouselId, current + direction, isManual);
     };
 
-    window.setBannerSizeToggle = function(sizeIndex) {
-      window.setMaterialsCarouselSlide('banners', sizeIndex);
-    };
-
-    // Auto-spin materials carousels every 6 seconds
-    setInterval(() => {
-      ['banners', 'posters', 'stickers'].forEach(id => {
-        if (document.getElementById('carousel-' + id)) {
-          window.moveMaterialsCarousel(id, 1);
-        }
-      });
-    }, 6000);
+    // Auto-spin all materials carousels together in sync
+    window.resetMasterMaterialsTimer();
 
     // ===== Dark mode (default light; shared key with questionnaire) =====
     function applyTheme(theme) {

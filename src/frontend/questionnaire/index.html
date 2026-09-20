@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Protecting Under the Hard Hat</title>
   <link rel="icon" type="image/png" href="../static/assets/logos/PUTHH-Logo-old-with-text.png" />
-  <link rel="stylesheet" href="../static/style.css" />
+  <link rel="stylesheet" href="../static/style.css?v=14" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 
@@ -149,103 +149,71 @@
           <div id="whyContent" class="why-content" style="display:none;"></div>
         </div>
 
-        <!-- Resource tools: search + email on top, ZIP lookup card with its local results below -->
-        <div class="help-tools">
-          <div class="help-tools-top">
-            <div class="help-search-row">
-              <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
-              <input type="search" id="resourceSearch" placeholder="Search resources…" aria-label="Search resources"
+        <!-- Unified "One Search Bar to Find All" Container -->
+        <div class="help-tools unified-search-container">
+          <div class="unified-search-bar-wrap">
+            <div class="unified-search-input-field">
+              <i class="fas fa-magnifying-glass search-leading-icon" aria-hidden="true"></i>
+              <input type="search" id="resourceSearch" placeholder="Search resources, unions, topics (e.g. alcohol, Local 825)…" aria-label="Search resources"
                 data-i18n-placeholder="search.placeholder" data-i18n-aria="search.aria" autocomplete="off">
-            </div>
-            <button id="emailResultsBtn" class="help-nav-btn secondary email-results-btn" type="button">
-              <i class="fas fa-envelope" aria-hidden="true"></i> <span data-i18n="email.button">Email results to myself</span>
-            </button>
-          </div>
-
-          <div class="zip-card">
-            <div class="zip-card-header">
-              <span class="zip-card-icon"><i class="fas fa-location-dot" aria-hidden="true"></i></span>
-              <div class="zip-card-text">
-                <label for="zipInput" class="zip-label" data-i18n="zip.label">Find local resources</label>
-                <span class="zip-hint" data-i18n="zip.hint">Enter your ZIP code to see support near you</span>
-              </div>
-            </div>
-            <div class="zip-search">
-              <div class="zip-search-field">
-                <i class="fas fa-location-crosshairs zip-search-icon" aria-hidden="true"></i>
-                <input type="text" id="zipInput" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" placeholder="e.g. 07102"
-                  aria-label="ZIP code" data-i18n-placeholder="zip.placeholder" data-i18n-aria="zip.aria">
-                <button id="zipSearchBtn" class="zip-search-go" type="button">
-                  <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
-                  <span data-i18n="zip.search">Search</span>
-                </button>
-              </div>
-              <button id="zipClearBtn" class="zip-clear-link" type="button" style="display:none;" data-i18n="zip.showNational">Show national</button>
+              
+              <!-- Proximity Popover Trigger Button -->
+              <button type="button" id="zipPopoverBtn" class="zip-popover-btn" title="Filter by ZIP & Distance" aria-expanded="false" aria-controls="zipPopoverMenu">
+                <i class="fas fa-location-dot" aria-hidden="true"></i>
+                <span class="popover-btn-text">ZIP & Distance</span>
+                <i class="fas fa-chevron-down popover-caret" aria-hidden="true"></i>
+              </button>
             </div>
 
-            <!-- Refine group: union/contractor typeahead, sort, and distance -->
-            <div class="local-filters">
-              <div class="local-filters-head">
-                <i class="fas fa-sliders" aria-hidden="true"></i>
-                <span data-i18n="filters.title">Refine results</span>
-              </div>
+            <!-- Categorized Typeahead Dropdown Menu -->
+            <div id="searchDropdown" class="search-typeahead-dropdown" style="display:none;" role="listbox"></div>
 
-              <!-- Union/Contractor client-side filter: typeahead over the full resource list -->
-              <div class="local-filter-row">
-                <div class="union-filter">
-                  <i class="fas fa-helmet-safety" aria-hidden="true"></i>
-                  <input type="text" id="unionFilterInput" placeholder="Filter by union/contractor, e.g. Local 825"
-                    aria-label="Filter by union or contractor" data-i18n-placeholder="union.placeholder"
-                    data-i18n-aria="union.aria" autocomplete="off" role="combobox" aria-expanded="false"
-                    aria-controls="unionFilterList" aria-autocomplete="list">
-                  <button id="unionClearBtn" class="union-clear-btn" type="button" style="display:none;"
-                    aria-label="Clear union/contractor filter" data-i18n-aria="union.clear">
-                    <i class="fas fa-xmark" aria-hidden="true"></i>
-                  </button>
-                  <ul id="unionFilterList" class="union-typeahead-list" role="listbox"></ul>
+            <!-- ZIP & Distance Inline Popover Menu -->
+            <div id="zipPopoverMenu" class="zip-popover-menu" style="display:none;">
+              <div class="zip-popover-header">
+                <i class="fas fa-location-crosshairs"></i> <span>Local Distance Filter</span>
+              </div>
+              <div class="zip-popover-body">
+                <div class="zip-input-wrap">
+                  <input type="text" id="zipInput" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" placeholder="e.g. 07102" aria-label="ZIP code">
+                  <button id="zipSearchBtn" class="zip-search-go-btn" type="button">Search ZIP</button>
                 </div>
-                <div class="local-sort">
-                  <span class="local-sort-label" data-i18n="sort.label">Sort by</span>
-                  <div class="custom-select" id="localSortWrap">
-                    <button type="button" class="custom-select-trigger" id="localSortTrigger"
-                      aria-haspopup="listbox" aria-expanded="false" aria-label="Sort local resources"
-                      data-i18n-aria="sort.aria">
-                      <span class="custom-select-value" id="localSortValue">Relevance</span>
-                      <i class="fas fa-chevron-down" aria-hidden="true"></i>
-                    </button>
-                    <ul class="custom-select-list" id="localSortList" role="listbox" tabindex="-1"
-                      aria-label="Sort local resources">
-                      <li class="custom-select-item is-selected" role="option" data-value="relevance"
-                        aria-selected="true" data-i18n="sort.relevance">Relevance</li>
-                      <li class="custom-select-item" role="option" data-value="name"
-                        aria-selected="false" data-i18n="sort.name">Name</li>
-                      <li class="custom-select-item" role="option" data-value="distance"
-                        aria-selected="false" aria-disabled="true" data-i18n="sort.distance">Distance</li>
-                    </ul>
+                <div class="distance-slider-wrap zip-locked" id="distanceSliderWrap" style="margin-top:12px;">
+                  <div class="slider-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <label for="maxDistanceSlider" style="font-size:0.8rem; font-weight:700; color:var(--text-secondary);">Max Distance:</label>
+                    <span id="distanceValueLabel" class="distance-value-badge">25 Miles</span>
+                  </div>
+                  <div class="slider-lock-tooltip" id="sliderLockTooltip" aria-live="polite">Enter a ZIP code first</div>
+                  <input type="range" id="maxDistanceSlider" class="distance-slider" min="10" max="105" step="5" value="25" aria-label="Max distance in miles" style="width:100%; cursor:pointer;">
+                  <div class="slider-ticks" style="display:flex; justify-content:space-between; font-size:0.72rem; color:var(--text-secondary); margin-top:2px;">
+                    <span>10 mi</span>
+                    <span>50 mi</span>
+                    <span>Any</span>
                   </div>
                 </div>
-              </div>
-
-              <!-- Max-distance slider: filters fetched ZIP results client-side; disabled until a ZIP search -->
-              <div class="local-distance-row disabled" id="distanceRow">
-                <label class="local-distance" for="maxDistanceSlider">
-                  <span class="local-distance-label"><span data-i18n="dist.label">Max distance</span>:
-                    <strong id="maxDistanceValue">50 mi</strong></span>
-                  <input type="range" id="maxDistanceSlider" min="5" max="200" step="5" value="50" disabled
-                    aria-label="Maximum distance in miles" data-i18n-aria="dist.aria">
-                </label>
-                <span class="local-distance-hint" id="maxDistanceHint" data-i18n="dist.hint">Enter a ZIP code first</span>
+                <button id="zipClearBtn" class="zip-clear-link" type="button" style="display:none; margin-top:8px;">Show national</button>
               </div>
             </div>
 
-            <div id="zipStatus" class="zip-status" role="status" aria-live="polite"></div>
+          </div><!-- /.unified-search-bar-wrap -->
 
-            <!-- Local (ZIP-based) results live INSIDE the ZIP card so they read as its output -->
-            <div id="localResourcesSection" class="zip-local-results" style="display:none;">
-              <h3 class="local-resources-title" data-i18n="local.title">Resources near you</h3>
-              <div id="localGrid" class="help-grid"></div>
-            </div>
-          </div>
+          <!-- Active Filter Chips Row (rendered below search input, behind dropdown) -->
+          <div id="searchChipsContainer" class="search-chips-container" style="display:none;"></div>
+
+          <!-- Status / Notice display for ZIP or search feedback -->
+          <div id="zipStatus" class="zip-status" role="status" aria-live="polite"></div>
+        </div><!-- /.unified-search-container -->
+
+        <div class="unified-search-actions" style="margin-top: 12px; margin-bottom: 20px;">
+          <button id="emailResultsBtn" class="help-nav-btn secondary email-results-btn" type="button">
+            <i class="fas fa-envelope" aria-hidden="true"></i> <span data-i18n="email.button">Email results to myself</span>
+          </button>
+        </div>
+
+        <!-- Local (ZIP-based) results -->
+        <div id="localResourcesSection" class="zip-local-results" style="display:none;">
+          <h3 class="local-resources-title" data-i18n="local.title">Resources near you</h3>
+          <div id="localGrid" class="help-grid"></div>
         </div>
 
         <h3 id="nationalTitle" class="local-resources-title" style="display:none;" data-i18n="national.title">National resources</h3>
@@ -293,7 +261,7 @@
 
   <script src="../static/config.js" defer></script>
   <script src="../static/i18n.js" defer></script>
-  <script src="../static/script.js?v=3" defer></script>
+  <script src="../static/script.js?v=15" defer></script>
 </body>
 
 </html>
