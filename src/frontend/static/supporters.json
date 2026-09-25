@@ -12,38 +12,45 @@
   "contractors": [
     {
       "name": "Simpson and Brown",
-      "logo": null,
+      "logo": "static/assets/logos/Contractors/simpson-brown.png",
       "icon": "fas fa-helmet-safety",
-      "url": null,
+      "url": "https://simpsonandbrown.com/",
       "description": "General Contractor."
     },
     {
       "name": "Skanska",
-      "logo": null,
+      "logo": "static/assets/logos/Contractors/skanska.png",
       "icon": "fas fa-helmet-safety",
-      "url": null,
+      "url": "https://www.usa.skanska.com/",
+      "description": "General Contractor."
+    },
+    {
+      "name": "Turner Construction",
+      "logo": "static/assets/logos/Contractors/turner.png",
+      "icon": "fas fa-helmet-safety",
+      "url": "https://www.turnerconstruction.com/",
       "description": "General Contractor."
     },
     {
       "name": "Waters and Bugbee",
-      "logo": "static/assets/logos/Contractors/Waters & Bugbee.jpeg",
+      "logo": "static/assets/logos/Contractors/waters-bugbee.jpeg",
       "icon": "fas fa-helmet-safety",
-      "url": null,
+      "url": "https://www.watersandbugbee.com/",
       "description": "Heavy Highway and Utility Contractor."
     },
     {
       "name": "Weeks Marine",
-      "logo": null,
+      "logo": "static/assets/logos/Contractors/weeks-marine.jpeg",
       "icon": "fas fa-helmet-safety",
-      "url": null,
-      "description": "Placeholder — logo and link to be added."
+      "url": "https://www.weeksmarine.com/",
+      "description": "Marine Construction and Dredging Contractor."
     }
   ],
   "unions": [
     {
       "name": "International Union of Operating Engineers Local 825",
       "featured": true,
-      "logo": "static/assets/logos/Unions/MAP-logo.jpeg",
+      "logo": "static/assets/logos/Unions/map-logo.jpeg",
       "icon": "fas fa-people-carry-box",
       "url": "https://www.iuoe825.org/",
       "description": "Member Assistance Program supporting operating engineers and their families."

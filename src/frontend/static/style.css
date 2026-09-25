@@ -44,6 +44,9 @@ body.dark-mode {
   --text-secondary: #cbd5e0;
   --accent: var(--accent-dark);
   --accent-hover: var(--accent-dark-hover);
+  /* Lighter red for accent-colored TEXT on dark surfaces (readability) */
+  --accent-soft: #ff8a8a;
+  --accent-soft-strong: #ffb3b3;
   --shadow-a: 8px 8px 16px var(--shadow-dark), -8px -8px 16px #2a3141;
   --shadow-inset: inset 2px 2px 4px var(--shadow-dark), inset -2px -2px 4px #2a3141;
   --glow: 0 0 20px rgba(34, 197, 94, 0.25);
@@ -2721,18 +2724,19 @@ body.dark-mode .distance-badge {
   object-position: center 15%;
 }
 
-/* Testimony headshots: zoomed in & centered */
+/* Testimony headshots: larger frame + zoomed in on faces */
 .testimony-slide .headshot-frame img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.15);
+  transform: scale(1.75);
+  transform-origin: center 30%;
   object-position: center 20%;
 }
 
 /* Joe Schwed: slightly zoomed out relative to default testimony zoom */
 .testimony-slide img[src*="JoeSchwed"] {
-  transform: scale(1.04);
+  transform: scale(1.6);
   object-position: center 18%;
 }
 
@@ -2808,6 +2812,81 @@ body.dark-mode .distance-badge {
   color: #ffffff !important;
   border-color: var(--accent, #cc0000);
   transform: scale(1.08);
+}
+
+/* ===== DARK MODE: glassmorphic buttons & cards =====
+   Light-theme translucent fills and red accent text are unreadable on
+   dark surfaces — swap fills to frosted white and text to a lighter red. */
+body.dark-mode .bio-btn-full {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--accent-soft, #ff8a8a);
+  border-color: rgba(255, 138, 138, 0.45);
+}
+
+body.dark-mode .bio-btn-full:hover {
+  background: var(--accent, #cc0000);
+  color: #ffffff;
+  border-color: var(--accent, #cc0000);
+}
+
+body.dark-mode .overview-icon {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: var(--accent-soft, #ff8a8a) !important;
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+body.dark-mode .overview-go {
+  color: var(--accent-soft, #ff8a8a);
+}
+
+body.dark-mode .bio-toggle {
+  color: var(--accent-soft, #ff8a8a);
+}
+
+body.dark-mode .bio-toggle:hover {
+  color: var(--accent-soft-strong, #ffb3b3);
+}
+
+body.dark-mode .bio-modal-role {
+  color: var(--accent-soft, #ff8a8a);
+}
+
+body.dark-mode .bio-content {
+  border-top-color: rgba(255, 255, 255, 0.18);
+}
+
+body.dark-mode .supporter-card a {
+  color: var(--accent-soft, #ff8a8a);
+}
+
+body.dark-mode .nav-dropdown button:hover,
+body.dark-mode .nav-dropdown button.active {
+  background: rgba(255, 138, 138, 0.1);
+  color: var(--accent-soft, #ff8a8a);
+}
+
+/* Carousel arrows keep a frosted chip, but the chevron must contrast */
+body.dark-mode .carousel-btn {
+  background: var(--secondary-dark, #2d3748);
+  color: var(--accent-soft, #ff8a8a);
+}
+
+body.dark-mode .carousel-btn:hover {
+  background: var(--accent, #cc0000);
+  color: #ffffff;
+}
+
+body.dark-mode .materials-carousel-btn {
+  background: var(--secondary-dark, #2d3748);
+  color: var(--text-dark, #e2e8f0);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Hairline borders tuned for dark surfaces */
+body.dark-mode .about-card,
+body.dark-mode .supporter-card,
+body.dark-mode .material-card {
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 @media (max-width: 600px) {
@@ -2936,7 +3015,7 @@ body.dark-mode .distance-badge {
 
 .material-card-image {
   position: relative;
-  height: 140px;
+  height: 180px;
   border-radius: 14px;
   background: linear-gradient(135deg, rgba(28, 20, 117, 0.06) 0%, rgba(204, 0, 0, 0.08) 100%);
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -2951,6 +3030,32 @@ body.dark-mode .distance-badge {
 .material-card-image i {
   font-size: 2.2rem;
   color: var(--accent, #cc0000);
+}
+
+/* Photo slides: image fills the card image box; badge + spec label overlay it */
+.material-card-image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 13px;
+}
+
+.material-card-image .spec-label {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  background: rgba(15, 23, 42, 0.85);
+  color: #ffffff;
+  padding: 3px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+  max-width: calc(100% - 20px);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .slide-badge {

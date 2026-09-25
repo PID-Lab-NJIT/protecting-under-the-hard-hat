@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Protecting Under the Hard Hat</title>
   <link rel="icon" type="image/png" href="static/assets/logos/PUTHH-Logo.png" />
-  <link rel="stylesheet" href="static/style.css?v=9" />
+  <link rel="stylesheet" href="static/style.css?v=10" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     /* ===== TAB NAVIGATION STYLES ===== */
@@ -519,9 +519,9 @@
     }
 
     .testimony-slide .headshot-frame {
-      width: 110px;
-      height: 110px;
-      margin-bottom: 20px;
+      width: 220px;
+      height: 220px;
+      margin-bottom: 24px;
     }
 
     .testimony-quote {
@@ -612,6 +612,11 @@
     @media (max-width: 768px) {
       .testimony-slide {
         padding: 34px 24px;
+      }
+
+      .testimony-slide .headshot-frame {
+        width: 170px;
+        height: 170px;
       }
 
       .carousel-btn.prev { left: 6px; }
@@ -1061,6 +1066,10 @@
       font-weight: 600;
       margin-bottom: 12px;
       letter-spacing: 0.2px;
+    }
+
+    body.dark-mode .team-role {
+      color: var(--accent-soft, #ff8a8a);
     }
 
     .team-bio {
@@ -2014,7 +2023,7 @@
           </div>
           <div class="partner-card">
             <div class="partner-logo-img">
-              <img src="static/assets/logos/Unions/MAP-logo.jpeg" alt="IUOE 825 MAP logo">
+              <img src="static/assets/logos/Unions/map-logo.jpeg" alt="IUOE 825 MAP logo">
             </div>
             <div class="partner-name">IUOE 825 MAP</div>
           </div>
@@ -2263,7 +2272,7 @@
                 <div class="materials-slide active">
                   <div class="material-card-image">
                     <span class="slide-badge">Small Size</span>
-                    <i class="fas fa-flag"></i>
+                    <img src="static/assets/order-materials/poster-vinyl-36x60.png" alt="3 foot by 5 foot vinyl banner mockup" loading="lazy">
                     <span class="spec-label">3' × 5' Banner</span>
                   </div>
                   <div class="material-card-body">
@@ -2273,7 +2282,7 @@
                 <div class="materials-slide">
                   <div class="material-card-image">
                     <span class="slide-badge">Small Size</span>
-                    <i class="fas fa-person-digging"></i>
+                    <img src="static/assets/order-materials/banner-fence-1.jpeg" alt="Vinyl banner hung on a jobsite fence" loading="lazy">
                     <span class="spec-label">3' × 5' Jobsite Fence Banner</span>
                   </div>
                   <div class="material-card-body">
@@ -2289,7 +2298,7 @@
                 <div class="materials-slide active">
                   <div class="material-card-image">
                     <span class="slide-badge">Large Size</span>
-                    <i class="fas fa-flag"></i>
+                    <img src="static/assets/order-materials/vinyl-banner-fence.png" alt="Large vinyl banner on a construction fence" loading="lazy">
                     <span class="spec-label">4' × 10' Banner</span>
                   </div>
                   <div class="material-card-body">
@@ -2299,7 +2308,17 @@
                 <div class="materials-slide">
                   <div class="material-card-image">
                     <span class="slide-badge">Large Size</span>
-                    <i class="fas fa-building-shield"></i>
+                    <img src="static/assets/order-materials/banner-fence-3.jpeg" alt="Large vinyl banner on a chain-link jobsite fence" loading="lazy">
+                    <span class="spec-label">4' × 10' Jobsite Fence Banner</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Weatherproof vinyl banners for jobsites, fences, and union halls.</p>
+                  </div>
+                </div>
+                <div class="materials-slide">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Large Size</span>
+                    <img src="static/assets/order-materials/banner-wall-2.jpeg" alt="Large vinyl banner mounted on a wooden construction wall" loading="lazy">
                     <span class="spec-label">4' × 10' Main Entrance Banner</span>
                   </div>
                   <div class="material-card-body">
@@ -2314,6 +2333,7 @@
           <div class="materials-carousel-dots" id="dots-banners">
             <button type="button" class="dot active" onclick="setMaterialsCarouselSlide('banners', 0)" aria-label="Slide 1"></button>
             <button type="button" class="dot" onclick="setMaterialsCarouselSlide('banners', 1)" aria-label="Slide 2"></button>
+            <button type="button" class="dot" onclick="setMaterialsCarouselSlide('banners', 2)" aria-label="Slide 3"></button>
           </div>
         </div>
 
@@ -2326,23 +2346,45 @@
             <button type="button" class="materials-carousel-btn prev" onclick="moveMaterialsCarousel('posters', -1)" aria-label="Previous poster slide"><i class="fas fa-chevron-left"></i></button>
             <div class="materials-carousel-viewport">
               <div class="materials-carousel-track">
-                <!-- Slide 0: Standard Poster -->
+                <!-- Slide 0: Standard Flyer -->
                 <div class="materials-slide active">
                   <div class="material-card-image">
                     <span class="slide-badge">Standard Size</span>
-                    <i class="fas fa-file-invoice"></i>
-                    <span class="spec-label">11" × 17" Poster</span>
+                    <img src="static/assets/order-materials/flyer-8.5x11.png" alt="8.5 by 11 inch flyer mockup" loading="lazy">
+                    <span class="spec-label">8.5" × 11" Flyer</span>
                   </div>
                   <div class="material-card-body">
-                    <p>Informational posters for break rooms, bulletin boards, and trailer walls.</p>
+                    <p>Informational flyers for break rooms, bulletin boards, and trailer walls.</p>
                   </div>
                 </div>
                 <!-- Slide 1: Large Poster -->
                 <div class="materials-slide">
                   <div class="material-card-image">
                     <span class="slide-badge">Large Format</span>
-                    <i class="fas fa-newspaper"></i>
-                    <span class="spec-label">18" × 24" Poster</span>
+                    <img src="static/assets/order-materials/poster-24x36.png" alt="24 by 36 inch poster mockup" loading="lazy">
+                    <span class="spec-label">24" × 36" Poster</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Informational posters for break rooms, bulletin boards, and trailer walls.</p>
+                  </div>
+                </div>
+                <!-- Slide 2: Poster in use (break room wall) -->
+                <div class="materials-slide">
+                  <div class="material-card-image">
+                    <span class="slide-badge">In Use</span>
+                    <img src="static/assets/order-materials/poster-paper-wall.png" alt="Paper poster displayed on a break room wall" loading="lazy">
+                    <span class="spec-label">Break Room Poster</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Informational posters for break rooms, bulletin boards, and trailer walls.</p>
+                  </div>
+                </div>
+                <!-- Slide 3: Poster in use (jobsite trailer) -->
+                <div class="materials-slide">
+                  <div class="material-card-image">
+                    <span class="slide-badge">In Use</span>
+                    <img src="static/assets/order-materials/poster-site-1.jpeg" alt="Poster displayed in a jobsite trailer office" loading="lazy">
+                    <span class="spec-label">Jobsite Trailer Poster</span>
                   </div>
                   <div class="material-card-body">
                     <p>Informational posters for break rooms, bulletin boards, and trailer walls.</p>
@@ -2355,6 +2397,8 @@
           <div class="materials-carousel-dots" id="dots-posters">
             <button type="button" class="dot active" onclick="setMaterialsCarouselSlide('posters', 0)" aria-label="Slide 1"></button>
             <button type="button" class="dot" onclick="setMaterialsCarouselSlide('posters', 1)" aria-label="Slide 2"></button>
+            <button type="button" class="dot" onclick="setMaterialsCarouselSlide('posters', 2)" aria-label="Slide 3"></button>
+            <button type="button" class="dot" onclick="setMaterialsCarouselSlide('posters', 3)" aria-label="Slide 4"></button>
           </div>
         </div>
 
@@ -2371,8 +2415,8 @@
                 <div class="materials-slide active">
                   <div class="material-card-image">
                     <span class="slide-badge">Hard Hat Decal</span>
-                    <i class="fas fa-stamp"></i>
-                    <span class="spec-label">2" Round Sticker</span>
+                    <img src="static/assets/order-materials/sticker-2x1.7.png" alt="2 by 1.7 inch sticker mockup" loading="lazy">
+                    <span class="spec-label">2" × 1.7" Sticker</span>
                   </div>
                   <div class="material-card-body">
                     <p>Durable stickers for hard hats, equipment, and toolboxes.</p>
@@ -2382,8 +2426,30 @@
                 <div class="materials-slide">
                   <div class="material-card-image">
                     <span class="slide-badge">Toolbox Sticker</span>
-                    <i class="fas fa-box-archive"></i>
-                    <span class="spec-label">3" × 4" Sticker</span>
+                    <img src="static/assets/order-materials/sticker-4x3.4.png" alt="4 by 3.4 inch sticker mockup" loading="lazy">
+                    <span class="spec-label">4" × 3.4" Sticker</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Durable stickers for hard hats, equipment, and toolboxes.</p>
+                  </div>
+                </div>
+                <!-- Slide 2: Stickers in use (hard hat & bottle) -->
+                <div class="materials-slide">
+                  <div class="material-card-image">
+                    <span class="slide-badge">In Use</span>
+                    <img src="static/assets/order-materials/stickers-hardhat-bottle.png" alt="Stickers applied to a hard hat and water bottle" loading="lazy">
+                    <span class="spec-label">Hard Hats & Water Bottles</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Durable stickers for hard hats, equipment, and toolboxes.</p>
+                  </div>
+                </div>
+                <!-- Slide 3: Stickers in use (truck) -->
+                <div class="materials-slide">
+                  <div class="material-card-image">
+                    <span class="slide-badge">In Use</span>
+                    <img src="static/assets/order-materials/sticker-truck-1.jpeg" alt="Sticker applied to a truck tailgate" loading="lazy">
+                    <span class="spec-label">Trucks & Equipment</span>
                   </div>
                   <div class="material-card-body">
                     <p>Durable stickers for hard hats, equipment, and toolboxes.</p>
@@ -2396,6 +2462,8 @@
           <div class="materials-carousel-dots" id="dots-stickers">
             <button type="button" class="dot active" onclick="setMaterialsCarouselSlide('stickers', 0)" aria-label="Slide 1"></button>
             <button type="button" class="dot" onclick="setMaterialsCarouselSlide('stickers', 1)" aria-label="Slide 2"></button>
+            <button type="button" class="dot" onclick="setMaterialsCarouselSlide('stickers', 2)" aria-label="Slide 3"></button>
+            <button type="button" class="dot" onclick="setMaterialsCarouselSlide('stickers', 3)" aria-label="Slide 4"></button>
           </div>
         </div>
       </div>
@@ -2743,7 +2811,6 @@
         <div class="supporter-card${featured}">
           <div class="supporter-logo">${logo}</div>
           <h4>${entry.name}</h4>
-          ${entry.description ? `<p style="font-size:.88rem;color:var(--text-secondary);margin-bottom:8px;">${entry.description}</p>` : ''}
           ${link}
         </div>`;
     }
