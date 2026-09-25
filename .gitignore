@@ -18,3 +18,6 @@ node_modules
 ## data and generated outputs
 examples/
 **/questions-json-to-csv/*.csv
+
+# other
+TODO.md
