@@ -1,4 +1,5 @@
 {
+  "_note": "Keep entries alphabetized by name within each group (associations, contractors, unions). The site sorts them at render time too — keep new entries in alphabetical order here.",
   "associations": [
     {
       "name": "Associated Construction Contractors of New Jersey (ACCNJ)",
