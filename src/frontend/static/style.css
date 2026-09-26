@@ -2752,14 +2752,34 @@ body.dark-mode .distance-badge {
   border-bottom: 1.5px solid rgba(113, 128, 150, 0.2);
 }
 
-.bio-modal-headshot {
+.bio-modal-headshot-wrap {
+  position: relative;
   width: 110px;
   height: 110px;
   border-radius: 50%;
-  object-fit: cover;
+  overflow: hidden;
   flex-shrink: 0;
   border: 3.5px solid var(--njit-blue, #1c1475);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.bio-modal-headshot-wrap .blur-fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(14px) saturate(1.1);
+  transform: none !important;
+  z-index: 0;
+}
+
+.bio-modal-headshot {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
 }
 
 .bio-modal-title-group h3 {
@@ -2820,6 +2840,22 @@ body.dark-mode .distance-badge {
   height: 100%;
   object-fit: cover;
   transition: transform 0.35s ease;
+  position: relative;
+  z-index: 1;
+}
+
+/* Blurred echo behind panned/zoomed portraits — softens any gap where the
+   photo doesn't reach the frame edge. transform stays none so per-person
+   pan/zoom rules (e.g. EdCampbell) only affect the sharp image. */
+.headshot-frame img.blur-fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(16px) saturate(1.1) brightness(0.97);
+  transform: none !important;
+  z-index: 0;
 }
 
 /* Specific headshot positioning & zooming adjustments */
@@ -2851,12 +2887,12 @@ body.dark-mode .distance-badge {
   object-position: 47% 18%;
 }
 
-/* Ed Campbell: photo shifted down (truck cab tops the crop) and left so the
-   full Waters & Bugbee door lettering stays in frame */
+/* Ed Campbell: the whole photo in frame — face, Waters & Bugbee lettering,
+   and his left hand (bottom right). Blurred bars top/bottom via blur-fill. */
 .testimony-slide img[src*="EdCampbell"] {
-  transform: translateX(15%) scale(1.1);
-  transform-origin: center 40%;
-  object-position: 50% 30%;
+  object-fit: contain;
+  object-position: 50% 50%;
+  transform: none;
 }
 
 .team-card:hover .headshot-frame img {

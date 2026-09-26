@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Protecting Under the Hard Hat</title>
   <link rel="icon" type="image/png" href="static/assets/logos/PUTHH-Logo.png" />
-  <link rel="stylesheet" href="static/style.css?v=14" />
+  <link rel="stylesheet" href="static/style.css?v=15" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     /* ===== TAB NAVIGATION STYLES ===== */
@@ -2981,6 +2981,8 @@
 
       document.getElementById('bioModalImg').src = img ? img.src : 'static/assets/headshots/placeholder.svg';
       document.getElementById('bioModalImg').alt = name;
+      const blurImg = document.getElementById('bioModalBlur');
+      if (blurImg) blurImg.src = document.getElementById('bioModalImg').src;
       document.getElementById('bioModalName').textContent = name;
       document.getElementById('bioModalRole').textContent = role;
       document.getElementById('bioModalAffiliation').textContent = affiliation;
@@ -3085,6 +3087,13 @@
         if (!img || img.dataset.lightboxReady) return;
         img.dataset.lightboxReady = '1';
 
+        const blur = document.createElement('img');
+        blur.src = img.src;
+        blur.alt = '';
+        blur.className = 'blur-fill';
+        blur.setAttribute('aria-hidden', 'true');
+        frame.insertBefore(blur, img);
+
         const badge = document.createElement('span');
         badge.className = 'image-view-badge';
         badge.innerHTML = '<i class="fas fa-expand"></i> View';
@@ -3097,6 +3106,21 @@
         };
         img.addEventListener('click', open);
         badge.addEventListener('click', open);
+      });
+    }
+
+    // Team headshots get the same blurred echo (for panned/zoomed portraits)
+    function initTeamHeadshotBlur() {
+      document.querySelectorAll('.team-card .headshot-frame').forEach(frame => {
+        const img = frame.querySelector('img');
+        if (!img || img.dataset.blurReady) return;
+        img.dataset.blurReady = '1';
+        const blur = document.createElement('img');
+        blur.src = img.src;
+        blur.alt = '';
+        blur.className = 'blur-fill';
+        blur.setAttribute('aria-hidden', 'true');
+        frame.insertBefore(blur, img);
       });
     }
 
@@ -3201,6 +3225,7 @@
       updateTabIndicator();
       loadSupporters();
       initMaterialImageLightbox();
+      initTeamHeadshotBlur();
     });
 
     // Update indicator on resize
@@ -3214,7 +3239,10 @@
         <i class="fas fa-xmark"></i>
       </button>
       <div class="bio-modal-header">
-        <img id="bioModalImg" src="static/assets/headshots/placeholder.svg" alt="" class="bio-modal-headshot">
+        <div class="bio-modal-headshot-wrap">
+          <img id="bioModalBlur" class="blur-fill" alt="" aria-hidden="true">
+          <img id="bioModalImg" src="static/assets/headshots/placeholder.svg" alt="" class="bio-modal-headshot">
+        </div>
         <div class="bio-modal-title-group">
           <h3 id="bioModalName">Member Name</h3>
           <div id="bioModalRole" class="bio-modal-role">Role</div>
