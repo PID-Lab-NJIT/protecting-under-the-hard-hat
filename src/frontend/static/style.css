@@ -2851,11 +2851,12 @@ body.dark-mode .distance-badge {
   object-position: 47% 18%;
 }
 
-/* Ed Campbell: helmet top + Waters & Bugbee truck lettering both in frame */
+/* Ed Campbell: photo shifted down (truck cab tops the crop) and left so the
+   full Waters & Bugbee door lettering stays in frame */
 .testimony-slide img[src*="EdCampbell"] {
-  transform: scale(1);
+  transform: translateX(15%) scale(1.1);
   transform-origin: center 40%;
-  object-position: 58% 30%;
+  object-position: 50% 30%;
 }
 
 .team-card:hover .headshot-frame img {
