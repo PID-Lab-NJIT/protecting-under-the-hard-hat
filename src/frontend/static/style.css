@@ -2905,6 +2905,7 @@ body.dark-mode .distance-badge {
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%) translateY(10px);
+  z-index: 3;
   background: rgba(15, 23, 42, 0.85);
   color: #ffffff;
   padding: 4px 12px;
@@ -3194,7 +3195,9 @@ body.dark-mode .material-card {
   color: var(--njit-blue, #1c1475);
 }
 
-.material-card-image i {
+/* Large accent icon for icon-only slides — direct children only, so the
+   "View" hover pill's icon keeps the pill's own text size */
+.material-card-image > i {
   font-size: 2.2rem;
   color: var(--accent, #cc0000);
 }
