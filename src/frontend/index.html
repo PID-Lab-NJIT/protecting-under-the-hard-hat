@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Protecting Under the Hard Hat</title>
   <link rel="icon" type="image/png" href="static/assets/logos/PUTHH-Logo.png" />
-  <link rel="stylesheet" href="static/style.css?v=12" />
+  <link rel="stylesheet" href="static/style.css?v=13" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     /* ===== TAB NAVIGATION STYLES ===== */
@@ -2923,6 +2923,7 @@
       renderSupporterGroup('contractorsGrid', (SUPPORTERS.contractors || []).slice().sort((a, b) => a.name.localeCompare(b.name)));
       renderSupporterGroup('unionsGrid', sortWithFeatured(SUPPORTERS.unions));
       renderTestimonies(SUPPORTERS.testimonies || []);
+      initTestimonyLightbox();
     }
 
     // Handle Newsletter Submit
@@ -3071,6 +3072,28 @@
           const title = card?.querySelector('h3')?.textContent?.trim() || '';
           const spec = box.querySelector('.spec-label')?.textContent?.trim() || '';
           openImageLightbox(img.src, img.alt, [title, spec].filter(Boolean).join(' — '));
+        };
+        img.addEventListener('click', open);
+        badge.addEventListener('click', open);
+      });
+    }
+
+    // Testimony headshots open the same lightbox, captioned with the name
+    function initTestimonyLightbox() {
+      document.querySelectorAll('#testimonyTrack .headshot-frame').forEach(frame => {
+        const img = frame.querySelector('img');
+        if (!img || img.dataset.lightboxReady) return;
+        img.dataset.lightboxReady = '1';
+
+        const badge = document.createElement('span');
+        badge.className = 'image-view-badge';
+        badge.innerHTML = '<i class="fas fa-expand"></i> View';
+        frame.appendChild(badge);
+
+        const open = () => {
+          const slide = frame.closest('.testimony-slide');
+          const name = slide?.querySelector('.testimony-name')?.textContent?.trim() || '';
+          openImageLightbox(img.src, img.alt, name);
         };
         img.addEventListener('click', open);
         badge.addEventListener('click', open);

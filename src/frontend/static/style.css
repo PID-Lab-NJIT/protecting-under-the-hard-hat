@@ -1612,7 +1612,7 @@ body.dark-mode .zip-popover-menu {
 .zip-panel {
   width: 100%;
   max-width: 100%;
-  background: #ffffff;
+  background: var(--bg-primary, #f0f4f8);
   border: 2px solid var(--njit-red, #cc0000);
   border-radius: 16px;
   padding: 16px 18px;
@@ -1621,7 +1621,7 @@ body.dark-mode .zip-popover-menu {
 }
 
 body.dark-mode .zip-panel {
-  background: #3a4657;
+  background: var(--primary-dark, #1a202c);
   color: var(--text-dark, #e2e8f0);
   border-color: var(--njit-red, #cc0000);
 }
@@ -2839,23 +2839,23 @@ body.dark-mode .distance-badge {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.3);
+  transform: scale(1.2);
   transform-origin: center 30%;
   object-position: center 20%;
 }
 
 /* Joe Schwed: wider view — full helmet + torso, face slightly left */
 .testimony-slide img[src*="JoeSchwed"] {
-  transform: scale(1.1);
+  transform: scale(1.02);
   transform-origin: center 30%;
-  object-position: 45% 15%;
+  object-position: 47% 18%;
 }
 
-/* Ed Campbell: face on the right side of photo, torso visible */
+/* Ed Campbell: helmet top + Waters & Bugbee truck lettering both in frame */
 .testimony-slide img[src*="EdCampbell"] {
-  transform: scale(1.2);
-  transform-origin: center 30%;
-  object-position: 62% 20%;
+  transform: scale(1);
+  transform-origin: center 40%;
+  object-position: 58% 30%;
 }
 
 .team-card:hover .headshot-frame img {
@@ -3209,16 +3209,45 @@ body.dark-mode .material-card {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
-.material-card-image:hover .image-view-badge {
+.material-card-image:hover .image-view-badge,
+.testimony-slide .headshot-frame:hover .image-view-badge {
   opacity: 1;
 }
 
-/* ===== MATERIALS IMAGE LIGHTBOX (mirrors the bio modal overlay) ===== */
+/* Testimony headshots: clickable, same hover pill as team cards */
+.testimony-slide .headshot-frame img {
+  cursor: zoom-in;
+}
+
+.testimony-slide .headshot-frame .image-view-badge {
+  top: auto;
+  bottom: 10px;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%) translateY(10px);
+}
+
+.testimony-slide .headshot-frame:hover .image-view-badge {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ===== MATERIALS IMAGE LIGHTBOX (mirrors the bio modal card look) ===== */
 .image-lightbox-container {
   position: relative;
-  max-width: min(92vw, 900px);
+  width: min(92vw, 680px);
+  background: var(--bg-primary, #ffffff);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+  box-sizing: border-box;
   transform: scale(0.92) translateY(20px);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.dark-mode .image-lightbox-container {
+  background: var(--primary-dark, #1a202c);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .image-lightbox-container .bio-modal-close {
@@ -3231,19 +3260,19 @@ body.dark-mode .material-card {
 
 .image-lightbox-img-wrap {
   position: relative;
-  border-radius: 20px;
+  border-radius: 14px;
   overflow: hidden;
   background: #1a202c;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.55);
 }
 
 .image-lightbox-img-wrap img.main {
   display: block;
   max-width: 100%;
-  max-height: 70vh;
+  max-height: 62vh;
   object-fit: contain;
   position: relative;
   z-index: 1;
+  margin: 0 auto;
 }
 
 .image-lightbox-img-wrap img.blur-fill {
@@ -3258,11 +3287,10 @@ body.dark-mode .material-card {
 
 .image-lightbox-caption {
   text-align: center;
-  color: #ffffff;
-  margin-top: 14px;
+  color: var(--text-secondary, #64748b);
+  margin-top: 12px;
   font-weight: 700;
-  font-size: 1rem;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  font-size: 0.92rem;
 }
 
 /* ===== TOOLBOX TALKS (Resources tab) ===== */
