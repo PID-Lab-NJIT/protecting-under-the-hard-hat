@@ -2887,12 +2887,13 @@ body.dark-mode .distance-badge {
   object-position: 47% 18%;
 }
 
-/* Ed Campbell: the whole photo in frame — face, Waters & Bugbee lettering,
-   and his left hand (bottom right). Blurred bars top/bottom via blur-fill. */
+/* Ed Campbell: zoomed in on Ed (face anchored); truck lettering crops out —
+   the full photo stays available via the click-to-fullscreen lightbox */
 .testimony-slide img[src*="EdCampbell"] {
   object-fit: contain;
   object-position: 50% 50%;
-  transform: none;
+  transform: scale(1.6);
+  transform-origin: 68% 35%;
 }
 
 .team-card:hover .headshot-frame img {
