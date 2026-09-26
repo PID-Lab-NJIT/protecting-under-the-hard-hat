@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Protecting Under the Hard Hat</title>
   <link rel="icon" type="image/png" href="../static/assets/logos/PUTHH-Logo-old-with-text.png" />
-  <link rel="stylesheet" href="../static/style.css?v=16" />
+  <link rel="stylesheet" href="../static/style.css?v=17" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 
@@ -156,46 +156,40 @@
               <i class="fas fa-magnifying-glass search-leading-icon" aria-hidden="true"></i>
               <input type="search" id="resourceSearch" placeholder="Search resources, unions, topics (e.g. alcohol, Local 825)…" aria-label="Search resources"
                 data-i18n-placeholder="search.placeholder" data-i18n-aria="search.aria" autocomplete="off">
-              
-              <!-- Proximity Popover Trigger Button -->
-              <button type="button" id="zipPopoverBtn" class="zip-popover-btn" title="Filter by ZIP & Distance" aria-expanded="false" aria-controls="zipPopoverMenu">
-                <i class="fas fa-location-dot" aria-hidden="true"></i>
-                <span class="popover-btn-text">ZIP & Distance</span>
-                <i class="fas fa-chevron-down popover-caret" aria-hidden="true"></i>
-              </button>
             </div>
 
             <!-- Categorized Typeahead Dropdown Menu -->
             <div id="searchDropdown" class="search-typeahead-dropdown" style="display:none;" role="listbox"></div>
-
-            <!-- ZIP & Distance Inline Popover Menu -->
-            <div id="zipPopoverMenu" class="zip-popover-menu" style="display:none;">
-              <div class="zip-popover-header">
-                <i class="fas fa-location-crosshairs"></i> <span>Local Distance Filter</span>
-              </div>
-              <div class="zip-popover-body">
-                <div class="zip-input-wrap">
-                  <input type="text" id="zipInput" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" placeholder="e.g. 07102" aria-label="ZIP code">
-                  <button id="zipSearchBtn" class="zip-search-go-btn" type="button">Search ZIP</button>
-                </div>
-                <div class="distance-slider-wrap zip-locked" id="distanceSliderWrap" style="margin-top:12px;">
-                  <div class="slider-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                    <label for="maxDistanceSlider" style="font-size:0.8rem; font-weight:700; color:var(--text-secondary);">Max Distance:</label>
-                    <span id="distanceValueLabel" class="distance-value-badge">25 Miles</span>
-                  </div>
-                  <div class="slider-lock-tooltip" id="sliderLockTooltip" aria-live="polite">Enter a ZIP code first</div>
-                  <input type="range" id="maxDistanceSlider" class="distance-slider" min="10" max="105" step="5" value="25" aria-label="Max distance in miles" style="width:100%; cursor:pointer;">
-                  <div class="slider-ticks" style="display:flex; justify-content:space-between; font-size:0.72rem; color:var(--text-secondary); margin-top:2px;">
-                    <span>10 mi</span>
-                    <span>50 mi</span>
-                    <span>Any</span>
-                  </div>
-                </div>
-                <button id="zipClearBtn" class="zip-clear-link" type="button" style="display:none; margin-top:8px;">Show national</button>
-              </div>
-            </div>
-
           </div><!-- /.unified-search-bar-wrap -->
+
+          <!-- ZIP & Distance: always-visible panel below the search bar -->
+          <div id="zipPopoverMenu" class="zip-panel" role="group" aria-label="ZIP code and distance filter">
+            <div class="zip-panel-header">
+              <i class="fas fa-location-crosshairs" aria-hidden="true"></i>
+              <span>Find resources near you</span>
+              <span id="zipActiveBadge" class="zip-active-badge" style="display:none;"></span>
+            </div>
+            <div class="zip-panel-body">
+              <div class="zip-input-wrap">
+                <input type="text" id="zipInput" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" placeholder="e.g. 07102" aria-label="ZIP code">
+                <button id="zipSearchBtn" class="zip-search-go-btn" type="button">Search ZIP</button>
+              </div>
+              <div class="distance-slider-wrap zip-locked" id="distanceSliderWrap">
+                <div class="slider-header">
+                  <label for="maxDistanceSlider">Max Distance:</label>
+                  <span id="distanceValueLabel" class="distance-value-badge">25 Miles</span>
+                </div>
+                <div class="slider-lock-tooltip" id="sliderLockTooltip" aria-live="polite">Enter a ZIP code first</div>
+                <input type="range" id="maxDistanceSlider" class="distance-slider" min="10" max="105" step="5" value="25" aria-label="Max distance in miles">
+                <div class="slider-ticks">
+                  <span>10 mi</span>
+                  <span>50 mi</span>
+                  <span>Any</span>
+                </div>
+              </div>
+              <button id="zipClearBtn" class="zip-clear-link" type="button" style="display:none;">Show national</button>
+            </div>
+          </div>
 
           <!-- Active Filter Chips Row (rendered below search input, behind dropdown) -->
           <div id="searchChipsContainer" class="search-chips-container" style="display:none;"></div>
@@ -261,7 +255,7 @@
 
   <script src="../static/config.js" defer></script>
   <script src="../static/i18n.js" defer></script>
-  <script src="../static/script.js?v=16" defer></script>
+  <script src="../static/script.js?v=17" defer></script>
 </body>
 
 </html>

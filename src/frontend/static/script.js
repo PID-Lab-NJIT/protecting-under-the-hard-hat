@@ -530,7 +530,6 @@ class DynamicSurvey {
 
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.unified-search-bar-wrap')) this.closeSearchDropdown();
-      if (!e.target.closest('#zipPopoverBtn') && !e.target.closest('#zipPopoverMenu')) this.closeZipPopover();
     });
 
     // Warm the union/contractor list in the background so the typeahead is
@@ -1711,57 +1710,30 @@ class DynamicSurvey {
     });
   }
 
-  /* Inline ZIP & Distance Popover Controls */
+  /* ZIP & Distance panel: always visible below the search bar.
+     The old popover open/close behavior is retired — these are kept as
+     no-ops because several call sites still invoke them. */
   toggleZipPopover() {
-    const menu = this.dom.zipPopoverMenu;
-    const btn = this.dom.zipPopoverBtn;
-    if (!menu) return;
-    const isOpen = menu.classList.contains('is-visible');
-    if (!isOpen) {
-      this.closeSearchDropdown();
-      menu.style.display = 'block';
-      requestAnimationFrame(() => menu.classList.add('is-visible'));
-      if (btn) btn.setAttribute('aria-expanded', 'true');
-      if (this.dom.unifiedSearchWrap) this.dom.unifiedSearchWrap.classList.add('zip-open');
-      // Sync slider lock state with current ZIP input value
-      this.updateSliderLockState();
-    } else {
-      this.closeZipPopover();
-    }
+    this.updateSliderLockState();
   }
 
   closeZipPopover() {
-    const menu = this.dom.zipPopoverMenu;
-    if (menu) {
-      menu.classList.remove('is-visible');
-      setTimeout(() => {
-        if (!menu.classList.contains('is-visible')) {
-          menu.style.display = 'none';
-        }
-      }, 190);
-    }
-    if (this.dom.zipPopoverBtn) {
-      this.dom.zipPopoverBtn.setAttribute('aria-expanded', 'false');
-    }
     if (this.dom.unifiedSearchWrap) {
       this.dom.unifiedSearchWrap.classList.remove('zip-open');
     }
   }
 
   updateZipPopoverLabel() {
-    const btn = this.dom.zipPopoverBtn;
-    if (!btn) return;
-    const textSpan = btn.querySelector('.popover-btn-text');
-    if (!textSpan) return;
+    const badge = document.getElementById('zipActiveBadge');
+    if (!badge) return;
 
     const zip = (this.dom.zipInput?.value || '').trim();
     if (zip && /^\d{5}$/.test(zip)) {
       const distStr = this._maxDistanceMiles >= 99999 ? '∞' : `${this._maxDistanceMiles} mi`;
-      textSpan.textContent = `📍 ${zip} (${distStr})`;
-      btn.classList.add('has-zip');
+      badge.textContent = `📍 ${zip} (${distStr})`;
+      badge.style.display = '';
     } else {
-      textSpan.textContent = 'ZIP & Distance';
-      btn.classList.remove('has-zip');
+      badge.style.display = 'none';
     }
   }
 

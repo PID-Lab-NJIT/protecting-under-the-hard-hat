@@ -1608,6 +1608,100 @@ body.dark-mode .zip-popover-menu {
   color: var(--text-dark, #e2e8f0);
 }
 
+/* ===== ZIP & Distance: always-visible panel below the search bar ===== */
+.zip-panel {
+  width: 100%;
+  max-width: 100%;
+  background: #f0f4f8;
+  border: 2px solid var(--njit-red, #cc0000);
+  border-radius: 16px;
+  padding: 16px 18px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+body.dark-mode .zip-panel {
+  background: var(--secondary-dark, #2d3748);
+  color: var(--text-dark, #e2e8f0);
+  border-color: var(--njit-red, #cc0000);
+}
+
+.zip-panel * {
+  box-sizing: border-box;
+}
+
+.zip-panel-header {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--njit-red, #cc0000);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(204, 0, 0, 0.15);
+  flex-wrap: wrap;
+}
+
+.zip-active-badge {
+  margin-left: auto;
+  background: var(--njit-red, #cc0000);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.zip-panel-body .slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.zip-panel-body .slider-header label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.zip-panel-body .distance-slider-wrap {
+  margin-top: 12px;
+}
+
+.zip-panel-body .distance-slider {
+  width: 100%;
+  cursor: pointer;
+}
+
+.zip-panel-body .slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.zip-panel-body .zip-clear-link {
+  margin-top: 8px;
+}
+
+@media (max-width: 480px) {
+  .zip-panel-body .zip-input-wrap {
+    flex-wrap: wrap;
+  }
+
+  .zip-panel-body .zip-input-wrap input {
+    flex: 1 1 100%;
+  }
+
+  .zip-panel-body .zip-search-go-btn {
+    flex: 1 1 auto;
+  }
+}
+
 .zip-popover-menu * {
   box-sizing: border-box;
 }
@@ -2734,10 +2828,18 @@ body.dark-mode .distance-badge {
   object-position: center 20%;
 }
 
-/* Joe Schwed: slightly zoomed out relative to default testimony zoom */
+/* Joe Schwed: zoomed out so the top of the helmet shows, face slightly left */
 .testimony-slide img[src*="JoeSchwed"] {
-  transform: scale(1.6);
-  object-position: center 18%;
+  transform: scale(1.42);
+  transform-origin: center 30%;
+  object-position: 42% 12%;
+}
+
+/* Ed Campbell: centered on his face (right side of photo), slightly zoomed out */
+.testimony-slide img[src*="EdCampbell"] {
+  transform: scale(1.55);
+  transform-origin: center 30%;
+  object-position: 62% 22%;
 }
 
 .team-card:hover .headshot-frame img {
@@ -2865,10 +2967,11 @@ body.dark-mode .nav-dropdown button.active {
   color: var(--accent-soft, #ff8a8a);
 }
 
-/* Carousel arrows keep a frosted chip, but the chevron must contrast */
+/* Carousel arrows: solid chip distinct from the slide background */
 body.dark-mode .carousel-btn {
-  background: var(--secondary-dark, #2d3748);
-  color: var(--accent-soft, #ff8a8a);
+  background: #3d4a5f;
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
 }
 
 body.dark-mode .carousel-btn:hover {
@@ -2877,8 +2980,8 @@ body.dark-mode .carousel-btn:hover {
 }
 
 body.dark-mode .materials-carousel-btn {
-  background: var(--secondary-dark, #2d3748);
-  color: var(--text-dark, #e2e8f0);
+  background: #3d4a5f;
+  color: #ffffff;
   border-color: rgba(255, 255, 255, 0.25);
 }
 
@@ -2903,10 +3006,19 @@ body.dark-mode .material-card {
 /* ===== MATERIALS CAROUSEL & SIZE TOGGLE STYLING ===== */
 .materials-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 24px;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto 30px;
+}
+
+/* .material-card is a column flex container with align-items:center —
+   children must be explicitly full-width (and min-width:0) or the
+   carousel sizes to the slides' max-content, overflowing the card and
+   clipping slide images / pushing the next arrow past the card edge */
+.material-card > * {
+  min-width: 0;
+  width: 100%;
 }
 
 .material-card {
@@ -3015,10 +3127,11 @@ body.dark-mode .material-card {
 
 .material-card-image {
   position: relative;
-  height: 180px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(28, 20, 117, 0.06) 0%, rgba(204, 0, 0, 0.08) 100%);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  height: 300px;
+  border-radius: 0;
+  background: #ffffff;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3032,14 +3145,19 @@ body.dark-mode .material-card {
   color: var(--accent, #cc0000);
 }
 
-/* Photo slides: image fills the card image box; badge + spec label overlay it */
+/* Photo slides: full image always visible inside the box; badge + spec label overlay it */
 .material-card-image img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: 13px;
+  object-fit: contain;
+  border-radius: 0;
+}
+
+body.dark-mode .material-card-image {
+  background: #1a202c;
+  border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 .material-card-image .spec-label {
@@ -3062,6 +3180,7 @@ body.dark-mode .material-card {
   position: absolute;
   top: 10px;
   left: 10px;
+  z-index: 2;
   background: rgba(15, 23, 42, 0.85);
   color: #ffffff;
   font-size: 0.72rem;
@@ -3082,18 +3201,18 @@ body.dark-mode .material-card {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  color: var(--text-primary);
+  background: #ffffff;
+  border: 1.5px solid rgba(0, 0, 0, 0.18);
+  color: #1a202c;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 5;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
   transition: all 0.2s ease;
 }
 
