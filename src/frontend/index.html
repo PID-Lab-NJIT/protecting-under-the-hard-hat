@@ -1867,8 +1867,7 @@
           </div>
         </div>
 
-        <!-- WIP: hidden from public nav until finished (add ?dev=1 to URL to reveal) -->
-        <div class="nav-item dev-only" id="navSupporters">
+        <div class="nav-item" id="navSupporters">
           <button class="tab-btn" data-tab="supporters" data-parent="supporters" onclick="switchTab('supporters')" aria-haspopup="true" aria-expanded="false">
             Supporters <span class="caret"><i class="fas fa-chevron-down"></i></span>
           </button>
@@ -1883,8 +1882,7 @@
         <div class="nav-item">
           <button class="tab-btn" data-tab="resources" onclick="switchTab('resources')">Resources</button>
         </div>
-        <!-- WIP: hidden from public nav until finished (add ?dev=1 to URL to reveal) -->
-        <div class="nav-item dev-only">
+        <div class="nav-item">
           <button class="tab-btn" data-tab="materials" onclick="switchTab('materials')">Order Materials</button>
         </div>
         <!-- WIP: hidden from public nav until finished (add ?dev=1 to URL to reveal) -->
@@ -2708,8 +2706,9 @@
     });
 
     // ===== Dev helpers =====
-    // ?dev=1 reveals WIP tabs (Supporters / Order Materials / Blog).
-    // ?tab=<panel-id> jumps straight to a panel (e.g. ?dev=1&tab=materials for review links).
+    // ?dev=1 reveals WIP tabs (currently only Blog — Supporters and Order
+    // Materials are now always in the public nav).
+    // ?tab=<panel-id> jumps straight to a panel (e.g. ?tab=materials for review links).
     (() => {
       const url = new URLSearchParams(window.location.search);
       if (url.get('dev') === '1') {
