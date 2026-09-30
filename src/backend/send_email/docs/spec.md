@@ -44,11 +44,13 @@ Env vars supply:
 
 - Rate limiting window in seconds (e.g. 3600 for hourly windows)
 - Limit for that window
+- Time to live (TTL) before an IP request record gets deleted
 
 Implement basic rate limiting using windowed intervals. Base the request counts upon the user's IP (via the request received).
 
-[TODO] Discuss TTL.
-[TODO] Create basic DB schema in `./db_schema.md` with reasoning.
+Acceptable tradeoff: 2x limit when traffic arrives at window boundaries.
+
+See `./db_schema.md` for more info.
 
 ## Basic Header Injection Prevention
 
