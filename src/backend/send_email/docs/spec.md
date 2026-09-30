@@ -77,6 +77,24 @@ Timestamp: {YYYY-MM-DD HH:MM:SS (ET)}
 
 Notably, the timestamp here is when the **server** received the frontend request to avoid spoofing.
 
+## Response Contract
+
+| Status Code | Condition                                             |
+| ----------- | ----------------------------------------------------- |
+| `200`       | Successful email send                                 |
+| `400`       | Validation error (e.g. mal-formatted request payload) |
+| `429`       | Rate limit from an IP exceeded for current window     |
+| `500`       | Any other uncaught error                              |
+
+Response format:
+
+```json
+{
+    "status": "number - status code",
+    "message": "str - short message corresponding to status"
+}
+```
+
 ## Code Requirements
 
 - Language: Typescript
