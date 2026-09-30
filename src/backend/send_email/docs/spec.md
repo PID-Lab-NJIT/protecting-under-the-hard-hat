@@ -53,6 +53,8 @@ See `./db_schema.md` for more info.
 
 ## Email Characteristics
 
+Sender address: directly from SES
+Recipient address: specified by env var `RECIPIENT_EMAIL_ADDRESS`
 Reply-to address: {user email}
 
 Skip injection prevention since non-raw SES already does its own checks robustly, and the subject is static, not concatenated with user input.
