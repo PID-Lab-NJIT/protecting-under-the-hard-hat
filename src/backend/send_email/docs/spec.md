@@ -102,7 +102,7 @@ Response format:
 - Language: Typescript
 - Handles errors gracefully. The user/frontend should never see any unhandled, raw error that's potentially compromising.
 - Maintainability above all: comments, variable names, general syntax should favor long-term code comprehension especially by others who've never seen the code before.
-- Log at key events: rate limit pass/reject (and stats), validation pass/reject (log relevant payload details upon reject), injection prevention pass/reject (log relevant message details upon reject), SES success/failure, overall success/failure. Future debugging should be possible just from looking at the logs rather than having to modify the code with print statements.
+- Log at key events: rate limit pass/reject (and stats), validation pass/reject (log relevant payload details upon reject), SES success/failure, and overall success/failure. Future debugging should be possible just from looking at the logs rather than having to modify the code with print statements.
   - Basic structure: log message (mandatory) and JSON body (if needed).
   - Use log levels appropriately (info, warn, error).
 
