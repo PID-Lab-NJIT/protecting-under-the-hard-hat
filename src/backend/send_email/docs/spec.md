@@ -27,8 +27,7 @@ Note: all form fields are user-inputted.
 {
     "name": "str - user's name",
     "email": "str - user's email address",
-    "message": "str - message / body",
-    "timestamp": "str - ISO datetime string"
+    "message": "str - message / body"
 }
 ```
 
