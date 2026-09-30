@@ -16,8 +16,7 @@ A Lambda function that receives an anonymous contact-us payload from the fronten
     - Rejects if above limit.
 4. Validates payload.
     - Reject if invalid format.
-5. Performs basic header injection prevention as described in a later section.
-6. SES sends the email.
+5. SES sends the email.
 7. Lambda returns a successful response to the frontend.
 
 ## Payload Schema
