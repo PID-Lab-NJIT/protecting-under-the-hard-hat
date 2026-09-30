@@ -75,6 +75,8 @@ IP: {user IP}
 Timestamp: {YYYY-MM-DD HH:MM:SS (ET)}
 ```
 
+ET refers to the timezone America/New_York, accounting for daylight savings.
+
 Notably, the timestamp here is when the **server** received the frontend request to avoid spoofing.
 
 ## Response Contract
