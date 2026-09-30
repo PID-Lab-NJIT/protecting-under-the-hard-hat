@@ -24,12 +24,12 @@ A Lambda function that receives an anonymous contact-us payload from the fronten
 
 Note: all form fields are user-inputted.
 
-[TODO] add timestamp here and to email
 ```json
 {
     "name": "str - user's name",
     "email": "str - user's email address",
-    "message": "str - message / body"
+    "message": "str - message / body",
+    "timestamp": "str - ISO datetime string"
 }
 ```
 
@@ -55,11 +55,9 @@ See `./db_schema.md` for more info.
 
 ## Email Characteristics
 
-Reply-To Address: {user email}
+Reply-to address: {user email}
 
 Skip injection prevention since non-raw SES already does its own checks robustly, and the subject is static, not concatenated with user input.
-
-[TODO] Any tips on format / other info to include?
 
 Subject: "PUTHH: New Contact Message"
 
@@ -74,8 +72,10 @@ From:
 Name: {name}
 Email: {user email}
 IP: {user IP}
-Timestamp: {YYYY-MM-DD HH:MM (ET)}
+Timestamp: {YYYY-MM-DD HH:MM:SS (ET)}
 ```
+
+Notably, the timestamp here is when the **server** received the frontend request to avoid spoofing.
 
 ## Code Requirements
 
