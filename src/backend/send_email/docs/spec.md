@@ -39,11 +39,11 @@ Validate every payload:
 
 ## Source IP Rate Limiting through DynamoDB
 
-Env vars supply:
+Env vars:
 
-- Rate limiting window in seconds (e.g. 3600 for hourly windows)
-- Limit for that window
-- Time to live (TTL) before an IP request record gets deleted
+- `RATE_LIMIT_WINDOW_SECONDS` - Rate limiting window (e.g. 3600 for hourly windows)
+- `RATE_LIMIT_MAX_REQUESTS` - Limit for that window
+- `RATE_LIMIT_TTL_SECONDS` - Time to live (TTL) before an IP request record gets deleted
 
 Implement basic rate limiting using windowed intervals. Base the request counts upon the user's IP (via the request received).
 
