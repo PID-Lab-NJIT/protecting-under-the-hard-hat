@@ -1,6 +1,6 @@
 # `send_email` Spec
 
-A Lambda function that receives an anonymous contact-us payload from the frontend and sends an email to a particular email address with the user's message using AWS SES (Simple Email Service). The Lambda implements a basic rate limiting via DynamoDB and header injection prevention.
+A Lambda function that receives an anonymous contact-us payload from the frontend and sends an email to a particular email address with the user's message using AWS SES (Simple Email Service). The Lambda implements a basic rate limiting via DynamoDB.
 
 ## Lambda Overview
 
@@ -24,6 +24,7 @@ A Lambda function that receives an anonymous contact-us payload from the fronten
 
 Note: all form fields are user-inputted.
 
+[TODO] add timestamp here and to email
 ```json
 {
     "name": "str - user's name",
@@ -52,21 +53,28 @@ Acceptable tradeoff: 2x limit when traffic arrives at window boundaries.
 
 See `./db_schema.md` for more info.
 
-## Basic Header Injection Prevention
+## Email Characteristics
 
-[TODO] Necessary with AWS SES non-raw send?
+Reply-To Address: {user email}
 
-## Email Body Format
+Skip injection prevention since non-raw SES already does its own checks robustly, and the subject is static, not concatenated with user input.
 
 [TODO] Any tips on format / other info to include?
 
+Subject: "PUTHH: New Contact Message"
+
+Body:
+
 ```
+Message:
 {message}
 
+---
 From:
-{name}
-{user email}
-{user IP}
+Name: {name}
+Email: {user email}
+IP: {user IP}
+Timestamp: {YYYY-MM-DD HH:MM (ET)}
 ```
 
 ## Code Requirements
