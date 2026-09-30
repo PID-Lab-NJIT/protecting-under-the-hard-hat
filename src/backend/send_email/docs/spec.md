@@ -53,7 +53,7 @@ See `./db_schema.md` for more info.
 
 ## Email Characteristics
 
-Sender address: directly from SES
+Sender address: specified by env var `SENDER_EMAIL_ADDRESS`
 Recipient address: specified by env var `RECIPIENT_EMAIL_ADDRESS`
 Reply-to address: {user email}
 
