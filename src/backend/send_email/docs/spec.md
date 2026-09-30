@@ -13,11 +13,11 @@ A Lambda function that receives an anonymous contact-us payload from the fronten
 1. User fills out contact form and submits. Frontend sends form data payload.
 2. Lambda executes from now on.
 3. Performs basic rate limiting as in a later section.
-    - Rejects if above limit.
+   - Rejects if above limit.
 4. Validates payload.
-    - Reject if invalid format.
+   - Reject if invalid format.
 5. SES sends the email.
-7. Lambda returns a successful response to the frontend.
+6. Lambda returns a successful response to the frontend.
 
 ## Payload Schema
 
@@ -25,9 +25,9 @@ Note: all form fields are user-inputted.
 
 ```json
 {
-    "name": "str - user's name",
-    "email": "str - user's email address",
-    "message": "str - message / body"
+  "name": "str - user's name",
+  "email": "str - user's email address",
+  "message": "str - message / body"
 }
 ```
 
@@ -90,8 +90,8 @@ Response format:
 
 ```json
 {
-    "status": "number - status code",
-    "message": "str - short message corresponding to status"
+  "status": "number - status code",
+  "message": "str - short message corresponding to status"
 }
 ```
 
@@ -99,10 +99,10 @@ Response format:
 
 - Language: Typescript
 - Handles errors gracefully. The user/frontend should never see any unhandled, raw error that's potentially compromising.
-- Maintainability above all: comments, variable names, general syntax should favor long-term code comprehension especially by others who've never seen the code  before.
+- Maintainability above all: comments, variable names, general syntax should favor long-term code comprehension especially by others who've never seen the code before.
 - Log at key events: rate limit pass/reject (and stats), validation pass/reject (log relevant payload details upon reject), injection prevention pass/reject (log relevant message details upon reject), SES success/failure, overall success/failure. Future debugging should be possible just from looking at the logs rather than having to modify the code with print statements.
-    - Basic structure: log message (mandatory) and JSON body (if needed).
-    - Use log levels appropriately (info, warn, error).
+  - Basic structure: log message (mandatory) and JSON body (if needed).
+  - Use log levels appropriately (info, warn, error).
 
 [TODO] Ask any questions you have. Give any suggestions for optimization, accuracy, security. Polish the architecture.
 
