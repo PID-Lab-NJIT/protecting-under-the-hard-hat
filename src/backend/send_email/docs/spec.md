@@ -2,9 +2,15 @@
 
 A Lambda function that receives an anonymous contact-us payload from the frontend and sends an email to a particular email address with the user's message using AWS SES (Simple Email Service). The Lambda implements a basic rate limiting via DynamoDB and header injection prevention.
 
+## Lambda Overview
+
+- Single route (`POST /`) (and most likely so for the future)
+- Thus event-based (not Express/`serverless-http`)
+- Invoked directly through Lambda function URL
+
 ## Flow
 
-1. User fills out contact form and submits. Frontend sends form data payload. [TODO] Lambda should be RESTful (Express app wrapped around serverless-http) or regular (event-based)?
+1. User fills out contact form and submits. Frontend sends form data payload.
 2. Lambda executes from now on.
 3. Performs basic rate limiting as in a later section.
     - Rejects if above limit.
