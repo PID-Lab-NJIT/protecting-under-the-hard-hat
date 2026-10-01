@@ -41,6 +41,7 @@ Validate every payload:
 
 Env vars:
 
+- `RATE_LIMIT_TABLE_NAME` - DynamoDB table name for rate limiting
 - `RATE_LIMIT_WINDOW_SECONDS` - Rate limiting window (e.g. 3600 for hourly windows)
 - `RATE_LIMIT_MAX_REQUESTS` - Limit for that window
 - `RATE_LIMIT_TTL_SECONDS` - Time to live (TTL) before an IP request record gets deleted
