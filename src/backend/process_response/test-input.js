@@ -53,6 +53,7 @@ console.log(
                     t10: "none",
                     g0: "no",
                 },
+                deviceID: "259498b1-bfe0-42fe-a2e4-db98b3a80709",
                 sessionId: "50b1fbbd-2475-4c2f-a600-b093c928ce5d",
                 language: "en-US",
                 completed: true,

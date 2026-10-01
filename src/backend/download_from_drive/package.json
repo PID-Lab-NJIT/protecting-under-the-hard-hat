@@ -12,5 +12,8 @@
     "@googleapis/drive": "^20.1.0",
     "google-auth-library": "^11.0.0",
     "p-limit": "^7.2.0"
+  },
+  "scripts": {
+    "predeploy": ""
   }
 }
