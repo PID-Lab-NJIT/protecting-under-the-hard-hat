@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Protecting Under the Hard Hat</title>
   <link rel="icon" type="image/png" href="static/assets/logos/PUTHH-Logo.png" />
-  <link rel="stylesheet" href="static/style.css" />
+  <link rel="stylesheet" href="static/style.css?v=9" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     /* ===== TAB NAVIGATION STYLES ===== */
@@ -70,24 +70,8 @@
     }
 
     .nav-logo img {
-      height: 40px;
+      height: 52px;
       width: auto;
-    }
-
-    .nav-logo span {
-      font-weight: 800;
-      font-size: 0.85rem;
-      color: var(--text-primary);
-      letter-spacing: 0.3px;
-      white-space: nowrap;
-      line-height: 1.2;
-    }
-
-    @media (max-width: 600px) {
-      .nav-logo span {
-        font-size: 0.7rem;
-        white-space: normal;
-      }
     }
 
     /* Tab Container */
@@ -238,6 +222,11 @@
       align-items: center;
     }
 
+    /* Work-in-progress tabs hidden from the public nav; revealed by ?dev=1 */
+    .nav-item.dev-only {
+      display: none !important;
+    }
+
     .tab-btn .caret {
       font-size: 0.6rem;
       margin-left: 6px;
@@ -326,11 +315,15 @@
     }
 
     .home-intro .about-card h3 {
-      justify-content: center;
+      justify-content: flex-start;
     }
 
     .home-intro .about-card {
-      text-align: center;
+      text-align: left;
+    }
+
+    .home-intro .about-card p {
+      padding: 0 32px;
     }
 
     .home-intro-link {
@@ -364,9 +357,10 @@
     }
 
     .partner-logo-img img {
-      max-height: 90px;
-      max-width: 100%;
+      height: 90px;
+      width: 100%;
       object-fit: contain;
+      object-position: center;
     }
 
     /* ===== TEAM (with bio expanders) ===== */
@@ -382,6 +376,14 @@
     .team-row .team-card {
       width: 300px;
       padding-top: 28px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .team-card .team-info {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
     }
 
     .team-row-label {
@@ -537,6 +539,15 @@
       line-height: 0;
       vertical-align: -0.35em;
       margin-right: 4px;
+    }
+
+    .testimony-quote::after {
+      content: '\201D';
+      color: var(--accent);
+      font-size: 2rem;
+      line-height: 0;
+      vertical-align: -0.35em;
+      margin-left: 4px;
     }
 
     .testimony-name {
@@ -789,6 +800,11 @@
       letter-spacing: -0.02em;
     }
 
+    .section-header h2 i {
+      color: var(--accent);
+      margin-right: 12px;
+    }
+
     .section-header p {
       color: var(--text-secondary);
       font-size: 1.05rem;
@@ -814,7 +830,7 @@
     }
 
     .hero-logo {
-      max-width: 340px;
+      max-width: 440px;
       position: relative;
       z-index: 1;
       transition: transform 0.4s ease;
@@ -1044,8 +1060,7 @@
       color: var(--accent);
       font-weight: 600;
       margin-bottom: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.2px;
     }
 
     .team-bio {
@@ -1055,60 +1070,98 @@
     }
 
     /* ===== ORDER MATERIALS TAB (Under Construction) ===== */
-    .construction-container {
+    /* ===== ORDER MATERIALS TAB ===== */
+    .materials-intro {
+      max-width: 800px;
+      margin: 0 auto 50px;
+      text-align: center;
+    }
+
+    .materials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto 60px;
+    }
+
+    .material-card {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       display: flex;
       flex-direction: column;
+    }
+
+    .material-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .material-card-image {
+      height: 160px;
+      display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 50vh;
-      text-align: center;
-      padding: 60px 40px;
+      font-size: 3rem;
+      color: var(--accent);
+      background: linear-gradient(135deg, rgba(204, 0, 0, 0.06), rgba(204, 0, 0, 0.02));
+    }
+
+    .material-card-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .material-card-body h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .material-card-body p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .materials-form-section {
+      max-width: 800px;
+      margin: 0 auto;
       background: var(--bg-secondary);
       border-radius: 20px;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
-      margin: 0 auto;
-      max-width: 700px;
+      padding: 50px;
+      text-align: center;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.06);
     }
 
-    .construction-icon {
-      font-size: 6rem;
-      color: var(--accent);
-      margin-bottom: 30px;
-      animation: bounce 2s infinite;
+    .materials-form-section h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text-primary);
     }
 
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-20px); }
-    }
-
-    .construction-title {
-      font-size: 2.5rem;
-      font-weight: 800;
-      margin-bottom: 20px;
-    }
-
-    .construction-message {
-      font-size: 1.2rem;
+    .materials-form-section > p {
       color: var(--text-secondary);
-      max-width: 500px;
+      margin-bottom: 24px;
       line-height: 1.6;
     }
 
-    .construction-estimate {
-      margin-top: 30px;
-      padding: 20px 30px;
-      background: var(--bg-secondary);
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow-a);
-      display: inline-flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .construction-estimate i {
-      font-size: 1.5rem;
-      color: var(--accent);
+    .materials-form-iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+      border-radius: 12px;
+      margin-top: 24px;
+      background: var(--bg-primary);
     }
 
     /* ===== BLOG TAB STYLES ===== */
@@ -1347,6 +1400,64 @@
       line-height: 1.5;
     }
 
+    /* Email line: mailto link + copy-to-clipboard button */
+    .contact-email-line {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .contact-email-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      overflow-wrap: anywhere;
+    }
+
+    .contact-email-link:hover {
+      text-decoration: underline;
+    }
+
+    .copy-email-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      font-size: 0.78rem;
+      font-family: inherit;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: var(--bg-primary);
+      border: 1px solid var(--text-secondary);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .copy-email-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .copy-email-btn.copied {
+      color: #22c55e;
+      border-color: #22c55e;
+    }
+
+    /* Note under the contact form submit button */
+    .form-note {
+      margin: 14px 0 0;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .form-note i {
+      margin-right: 4px;
+      color: var(--accent);
+    }
+
     .map-placeholder {
       width: 100%;
       height: 160px;
@@ -1479,7 +1590,7 @@
     }
 
     .footer-logo {
-      height: 42px;
+      height: 52px;
       opacity: 0.6;
       margin-bottom: 16px;
       transition: opacity 0.3s ease;
@@ -1657,7 +1768,7 @@
 
       /* Mobile Hero - Remove glow effects */
       .hero-logo {
-        max-width: 200px;
+        max-width: 260px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       }
 
@@ -1717,7 +1828,6 @@
     <div class="nav-container">
       <div class="nav-logo">
         <img src="static/assets/logos/PUTHH-Logo.png" alt="Protecting Under the Hard Hat Logo">
-        <span>Protecting Under the Hard Hat</span>
       </div>
       
       <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
@@ -1742,7 +1852,8 @@
           </div>
         </div>
 
-        <div class="nav-item" id="navSupporters">
+        <!-- WIP: hidden from public nav until finished (add ?dev=1 to URL to reveal) -->
+        <div class="nav-item dev-only" id="navSupporters">
           <button class="tab-btn" data-tab="supporters" data-parent="supporters" onclick="switchTab('supporters')" aria-haspopup="true" aria-expanded="false">
             Supporters <span class="caret"><i class="fas fa-chevron-down"></i></span>
           </button>
@@ -1757,16 +1868,18 @@
         <div class="nav-item">
           <button class="tab-btn" data-tab="resources" onclick="switchTab('resources')">Resources</button>
         </div>
-        <div class="nav-item">
+        <!-- WIP: hidden from public nav until finished (add ?dev=1 to URL to reveal) -->
+        <div class="nav-item dev-only">
           <button class="tab-btn" data-tab="materials" onclick="switchTab('materials')">Order Materials</button>
         </div>
-        <div class="nav-item">
+        <!-- WIP: hidden from public nav until finished (add ?dev=1 to URL to reveal) -->
+        <div class="nav-item dev-only">
           <button class="tab-btn" data-tab="blog" onclick="switchTab('blog')">Blog</button>
         </div>
         <div class="nav-item">
           <button class="tab-btn" data-tab="contact" onclick="switchTab('contact')">Contact</button>
         </div>
-        <a href="questionnaire/" class="tab-btn survey-tab" style="text-decoration: none;">
+        <a href="questionnaire/" target="_blank" rel="noopener noreferrer" class="tab-btn survey-tab" style="text-decoration: none;">
           <i class="fas fa-clipboard-check"></i> Take Survey
         </a>
         <button id="themeToggle" class="theme-toggle-btn" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
@@ -1790,7 +1903,7 @@
         
         <h1 class="hero-title">Protecting Under the Hard Hat</h1>
         
-        <a href="questionnaire/" class="hero-cta">
+        <a href="questionnaire/" target="_blank" rel="noopener noreferrer" class="hero-cta">
           <i class="fas fa-clipboard-check"></i>
           Take the Survey
         </a>
@@ -1859,12 +1972,10 @@
     <!-- ABOUT: OUR MISSION -->
     <section id="about-mission" class="tab-panel" data-parent="about">
       <div class="section-header">
-        <h2><span class="diagonal-line">Our Mission</span></h2>
-        <p>Learn about our mission and the people who make this initiative possible</p>
+        <h2><span class="diagonal-line"><i class="fas fa-bullseye"></i> Our Mission</span></h2>
       </div>
       <div class="single-card-wrap">
         <div class="about-card">
-          <h3><i class="fas fa-bullseye"></i> Our Mission</h3>
           <p>Protecting Under the Hard Hat is dedicated to improving access to mental health, substance use, and
             wellness resources for construction workers and their families. Through education, outreach, and resource
             navigation tools, we aim to make it easier to find support, reduce barriers to seeking help, and promote
@@ -1876,12 +1987,10 @@
     <!-- ABOUT: OUR GOALS -->
     <section id="about-goals" class="tab-panel" data-parent="about">
       <div class="section-header">
-        <h2><span class="diagonal-line">Our Goals</span></h2>
-        <p>Learn about our mission and the people who make this initiative possible</p>
+        <h2><span class="diagonal-line"><i class="fas fa-flag-checkered"></i> Our Goals</span></h2>
       </div>
       <div class="single-card-wrap">
         <div class="about-card">
-          <h3><i class="fas fa-flag-checkered"></i> Our Goals</h3>
           <p>Our goals are to increase awareness of mental health and substance use challenges within the construction
             industry, reduce stigma surrounding help-seeking, and connect individuals with trusted resources and
             support services. We strive to foster a culture in which mental well-being is valued alongside physical
@@ -1894,7 +2003,6 @@
     <section id="about-partners" class="tab-panel" data-parent="about">
       <div class="section-header">
         <h2><span class="diagonal-line">Our Partners</span></h2>
-        <p>Learn about our mission and the people who make this initiative possible</p>
       </div>
       <div class="partners-section">
         <div class="partners-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); max-width: 700px;">
@@ -1906,7 +2014,7 @@
           </div>
           <div class="partner-card">
             <div class="partner-logo-img">
-              <img src="static/assets/logos/MAP-logo.jpeg" alt="IUOE 825 MAP logo">
+              <img src="static/assets/logos/Unions/MAP-logo.jpeg" alt="IUOE 825 MAP logo">
             </div>
             <div class="partner-name">IUOE 825 MAP</div>
           </div>
@@ -1918,46 +2026,54 @@
     <section id="about-team" class="tab-panel" data-parent="about">
       <div class="section-header">
         <h2><span class="diagonal-line">Meet the Team</span></h2>
-        <p>Learn about our mission and the people who make this initiative possible</p>
       </div>
 
       <div class="team-section" style="border-top: none; margin-top: 0; padding-top: 0;">
         <!-- Leaders row (alphabetical: Roni Barak Ventura, Chris Lalevee, Therese Edwards) -->
         <div class="team-row">
-          <div class="team-card">
+          <div class="team-card" onclick="openBioModal(this)" role="button" tabindex="0" title="Click to view full bio">
             <div class="headshot-frame">
               <img src="static/assets/headshots/RoniBarakVentura.webp" alt="Roni Barak Ventura">
+              <div class="headshot-overlay-badge"><i class="fas fa-expand"></i> Full Bio</div>
             </div>
             <div class="team-info">
               <h4>Roni Barak Ventura</h4>
               <p class="team-role">Assistant Professor</p>
-              <p class="team-bio">School of Applied Engineering and Technology, Newark College of Engineering, New Jersey Institute of Technology.</p>
-              <button class="bio-toggle" onclick="toggleBio(this)" aria-expanded="false">Bio <i class="fas fa-chevron-down"></i></button>
-              <div class="bio-content">Dr. Roni Barak Ventura is an Assistant Professor in the School of Applied Engineering and Technology at NJIT. Her research focuses on human-centered engineering approaches to health and wellbeing. <em>(Placeholder — full bio to be provided.)</em></div>
+              <p class="team-bio">School of Applied Engineering and Technology, Newark College of Engineering, New Jersey Institute of Technology</p>
+              <button type="button" class="bio-btn-full" onclick="event.stopPropagation(); openBioModal(this);">
+                <span>View Full Bio</span>
+              </button>
+              <div class="bio-content" style="display:none;"><p>Dr. Roni Barak Ventura is an Assistant Professor in the School of Applied Engineering and Technology at the New Jersey Institute of Technology (NJIT). Her research focuses on designing human-centered technologies that promote health, well-being, and social good. By combining engineering, artificial intelligence, and human-computer interaction, she develops technologies that are not only effective but also relatable, trustworthy, and responsive to people's needs.</p><p>Her work spans digital health, rehabilitation engineering, and assistive technologies, including the development of telerehabilitation systems and other innovative tools to improve access to care. Through Protecting Under the Hard Hat, she works with construction industry partners to apply these engineering approaches to support construction workers and their families, creating evidence-based technologies that connect people with mental health, substance use, and wellness resources.</p><p>Dr. Barak Ventura's work is informed by both scientific research and her personal experience with depression and recovery, strengthening her commitment to reducing stigma and making it easier for people to seek help. Her broader research also uses data science and causal inference to better understand complex public health challenges and evaluate interventions and policies that improve health and well-being.</p></div>
             </div>
           </div>
-          <div class="team-card">
+          <div class="team-card" onclick="openBioModal(this)" role="button" tabindex="0" title="Click to view full bio">
             <div class="headshot-frame">
               <img src="static/assets/headshots/ChrisLalevee.jpg" alt="Chris Lalevee">
+              <div class="headshot-overlay-badge"><i class="fas fa-expand"></i> Full Bio</div>
             </div>
             <div class="team-info">
               <h4>Chris Lalevee</h4>
               <p class="team-role">Member Assistance Coordinator</p>
-              <p class="team-bio">IUOE Local 825.</p>
-              <button class="bio-toggle" onclick="toggleBio(this)" aria-expanded="false">Bio <i class="fas fa-chevron-down"></i></button>
-              <div class="bio-content">Bio coming soon. Chris serves as Member Assistance Coordinator for IUOE Local 825, supporting members and their families. <em>(Placeholder — full bio to be provided.)</em></div>
+              <p class="team-bio">International Union of Operating Engineers Local 825</p>
+              <button type="button" class="bio-btn-full" onclick="event.stopPropagation(); openBioModal(this);">
+                <span>View Full Bio</span>
+              </button>
+              <div class="bio-content" style="display:none;"><p>Chris Lalevee is a Business Agent and Member Assistance Program (MAP) Coordinator for the International Union of Operating Engineers (IUOE) Local 825, representing thousands of heavy equipment operators throughout New Jersey and New York's Hudson Valley. A second-generation Operating Engineer and former crane operator, Chris transitioned from the field into union leadership, where he champions the health, safety, and well-being of construction workers.</p><p>Drawing on his own lived experience, Chris developed Local 825's confidential Member Assistance Program to connect members and their families with resources for mental health, substance use, and other personal challenges. He is also a founding member of the Alliance for Naloxone Safety in the Workplace, working with labor organizations, contractors, and industry leaders to promote overdose prevention, workplace naloxone programs, and supportive workplace policies.</p><p>A nationally recognized speaker and advocate, Chris collaborates with industry partners to integrate mental health, addiction recovery, overdose prevention, and suicide prevention into everyday construction safety, helping create workplaces where workers feel supported and empowered to seek help.</p></div>
             </div>
           </div>
-          <div class="team-card">
+          <div class="team-card" onclick="openBioModal(this)" role="button" tabindex="0" title="Click to view full bio">
             <div class="headshot-frame">
-              <img src="static/assets/headshots/placeholder.svg" alt="Therese Edwards">
+              <img src="static/assets/headshots/ThereseEdwards.png" alt="Therese Edwards">
+              <div class="headshot-overlay-badge"><i class="fas fa-expand"></i> Full Bio</div>
             </div>
             <div class="team-info">
               <h4>Therese Edwards</h4>
               <p class="team-role">Health and Wellness Coordinator</p>
-              <p class="team-bio">IUOE Local 825 Funds.</p>
-              <button class="bio-toggle" onclick="toggleBio(this)" aria-expanded="false">Bio <i class="fas fa-chevron-down"></i></button>
-              <div class="bio-content">Bio coming soon. Therese serves as Health and Wellness Coordinator for IUOE Local 825 Funds. <em>(Placeholder — full bio to be provided.)</em></div>
+              <p class="team-bio">International Union of Operating Engineers Local 825 Funds</p>
+              <button type="button" class="bio-btn-full" onclick="event.stopPropagation(); openBioModal(this);">
+                <span>View Full Bio</span>
+              </button>
+              <div class="bio-content" style="display:none;">Therese serves as Health and Wellness Coordinator for International Union of Operating Engineers Local 825 Funds.</div>
             </div>
           </div>
         </div>
@@ -1966,37 +2082,46 @@
 
         <!-- Students row (alphabetical) -->
         <div class="team-row">
-          <div class="team-card">
+          <div class="team-card" onclick="openBioModal(this)" role="button" tabindex="0" title="Click to view full bio">
             <div class="headshot-frame">
               <img src="static/assets/headshots/AndrewCouto.webp" alt="Andrew Couto">
+              <div class="headshot-overlay-badge"><i class="fas fa-expand"></i> Full Bio</div>
             </div>
             <div class="team-info">
               <h4>Andrew Couto</h4>
               <p class="team-role">Student Researcher</p>
-              <button class="bio-toggle" onclick="toggleBio(this)" aria-expanded="false">Bio <i class="fas fa-chevron-down"></i></button>
-              <div class="bio-content">B.Sc. Civil Engineering, expected 2028. Research interests: construction, data science, and health and safety.</div>
+              <button type="button" class="bio-btn-full" onclick="event.stopPropagation(); openBioModal(this);">
+                <span>View Full Bio</span>
+              </button>
+              <div class="bio-content" style="display:none;"><p>Andrew Couto is a third-year civil engineering major at the New Jersey Institute of Technology, with minors in applied mathematics and business. On Protecting Under the Hard Hat, he designed the project's promotional materials, helped develop the worker survey, and contributes to the writing of the team's research publications. Outside the project, Andrew serves as president of NJIT's student chapter of the American Society of Civil Engineers and is a volunteer firefighter in his hometown.</p></div>
             </div>
           </div>
-          <div class="team-card">
+          <div class="team-card" onclick="openBioModal(this)" role="button" tabindex="0" title="Click to view full bio">
             <div class="headshot-frame">
               <img src="static/assets/headshots/FrancoGiovannetti.webp" alt="Franco Giovannetti">
+              <div class="headshot-overlay-badge"><i class="fas fa-expand"></i> Full Bio</div>
             </div>
             <div class="team-info">
               <h4>Franco Giovannetti</h4>
               <p class="team-role">Student Researcher</p>
-              <button class="bio-toggle" onclick="toggleBio(this)" aria-expanded="false">Bio <i class="fas fa-chevron-down"></i></button>
-              <div class="bio-content">B.Sc. Computer Science, expected 2029. Research interests: data science, health and safety, and web design.</div>
+              <button type="button" class="bio-btn-full" onclick="event.stopPropagation(); openBioModal(this);">
+                <span>View Full Bio</span>
+              </button>
+              <div class="bio-content" style="display:none;">B.Sc. Computer Science, expected 2029. Research interests: data science, health and safety, and web design.</div>
             </div>
           </div>
-          <div class="team-card">
+          <div class="team-card" onclick="openBioModal(this)" role="button" tabindex="0" title="Click to view full bio">
             <div class="headshot-frame">
               <img src="static/assets/headshots/KrishPatel.webp" alt="Krish Patel">
+              <div class="headshot-overlay-badge"><i class="fas fa-expand"></i> Full Bio</div>
             </div>
             <div class="team-info">
               <h4>Krish Patel</h4>
               <p class="team-role">Student Researcher</p>
-              <button class="bio-toggle" onclick="toggleBio(this)" aria-expanded="false">Bio <i class="fas fa-chevron-down"></i></button>
-              <div class="bio-content">B.Sc. Computer Science and B.Sc. Applied Physics, expected 2028. Research interests: data science, health and safety, and web design.</div>
+              <button type="button" class="bio-btn-full" onclick="event.stopPropagation(); openBioModal(this);">
+                <span>View Full Bio</span>
+              </button>
+              <div class="bio-content" style="display:none;"><p>Krish Amitkumar Patel is an undergraduate student at the Albert Dorman Honors College (ADHC) of the New Jersey Institute of Technology (NJIT). He studies Computer Science and Applied Physics with minors in Design of the User Experience and Computational Mathematics. His career aspirations include full-stack engineering, AI engineering, and software development. He hopes to approach his education and career with an interdisciplinary mindset, combining a holistic set of skills to inform his endeavors. He is the backend engineer for this website.</p></div>
             </div>
           </div>
         </div>
@@ -2097,13 +2222,11 @@
     <section id="resources" class="tab-panel">
       <div class="section-header">
         <h2><span class="diagonal-line">Resources</span></h2>
-        <p>Find mental health and wellbeing resources for construction workers and their families</p>
       </div>
       <div class="single-card-wrap">
         <div class="about-card" style="text-align:center;">
-          <p>Browse the full list of support resources on our questionnaire page — or take the quick survey to get
-            resources matched to you.</p>
-          <a class="hero-cta" href="questionnaire/" style="margin-top: 24px;">
+          <p>Browse the full list of support resources.</p>
+          <a class="hero-cta" href="questionnaire/?resources=1" target="_blank" rel="noopener noreferrer" style="margin-top: 24px;">
             <i class="fas fa-hand-holding-heart"></i> View Resources
           </a>
         </div>
@@ -2114,21 +2237,184 @@
     <section id="materials" class="tab-panel">
       <div class="section-header">
         <h2><span class="diagonal-line">Order Materials</span></h2>
+        <p>We offer a variety of outreach materials to help spread awareness about mental health and wellbeing in the
+          construction industry. From weatherproof vinyl banners to stickers and posters, we have materials to support
+          your jobsite, union hall, or organization.</p>
       </div>
 
-      <div class="construction-container">
-        <div class="construction-icon">
-          <i class="fas fa-person-digging"></i>
+      <!-- MATERIALS PREVIEW CARDS (MOVED TO TOP) -->
+      <div class="materials-grid">
+        <!-- VINYL BANNERS CARD -->
+        <div class="material-card" id="bannerMaterialCard">
+          <div class="material-card-header">
+            <h3><i class="fas fa-flag"></i> Vinyl Banners</h3>
+            <div class="banner-size-toggle" role="radiogroup" aria-label="Vinyl Banner Size Selection">
+              <button type="button" class="size-toggle-btn active" id="bannerBtnSmall" onclick="setBannerSizeMode('small')">Small (3'×5')</button>
+              <button type="button" class="size-toggle-btn" id="bannerBtnLarge" onclick="setBannerSizeMode('large')">Large (4'×10')</button>
+            </div>
+          </div>
+          
+          <div class="materials-carousel" id="carousel-banners">
+            <button type="button" class="materials-carousel-btn prev" onclick="moveMaterialsCarousel('banners', -1)" aria-label="Previous banner slide"><i class="fas fa-chevron-left"></i></button>
+            
+            <!-- Small Size Slide Track -->
+            <div class="materials-carousel-viewport banner-track-view" id="bannerViewSmall">
+              <div class="materials-carousel-track">
+                <div class="materials-slide active">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Small Size</span>
+                    <i class="fas fa-flag"></i>
+                    <span class="spec-label">3' × 5' Banner</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Weatherproof vinyl banners for jobsites, fences, and union halls.</p>
+                  </div>
+                </div>
+                <div class="materials-slide">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Small Size</span>
+                    <i class="fas fa-person-digging"></i>
+                    <span class="spec-label">3' × 5' Jobsite Fence Banner</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Weatherproof vinyl banners for jobsites, fences, and union halls.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Large Size Slide Track -->
+            <div class="materials-carousel-viewport banner-track-view" id="bannerViewLarge" style="display:none;">
+              <div class="materials-carousel-track">
+                <div class="materials-slide active">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Large Size</span>
+                    <i class="fas fa-flag"></i>
+                    <span class="spec-label">4' × 10' Banner</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Weatherproof vinyl banners for jobsites, fences, and union halls.</p>
+                  </div>
+                </div>
+                <div class="materials-slide">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Large Size</span>
+                    <i class="fas fa-building-shield"></i>
+                    <span class="spec-label">4' × 10' Main Entrance Banner</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Weatherproof vinyl banners for jobsites, fences, and union halls.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" class="materials-carousel-btn next" onclick="moveMaterialsCarousel('banners', 1)" aria-label="Next banner slide"><i class="fas fa-chevron-right"></i></button>
+          </div>
+          <div class="materials-carousel-dots" id="dots-banners">
+            <button type="button" class="dot active" onclick="setMaterialsCarouselSlide('banners', 0)" aria-label="Slide 1"></button>
+            <button type="button" class="dot" onclick="setMaterialsCarouselSlide('banners', 1)" aria-label="Slide 2"></button>
+          </div>
         </div>
-        <h2 class="construction-title">Under Construction</h2>
-        <p class="construction-message">
-          We're working hard to build this page for you. Soon you'll be able to order 
-          mental health resources, safety materials, and educational content right here.
-        </p>
-        <div class="construction-estimate">
-          <i class="fas fa-clock"></i>
-          <span>Expected completion: Coming Soon</span>
+
+        <!-- POSTERS CARD -->
+        <div class="material-card">
+          <div class="material-card-header">
+            <h3><i class="fas fa-rectangle-list"></i> Posters</h3>
+          </div>
+          <div class="materials-carousel" id="carousel-posters">
+            <button type="button" class="materials-carousel-btn prev" onclick="moveMaterialsCarousel('posters', -1)" aria-label="Previous poster slide"><i class="fas fa-chevron-left"></i></button>
+            <div class="materials-carousel-viewport">
+              <div class="materials-carousel-track">
+                <!-- Slide 0: Standard Poster -->
+                <div class="materials-slide active">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Standard Size</span>
+                    <i class="fas fa-file-invoice"></i>
+                    <span class="spec-label">11" × 17" Poster</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Informational posters for break rooms, bulletin boards, and trailer walls.</p>
+                  </div>
+                </div>
+                <!-- Slide 1: Large Poster -->
+                <div class="materials-slide">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Large Format</span>
+                    <i class="fas fa-newspaper"></i>
+                    <span class="spec-label">18" × 24" Poster</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Informational posters for break rooms, bulletin boards, and trailer walls.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="materials-carousel-btn next" onclick="moveMaterialsCarousel('posters', 1)" aria-label="Next poster slide"><i class="fas fa-chevron-right"></i></button>
+          </div>
+          <div class="materials-carousel-dots" id="dots-posters">
+            <button type="button" class="dot active" onclick="setMaterialsCarouselSlide('posters', 0)" aria-label="Slide 1"></button>
+            <button type="button" class="dot" onclick="setMaterialsCarouselSlide('posters', 1)" aria-label="Slide 2"></button>
+          </div>
         </div>
+
+        <!-- STICKERS CARD -->
+        <div class="material-card">
+          <div class="material-card-header">
+            <h3><i class="fas fa-note-sticky"></i> Stickers</h3>
+          </div>
+          <div class="materials-carousel" id="carousel-stickers">
+            <button type="button" class="materials-carousel-btn prev" onclick="moveMaterialsCarousel('stickers', -1)" aria-label="Previous sticker slide"><i class="fas fa-chevron-left"></i></button>
+            <div class="materials-carousel-viewport">
+              <div class="materials-carousel-track">
+                <!-- Slide 0: Hard Hat Decal -->
+                <div class="materials-slide active">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Hard Hat Decal</span>
+                    <i class="fas fa-stamp"></i>
+                    <span class="spec-label">2" Round Sticker</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Durable stickers for hard hats, equipment, and toolboxes.</p>
+                  </div>
+                </div>
+                <!-- Slide 1: Toolbox Sticker -->
+                <div class="materials-slide">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Toolbox Sticker</span>
+                    <i class="fas fa-box-archive"></i>
+                    <span class="spec-label">3" × 4" Sticker</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Durable stickers for hard hats, equipment, and toolboxes.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="materials-carousel-btn next" onclick="moveMaterialsCarousel('stickers', 1)" aria-label="Next sticker slide"><i class="fas fa-chevron-right"></i></button>
+          </div>
+          <div class="materials-carousel-dots" id="dots-stickers">
+            <button type="button" class="dot active" onclick="setMaterialsCarouselSlide('stickers', 0)" aria-label="Slide 1"></button>
+            <button type="button" class="dot" onclick="setMaterialsCarouselSlide('stickers', 1)" aria-label="Slide 2"></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- GOOGLE FORM ORDER SECTION -->
+      <div class="materials-form-section" style="margin-top: 40px;">
+        <h3><i class="fas fa-clipboard-list"></i> Request Materials Form</h3>
+        <p>Fill out the form below to request materials for your jobsite, union hall, or organization. We'll review your
+          request and get back to you with availability and shipping details.</p>
+        <a id="materialsFormLink" href="#" target="_blank" rel="noopener noreferrer" class="hero-cta" style="margin-top: 8px;">
+          <i class="fas fa-up-right-from-square"></i> Open Form in New Tab
+        </a>
+        <iframe id="materialsFormFrame"
+                src=""
+                class="materials-form-iframe"
+                loading="lazy"
+                title="Order Materials Form">
+          Loading…
+        </iframe>
       </div>
     </section>
 
@@ -2226,33 +2512,13 @@
             </div>
             <div>
               <h4>Email Us</h4>
-              <p>contact@hardhatwellbeing.org</p>
+              <p class="contact-email-line">
+                <a id="contactEmailLink" class="contact-email-link" href="mailto:info@protectingunderthehardhat.org">info@protectingunderthehardhat.org</a>
+                <button type="button" id="copyEmailBtn" class="copy-email-btn" aria-label="Copy email address" title="Copy email address">
+                  <i class="fas fa-copy" aria-hidden="true"></i><span>Copy</span>
+                </button>
+              </p>
             </div>
-          </div>
-
-          <div class="contact-detail">
-            <div class="contact-icon">
-              <i class="fas fa-phone"></i>
-            </div>
-            <div>
-              <h4>Call Us</h4>
-              <p>1-800-123-4567</p>
-            </div>
-          </div>
-
-          <div class="contact-detail">
-            <div class="contact-icon">
-              <i class="fas fa-location-dot"></i>
-            </div>
-            <div>
-              <h4>Visit Us</h4>
-              <p>New Jersey Institute of Technology<br>Newark, NJ 07102</p>
-            </div>
-          </div>
-
-          <div class="map-placeholder">
-            <i class="fas fa-map-location-dot"></i>
-            <span>Map Location</span>
           </div>
         </div>
 
@@ -2277,12 +2543,16 @@
             <button type="submit" class="submit-btn">
               <i class="fas fa-paper-plane"></i> Send Message
             </button>
+            <p class="form-note">
+              <i class="fas fa-info-circle" aria-hidden="true"></i>
+              Submitting opens your email app with your message prefilled.
+            </p>
           </form>
 
           <div class="form-success" id="contactSuccess">
-            <i class="fas fa-check-circle"></i>
-            <h4>Message Sent!</h4>
-            <p>Thank you for reaching out. We'll get back to you soon.</p>
+            <i class="fas fa-envelope-open-text"></i>
+            <h4>Your email app should open</h4>
+            <p>Press Send in your email app to deliver your message to us.</p>
           </div>
         </div>
       </div>
@@ -2293,7 +2563,71 @@
   <!-- Footer (NJIT logo + © text removed per request) -->
   <footer class="main-footer"></footer>
 
+  <script src="static/config.js"></script>
   <script>
+    // ===== Config-driven values =====
+    // Google Form (Order Materials): link + embedded iframe from PUTHH_CONFIG
+    // (declared with const in static/config.js → not a window property)
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof PUTHH_CONFIG === 'undefined') return;
+      const formLink = document.getElementById('materialsFormLink');
+      if (formLink) formLink.href = PUTHH_CONFIG.GOOGLE_FORM_URL;
+      const formFrame = document.getElementById('materialsFormFrame');
+      if (formFrame) formFrame.src = PUTHH_CONFIG.GOOGLE_FORM_URL + '?embedded=true';
+
+      // Contact email: wire mailto link from config (markup holds a hardcoded fallback)
+      const emailLink = document.getElementById('contactEmailLink');
+      if (emailLink && PUTHH_CONFIG.CONTACT_EMAIL) {
+        emailLink.href = 'mailto:' + PUTHH_CONFIG.CONTACT_EMAIL;
+        emailLink.textContent = PUTHH_CONFIG.CONTACT_EMAIL;
+      }
+
+      // Copy email address to clipboard with "Copied!" feedback
+      const copyBtn = document.getElementById('copyEmailBtn');
+      if (copyBtn) copyBtn.addEventListener('click', async () => {
+        const addr = (emailLink && emailLink.textContent.trim()) || 'info@protectingunderthehardhat.org';
+        let copied = false;
+        try {
+          await navigator.clipboard.writeText(addr); // secure context: https (Pages) or localhost
+          copied = true;
+        } catch {
+          // Legacy fallback for older browsers / non-secure contexts
+          try {
+            const ta = document.createElement('textarea');
+            ta.value = addr;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            copied = document.execCommand('copy');
+            ta.remove();
+          } catch { /* clipboard unavailable */ }
+        }
+        copyBtn.classList.add('copied');
+        copyBtn.innerHTML = copied
+          ? '<i class="fas fa-check" aria-hidden="true"></i><span>Copied!</span>'
+          : '<i class="fas fa-times" aria-hidden="true"></i><span>Copy failed</span>';
+        setTimeout(() => {
+          copyBtn.classList.remove('copied');
+          copyBtn.innerHTML = '<i class="fas fa-copy" aria-hidden="true"></i><span>Copy</span>';
+        }, 2000);
+      });
+    });
+
+    // ===== Dev helpers =====
+    // ?dev=1 reveals WIP tabs (Supporters / Order Materials / Blog).
+    // ?tab=<panel-id> jumps straight to a panel (e.g. ?dev=1&tab=materials for review links).
+    (() => {
+      const url = new URLSearchParams(window.location.search);
+      if (url.get('dev') === '1') {
+        document.querySelectorAll('.nav-item.dev-only').forEach(el => el.classList.remove('dev-only'));
+      }
+      const tab = url.get('tab');
+      if (tab && document.getElementById(tab)) {
+        document.addEventListener('DOMContentLoaded', () => switchTab(tab));
+      }
+    })();
+
     // ===== Nav / Tab Switching (supports nested dropdown panels) =====
     // Panels can declare data-parent="about" / "supporters"; the matching
     // top-level tab button (data-parent) is highlighted for any child panel.
@@ -2503,21 +2837,145 @@
       }, 5000);
     }
 
-    // Handle Contact Form Submit
+    // Handle Contact Form Submit — static site: compose a mailto in the
+    // visitor's email app (no backend). Message sends when they press Send.
     function handleContactSubmit(event) {
       event.preventDefault();
 
-      // Show success message
+      const name = (document.getElementById('contactName').value || '').trim();
+      const email = (document.getElementById('contactEmail').value || '').trim();
+      const message = (document.getElementById('contactMessage').value || '').trim();
+      const to = (typeof PUTHH_CONFIG !== 'undefined' && PUTHH_CONFIG.CONTACT_EMAIL) || 'info@protectingunderthehardhat.org';
+
+      const subject = encodeURIComponent('PUTHH website message from ' + (name || 'a visitor'));
+      const body = encodeURIComponent(message + '\n\n— ' + (name || '') + (email ? '\n' + email : ''));
+      window.location.href = 'mailto:' + to + '?subject=' + subject + '&body=' + body;
+
+      // Show guidance message (mail app opens on top; user still has to press Send there)
       document.getElementById('contactSuccess').classList.add('show');
 
       // Reset form
       event.target.reset();
 
-      // Hide success after 5 seconds
+      // Hide message after 8 seconds
       setTimeout(() => {
         document.getElementById('contactSuccess').classList.remove('show');
-      }, 5000);
+      }, 8000);
     }
+
+    // ===== Full Screen Bio Modal =====
+    function openBioModal(btn) {
+      const card = btn.closest('.team-card');
+      if (!card) return;
+      const img = card.querySelector('.headshot-frame img');
+      const name = card.querySelector('h4')?.textContent || '';
+      const role = card.querySelector('.team-role')?.textContent || '';
+      const affiliation = card.querySelector('.team-bio')?.textContent || '';
+      const bioContent = card.querySelector('.bio-content')?.innerHTML || '';
+
+      document.getElementById('bioModalImg').src = img ? img.src : 'static/assets/headshots/placeholder.svg';
+      document.getElementById('bioModalImg').alt = name;
+      document.getElementById('bioModalName').textContent = name;
+      document.getElementById('bioModalRole').textContent = role;
+      document.getElementById('bioModalAffiliation').textContent = affiliation;
+      document.getElementById('bioModalBody').innerHTML = bioContent;
+
+      const overlay = document.getElementById('bioModalOverlay');
+      if (overlay) {
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeBioModal() {
+      const overlay = document.getElementById('bioModalOverlay');
+      if (overlay) {
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+    }
+
+    // Modal backdrop click & Escape key listener
+    document.addEventListener('click', (e) => {
+      const overlay = document.getElementById('bioModalOverlay');
+      if (overlay && overlay.classList.contains('active') && e.target === overlay) {
+        closeBioModal();
+      }
+    });
+
+    // ===== Materials Carousel & Size Toggle Handlers (Synchronized) =====
+    window.materialsCarouselState = { banners: 0, posters: 0, stickers: 0 };
+    window.bannerSizeMode = 'small';
+    window.masterMaterialsTimer = null;
+
+    window.resetMasterMaterialsTimer = function() {
+      if (window.masterMaterialsTimer) {
+        clearInterval(window.masterMaterialsTimer);
+      }
+      window.masterMaterialsTimer = setInterval(() => {
+        ['banners', 'posters', 'stickers'].forEach(id => {
+          if (document.getElementById('carousel-' + id)) {
+            window.moveMaterialsCarousel(id, 1, false);
+          }
+        });
+      }, 6000);
+    };
+
+    window.setBannerSizeMode = function(mode) {
+      window.bannerSizeMode = mode;
+      const smallBtn = document.getElementById('bannerBtnSmall');
+      const largeBtn = document.getElementById('bannerBtnLarge');
+      const smallView = document.getElementById('bannerViewSmall');
+      const largeView = document.getElementById('bannerViewLarge');
+
+      if (smallBtn && largeBtn && smallView && largeView) {
+        const isSmall = mode === 'small';
+        smallBtn.classList.toggle('active', isSmall);
+        largeBtn.classList.toggle('active', !isSmall);
+        smallView.style.display = isSmall ? 'block' : 'none';
+        largeView.style.display = isSmall ? 'none' : 'block';
+        window.setMaterialsCarouselSlide('banners', 0, true);
+      }
+    };
+
+    window.setMaterialsCarouselSlide = function(carouselId, slideIndex, isManual = true) {
+      const carousel = document.getElementById('carousel-' + carouselId);
+      if (!carousel) return;
+
+      let viewport = carousel.querySelector('.materials-carousel-viewport');
+      if (carouselId === 'banners') {
+        const activeMode = window.bannerSizeMode || 'small';
+        viewport = document.getElementById(activeMode === 'small' ? 'bannerViewSmall' : 'bannerViewLarge');
+      }
+      if (!viewport) return;
+
+      const track = viewport.querySelector('.materials-carousel-track');
+      const slides = viewport.querySelectorAll('.materials-slide');
+      const dots = document.querySelectorAll('#dots-' + carouselId + ' .dot');
+      if (!track || !slides.length) return;
+
+      const numSlides = slides.length;
+      const idx = ((slideIndex % numSlides) + numSlides) % numSlides;
+      window.materialsCarouselState[carouselId] = idx;
+
+      track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+      slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+
+      if (isManual !== false) {
+        window.resetMasterMaterialsTimer();
+      }
+    };
+
+    window.moveMaterialsCarousel = function(carouselId, direction, isManual = true) {
+      const current = window.materialsCarouselState[carouselId] || 0;
+      window.setMaterialsCarouselSlide(carouselId, current + direction, isManual);
+    };
+
+    // Auto-spin all materials carousels together in sync
+    window.resetMasterMaterialsTimer();
 
     // ===== Dark mode (default light; shared key with questionnaire) =====
     function applyTheme(theme) {
@@ -2552,6 +3010,26 @@
     // Update indicator on resize
     window.addEventListener('resize', updateTabIndicator);
   </script>
+
+  <!-- FULL SCREEN BIO MODAL OVERLAY -->
+  <div id="bioModalOverlay" class="bio-modal-overlay" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="bio-modal-container">
+      <button type="button" id="bioModalCloseBtn" class="bio-modal-close" onclick="closeBioModal()" aria-label="Close Bio Panel">
+        <i class="fas fa-xmark"></i>
+      </button>
+      <div class="bio-modal-header">
+        <img id="bioModalImg" src="static/assets/headshots/placeholder.svg" alt="" class="bio-modal-headshot">
+        <div class="bio-modal-title-group">
+          <h3 id="bioModalName">Member Name</h3>
+          <div id="bioModalRole" class="bio-modal-role">Role</div>
+          <div id="bioModalAffiliation" class="bio-modal-affiliation">Organization</div>
+        </div>
+      </div>
+      <div id="bioModalBody" class="bio-modal-body">
+        Bio details...
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
