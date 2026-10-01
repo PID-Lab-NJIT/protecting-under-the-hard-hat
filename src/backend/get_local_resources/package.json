@@ -12,5 +12,8 @@
     "papaparse": "^5.5.3",
     "serverless-http": "^4.0.0",
     "uuid": "^14.0.1"
+  },
+  "scripts": {
+    "predeploy": ""
   }
 }

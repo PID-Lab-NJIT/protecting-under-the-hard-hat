@@ -11,5 +11,8 @@
     "express": "^5.1.0",
     "geoip-lite": "^2.0.1",
     "serverless-http": "^4.0.0"
+  },
+  "scripts": {
+    "predeploy": ""
   }
 }
