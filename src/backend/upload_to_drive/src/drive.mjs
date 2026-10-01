@@ -67,16 +67,8 @@ async function createFolders(authClient, folderId, path) {
  * @returns {Promise<object>} The credentials object.
  */
 async function getCredentials() {
-    if (!process.env.AWS_LAMBDA_FUNCTION_NAME) {
-        console.log("🛠️ Running locally: Loading JSON from disk");
-        const filePath = join(process.cwd(), 'private/service_account.json');
-        const fileContent = await readFile(filePath, 'utf8');
-        return JSON.parse(fileContent);
-    }
-
-    console.log("☁️ Running in Lambda: Fetching from Secrets Manager");
     const client = new SecretsManagerClient({ region: process.env.AWS_REGION });
-    const command = new GetSecretValueCommand({ SecretId: "GoogleServiceAccount" });
+    const command = new GetSecretValueCommand({ SecretId: process.env.SERVICE_ACCOUNT_SECRET_ID });
 
     const response = await client.send(command);
     return JSON.parse(response.SecretString);
@@ -98,7 +90,7 @@ async function authorize(scopes) {
         console.log("Service account authenticated successfully.");
         return authClient;
     } catch (e) {
-        console.error("Authentication failed. Please check that 'service_account.json' exists and is valid.");
+        console.error("Authentication failed.");
         throw e;
     }
 }
