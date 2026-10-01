@@ -2,7 +2,7 @@
 
 Supports the fixed-window rate limiting described in [`spec.md`](./spec.md). One item exists per (source IP, window) pair.
 
-## Table: `SendEmailRateLimit`
+## Table
 
 | Attribute      | Type         | Description                                                                           |
 | -------------- | ------------ | ------------------------------------------------------------------------------------- |
