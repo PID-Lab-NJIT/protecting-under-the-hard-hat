@@ -62,9 +62,19 @@ if [ ! -d "$DIR_NAME" ]; then
     exit 3
 fi
 
-# --- Step 4: Zip Directory Contents ---
-echo -e "${YELLOW}📦 Packaging code from $DIR_NAME...${NC}"
+# --- Step 4a: Run Predeploy ---
 cd "$DIR_NAME" || exit 4
+
+echo -e "${YELLOW}🔨 Running predeploy for $AWS_FUNC_NAME...${NC}"
+npm run predeploy
+if [ $? -ne 0 ]; then
+    echo -e "${RED}❌ Error: predeploy script failed.${NC}"
+    exit 13
+fi
+echo -e "${GREEN}✅ Predeploy complete.${NC}"
+
+# --- Step 4b: Zip Directory Contents ---
+echo -e "${YELLOW}📦 Packaging code from $DIR_NAME...${NC}"
 
 if [ ! -f deploy_list.txt ]; then
 	echo -e "${RED}❌ Error: deploy_list.txt not found.${NC}"
