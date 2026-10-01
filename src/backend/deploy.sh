@@ -81,7 +81,7 @@ if [ ! -f deploy_list.txt ]; then
     exit 11
 fi
 
-zip -qr "$ZIP_NAME" $(cat deploy_list.txt) -x *.ts
+zip -qr "$ZIP_NAME" $(cat deploy_list.txt) -x *.mts
 
 # Check if zip was successful
 if [ $? -ne 0 ]; then
