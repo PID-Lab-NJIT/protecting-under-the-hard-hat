@@ -106,6 +106,4 @@ Response format:
   - Basic structure: log message (mandatory) and JSON body (if needed).
   - Use log levels appropriately (info, warn, error).
 
-[TODO] Ask any questions you have. Give any suggestions for optimization, accuracy, security. Polish the architecture.
-
 [TODO] AFTER GENERATING CODE: Any important info to add to this spec for future devs?
