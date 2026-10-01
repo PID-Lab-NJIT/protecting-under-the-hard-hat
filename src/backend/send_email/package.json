@@ -10,7 +10,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "predeploy": "npx tsc index.ts"
+    "predeploy": "npx tsc"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.164",
