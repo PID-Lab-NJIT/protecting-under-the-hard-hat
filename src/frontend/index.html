@@ -1590,6 +1590,31 @@
       margin-bottom: 10px;
     }
 
+    /* Error variant — mirrors .form-success in the theme's red */
+    .form-error {
+      display: none;
+      background: #fef2f2;
+      border: 2px solid var(--njit-red, #cc0000);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .form-error.show {
+      display: block;
+    }
+
+    .form-error i {
+      font-size: 2rem;
+      color: var(--njit-red, #cc0000);
+      margin-bottom: 10px;
+    }
+
+    body.dark-mode .form-error {
+      background: rgba(204, 0, 0, 0.12);
+    }
+
     /* ===== FOOTER ===== */
     .main-footer {
       background: transparent;
@@ -2631,19 +2656,24 @@
               <textarea id="contactMessage" placeholder="How can we help you?" required></textarea>
             </div>
 
-            <button type="submit" class="submit-btn">
+            <button type="submit" class="submit-btn" id="contactSubmitBtn">
               <i class="fas fa-paper-plane"></i> Send Message
             </button>
             <p class="form-note">
               <i class="fas fa-info-circle" aria-hidden="true"></i>
-              Submitting opens your email app with your message prefilled.
+              Your message goes straight to our team — no email app needed.
             </p>
           </form>
 
           <div class="form-success" id="contactSuccess">
             <i class="fas fa-envelope-open-text"></i>
-            <h4>Your email app should open</h4>
-            <p>Press Send in your email app to deliver your message to us.</p>
+            <h4>Message sent!</h4>
+            <p>Thanks for reaching out — we'll get back to you soon.</p>
+          </div>
+          <div class="form-error" id="contactError" role="alert">
+            <i class="fas fa-circle-exclamation"></i>
+            <h4>Message failed to send</h4>
+            <p id="contactErrorText">Something went wrong. Please try again in a moment.</p>
           </div>
         </div>
       </div>
@@ -2931,30 +2961,80 @@
       }, 5000);
     }
 
-    // Handle Contact Form Submit — static site: compose a mailto in the
-    // visitor's email app (no backend). Message sends when they press Send.
-    function handleContactSubmit(event) {
+    // Handle Contact Form Submit — POSTs {name, email, message} straight to
+    // the send_email Lambda (see src/backend/send_email/docs/spec.md), which
+    // relays it to our inbox via SES. No email app involved.
+    async function handleContactSubmit(event) {
       event.preventDefault();
 
       const name = (document.getElementById('contactName').value || '').trim();
       const email = (document.getElementById('contactEmail').value || '').trim();
       const message = (document.getElementById('contactMessage').value || '').trim();
-      const to = (typeof PUTHH_CONFIG !== 'undefined' && PUTHH_CONFIG.CONTACT_EMAIL) || 'info@protectingunderthehardhat.org';
+      const endpoint = (typeof PUTHH_CONFIG !== 'undefined' && PUTHH_CONFIG.CONTACT_ENDPOINT) || '';
 
-      const subject = encodeURIComponent('PUTHH website message from ' + (name || 'a visitor'));
-      const body = encodeURIComponent(message + '\n\n— ' + (name || '') + (email ? '\n' + email : ''));
-      window.location.href = 'mailto:' + to + '?subject=' + subject + '&body=' + body;
+      const successBox = document.getElementById('contactSuccess');
+      const errorBox = document.getElementById('contactError');
+      const errorText = document.getElementById('contactErrorText');
+      const submitBtn = document.getElementById('contactSubmitBtn');
+      const showBox = (el) => {
+        successBox.classList.remove('show');
+        errorBox.classList.remove('show');
+        if (el) el.classList.add('show');
+      };
 
-      // Show guidance message (mail app opens on top; user still has to press Send there)
-      document.getElementById('contactSuccess').classList.add('show');
+      // Endpoint not configured (yet) → legacy mailto fallback so the form
+      // still works, exactly as before this integration.
+      if (!endpoint) {
+        const to = (typeof PUTHH_CONFIG !== 'undefined' && PUTHH_CONFIG.CONTACT_EMAIL) || 'info@protectingunderthehardhat.org';
+        const subject = encodeURIComponent('PUTHH website message from ' + (name || 'a visitor'));
+        const body = encodeURIComponent(message + '\n\n— ' + (name || '') + (email ? '\n' + email : ''));
+        window.location.href = 'mailto:' + to + '?subject=' + subject + '&body=' + body;
+        showBox(successBox);
+        event.target.reset();
+        setTimeout(() => successBox.classList.remove('show'), 8000);
+        return;
+      }
 
-      // Reset form
-      event.target.reset();
+      // Client-side required check (mirrors the Lambda's validation)
+      if (!name || !email || !message) {
+        errorText.textContent = 'Please fill in your name, email, and message.';
+        showBox(errorBox);
+        setTimeout(() => errorBox.classList.remove('show'), 8000);
+        return;
+      }
 
-      // Hide message after 8 seconds
-      setTimeout(() => {
-        document.getElementById('contactSuccess').classList.remove('show');
-      }, 8000);
+      submitBtn.disabled = true;
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, message })
+        });
+        const text = await res.text();
+        let data;
+        try { data = text ? JSON.parse(text) : null; } catch { data = null; }
+
+        if (res.ok) {
+          showBox(successBox);
+          event.target.reset();
+          setTimeout(() => successBox.classList.remove('show'), 8000);
+        } else {
+          // 400 = validation, 429 = rate limited, 500 = server error (spec § Response Contract)
+          errorText.textContent = (data && data.message) ||
+            (res.status === 429
+              ? 'Too many messages sent recently. Please try again later.'
+              : 'Something went wrong. Please try again in a moment.');
+          showBox(errorBox);
+          setTimeout(() => errorBox.classList.remove('show'), 8000);
+        }
+      } catch (e) {
+        console.error('Contact submit failed:', e);
+        errorText.textContent = 'Network error — please check your connection and try again.';
+        showBox(errorBox);
+        setTimeout(() => errorBox.classList.remove('show'), 8000);
+      } finally {
+        submitBtn.disabled = false;
+      }
     }
 
     // ===== Full Screen Bio Modal =====

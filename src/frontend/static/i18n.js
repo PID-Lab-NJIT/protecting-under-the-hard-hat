@@ -84,6 +84,7 @@ window.TRANSLATIONS = {
     'zip.error': 'Oops there was an error. Here are all the resources.',
 
     'local.title': 'Resources near you',
+    'local.allTitle': 'Local resources',
     'national.title': 'National resources',
     'local.fallbackName': 'Local resource',
     'local.supportFor': 'Support for:',
@@ -236,6 +237,7 @@ window.TRANSLATIONS = {
     'zip.error': 'Hubo un error. Aquí están todos los recursos.',
 
     'local.title': 'Recursos cerca de usted',
+    'local.allTitle': 'Recursos locales',
     'national.title': 'Recursos nacionales',
     'local.fallbackName': 'Recurso local',
     'local.supportFor': 'Apoyo para:',
@@ -449,6 +451,7 @@ window.TRANSLATIONS = {
     'zip.error': 'Ocorreu um erro. Aqui estão todos os recursos.',
 
     'local.title': 'Recursos perto de você',
+    'local.allTitle': 'Recursos locais',
     'national.title': 'Recursos nacionais',
     'local.fallbackName': 'Recurso local',
     'local.supportFor': 'Apoio para:',

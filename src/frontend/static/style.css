@@ -1527,6 +1527,36 @@ body.dark-mode .search-typeahead-dropdown {
   background: rgba(255, 255, 255, 0.5);
 }
 
+/* Clear-all X at the end of the chips row — ALWAYS visible (mobiles can't
+   hover), themed to the NJIT red chips */
+.search-chips-container .chips-clear-all {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid var(--njit-red, #cc0000);
+  background: rgba(204, 0, 0, 0.08);
+  color: var(--njit-red, #cc0000);
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.search-chips-container .chips-clear-all:hover {
+  background: var(--njit-red, #cc0000);
+  color: #ffffff;
+}
+
+body.dark-mode .search-chips-container .chips-clear-all {
+  background: rgba(255, 138, 138, 0.12);
+  color: var(--accent-soft, #ff8a8a);
+  border-color: rgba(255, 138, 138, 0.5);
+}
+
 .search-dropdown-group-title {
   padding: 8px 16px;
   font-size: 0.75rem;

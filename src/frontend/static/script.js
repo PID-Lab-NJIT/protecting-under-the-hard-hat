@@ -54,6 +54,14 @@ const LOCAL_RESOURCES_ENDPOINT = (typeof PUTHH_CONFIG !== 'undefined' && PUTHH_C
 /* Public survey URL used in emails/share text (config.js) */
 const SURVEY_PUBLIC_URL = (typeof PUTHH_CONFIG !== 'undefined' && PUTHH_CONFIG.PUBLIC_SURVEY_URL) ||
   'https://pid-lab-njit.github.io/protecting-under-the-hard-hat/questionnaire/';
+/* Common acronym expansions so searches like "iuoe" surface resources whose
+   text uses the full name, a short form, or anything in between. Each token
+   maps to alternative phrases — ANY of them matching counts. Extend as needed. */
+const QUERY_ALIASES = {
+  'iuoe': ['international union of operating engineers', 'operating engineers'],
+  'liuna': ['laborers international union of north america', 'laborers'],
+  'nabtu': ['building and construction trades department', 'building trades'],
+};
 async function submitSurvey(payload) {
   const res = await fetch(SURVEY_ENDPOINT, {
     method: 'POST',
@@ -1456,9 +1464,27 @@ class DynamicSurvey {
      (e.g. "depression"); local rows match every sheet field (title, union,
      notes, address, phone, web address, topic names, …). Raw English fields
      are always searchable, even when the UI language is es/pt. */
+
+  /* Token-based query matching: every whitespace-separated token of the
+     query must appear in the text — directly, or via an alias phrase
+     (acronym expansion). Order-independent, so "carpenters local 253"
+     matches "Northeast Carpenters Local 253" and "iuoe" matches
+     "Operating Engineers Local 825". */
+  matchQuery(text, q) {
+    if (!text || !q) return false;
+    const hay = String(text).toLowerCase();
+    const raw = String(q).toLowerCase().trim().split(/\s+/).filter(Boolean);
+    if (!raw.length) return false;
+    return raw.every(token => {
+      if (hay.includes(token)) return true;
+      const aliases = QUERY_ALIASES[token];
+      return Array.isArray(aliases) && aliases.some(phrase => hay.includes(phrase));
+    });
+  }
+
   unionMatchesQuery(unionName, q) {
     if (!unionName || !q) return false;
-    return String(unionName).toLowerCase().includes(q);
+    return this.matchQuery(unionName, q);
   }
 
   /* Unified Search & Categorized Typeahead Dropdown */
@@ -1512,13 +1538,13 @@ class DynamicSurvey {
       // 3. Direct Resources
       const resourceCandidates = [];
       (RESOURCES_DB || []).forEach(r => {
-        if (r.title && r.title.toLowerCase().includes(q)) {
+        if (r.title && this.matchQuery(r.title, q)) {
           resourceCandidates.push({ label: r.title, value: r.title, isLocal: false });
         }
       });
       (this._allLocalResources || []).forEach(r => {
         const title = this.field(r, 'Title') || this.field(r, 'Resource') || this.field(r, 'Name');
-        if (title && String(title).toLowerCase().includes(q)) {
+        if (title && this.matchQuery(title, q)) {
           if (!resourceCandidates.some(c => c.label === String(title))) {
             resourceCandidates.push({ label: String(title), value: String(title), isLocal: true });
           }
@@ -1699,13 +1725,24 @@ class DynamicSurvey {
         <span class="chip-text">${c.label}</span>
         <button type="button" class="chip-remove-btn" data-index="${i}" aria-label="Remove filter">&times;</button>
       </span>
-    `).join('');
+    `).join('') + `
+      <button type="button" class="chips-clear-all" aria-label="Clear all filters" title="Clear all filters">
+        <i class="fas fa-xmark" aria-hidden="true"></i>
+      </button>`;
 
     container.querySelectorAll('.chip-remove-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const idx = Number(btn.dataset.index);
         this.removeSearchChip(idx);
+      });
+    });
+
+    // Always-visible clear-all X (mobile-safe): resets chips + search text
+    container.querySelectorAll('.chips-clear-all').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.clearAllFilters();
       });
     });
   }
@@ -1786,7 +1823,7 @@ class DynamicSurvey {
         if (directTitle) {
           match = (cardTitle === directTitle || cardTitle.includes(directTitle));
         } else {
-          if (q && !cardText.includes(q)) match = false;
+          if (q && !this.matchQuery(cardText, q)) match = false;
           if (tagChips.length > 0) {
             // Match against data-tags attribute (space-separated tag values set in helpCardHTML)
             const cardTags = (cardEl.dataset.tags || '').toLowerCase().split(' ').filter(Boolean);
@@ -1817,7 +1854,7 @@ class DynamicSurvey {
         if (directTitle) {
           match = (cardTitle === directTitle || cardTitle.includes(directTitle));
         } else {
-          if (q && !cardText.includes(q) && !this.unionMatchesQuery(cardUnion, q) && !this.unionMatchesQuery(cardTitle, q)) match = false;
+          if (q && !this.matchQuery(cardText, q) && !this.matchQuery(cardUnion, q)) match = false;
           if (tagChips.length > 0) {
             const hasTagMatch = tagChips.some(tc => cardText.includes(tc));
             if (!hasTagMatch) match = false;
@@ -1962,6 +1999,9 @@ class DynamicSurvey {
       .then(res => res.json().then(data => {
         if (!res.ok || !data.success) throw new Error(data?.error || `HTTP ${res.status}`);
         this._allLocalResources = Array.isArray(data.resources) ? data.resources : [];
+        // All-resources model: the local grid renders as soon as the full
+        // list arrives (ZIP distances, if any, are layered on separately)
+        this.refreshLocalResults();
         return this._allLocalResources;
       }))
       .catch(e => {
@@ -2172,17 +2212,29 @@ class DynamicSurvey {
   /* Recompute the local grid from live state: ZIP results (if any) or the
      cached full list when a union filter is active; then filter + sort. */
   refreshLocalResults() {
+    /* All-resources model: the grid ALWAYS shows the full local list; a ZIP
+       lookup layers proximity on top (distances merged onto matching rows,
+       radius slider caps the list). Searching then filters across everything,
+       so a searched resource shows up regardless of distance. */
     let base = null;
     let place = null;
-    if (this._zipResults) {
-      base = this._zipResults.list;
-      place = this._zipResults.place;
-    } else if (this._unionFilter && Array.isArray(this._allLocalResources)) {
-      base = this._allLocalResources;
+    if (Array.isArray(this._allLocalResources)) {
+      // Shallow copies — ZIP distances are merged onto the copies, never the cache
+      base = this._allLocalResources.map(r => ({ ...r }));
+      if (this._zipResults) {
+        place = this._zipResults.place;
+        const rowKey = (r) => [
+          this.field(r, 'title'), this.field(r, 'Title'),
+          this.field(r, 'Union/Contractor'), this.field(r, 'physical address')
+        ].map(v => String(v ?? '').trim().toLowerCase()).join('|');
+        const distMap = new Map();
+        this._zipResults.list.forEach(r => distMap.set(rowKey(r), r.distance));
+        base.forEach(r => { r.distance = distMap.has(rowKey(r)) ? distMap.get(rowKey(r)) : null; });
+      }
     }
 
     if (!base) {
-      // Nothing to show → hide the local section (pre-filter behavior)
+      // Full list not fetched (yet/failed) → hide the section (pre-search behavior)
       if (this.dom.localSection) this.dom.localSection.style.display = 'none';
       if (this.dom.nationalTitle) this.dom.nationalTitle.style.display = 'none';
       return;
@@ -2194,13 +2246,14 @@ class DynamicSurvey {
       list = list.filter(r => String(this.field(r, 'Union/Contractor') || '').trim().toLowerCase() === want);
     }
 
-    // Max-distance cap: client-side only, and only when ZIP results are active.
-    // At the top of the slider ("Any distance") no cap is applied.
+    // Radius cap: only meaningful when ZIP distances exist. "Any" distance
+    // (>= slider max) shows everything; rows without a distance are beyond
+    // the searched radius and hide under an active cap.
     if (this._zipResults) {
       const max = Number(this.dom.maxDistanceSlider?.max) || 200;
       if (this._maxDistanceMiles < max) {
         const capMeters = this._maxDistanceMiles * 1609.34;
-        list = list.filter(r => r.distance == null || r.distance <= capMeters);
+        list = list.filter(r => r.distance != null && r.distance <= capMeters);
       }
     }
 
@@ -2226,7 +2279,6 @@ class DynamicSurvey {
 
     this.renderLocalResources(list, place);
   }
-
   /* Convert a raw backend resource row into a help-card and render local section */
   renderLocalResources(list, place) {
     const grid = this.dom.localGrid;
@@ -2330,12 +2382,12 @@ class DynamicSurvey {
       grid.innerHTML = list.length ? list.map(cardHTML).join('') : emptyHTML;
     }
 
-    // Title reflects the active mode: ZIP proximity vs. union/contractor filter
+    // Title reflects the active mode: ZIP proximity vs. the full local list
     const titleEl = section.querySelector('.local-resources-title');
     if (titleEl) {
       titleEl.textContent = place
         ? t('local.title', 'Resources near you')
-        : t('union.resultsTitle', 'Union/contractor resources');
+        : t('local.allTitle', 'Local resources');
     }
 
     section.style.display = '';
@@ -2346,9 +2398,6 @@ class DynamicSurvey {
 
   clearLocalResources(resetStatus = true) {
     if (this.dom.zipInput) this.dom.zipInput.value = '';
-    if (this.dom.localGrid) this.dom.localGrid.innerHTML = '';
-    if (this.dom.localSection) this.dom.localSection.style.display = 'none';
-    if (this.dom.nationalTitle) this.dom.nationalTitle.style.display = 'none';
     if (this.dom.zipClearBtn) this.dom.zipClearBtn.style.display = 'none';
     this._localList = null;
     this._zipResults = null;
@@ -2360,8 +2409,9 @@ class DynamicSurvey {
     this.updateZipPopoverLabel();
     this.syncSortOptions();
     if (resetStatus && this.dom.zipStatus) { this.dom.zipStatus.textContent = ''; this.dom.zipStatus.classList.remove('error'); }
-    // An active union/contractor filter keeps working from the cached full list
-    if (this._unionFilter && Array.isArray(this._allLocalResources)) this.refreshLocalResults();
+    // All-resources model: without ZIP results the grid re-renders from the
+    // cached full list (no distances) instead of hiding
+    if (Array.isArray(this._allLocalResources)) this.refreshLocalResults();
   }
 
   /* H6: email results to oneself via prefilled mailto: */
