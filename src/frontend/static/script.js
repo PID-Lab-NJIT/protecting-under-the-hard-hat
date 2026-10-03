@@ -1899,7 +1899,31 @@ class DynamicSurvey {
       });
     }
 
-    // 3. Hide group headings/dividers when filtering
+    // 3. Deduplicate: the local sheet (resources.csv) contains copies of most
+    // national hotlines. Hide any national card whose title/phone matches a
+    // VISIBLE local card so every resource appears exactly once — the local
+    // row (with union/address context) is the canonical entry.
+    const normKey = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const visibleLocal = [...(this.dom.localGrid?.querySelectorAll('.help-card') || [])]
+      .filter(c => c.id !== 'searchNoMatch' && c.style.display !== 'none');
+    const localTitles = new Set(visibleLocal.map(c => normKey(c.dataset.title)).filter(Boolean));
+    const localPhones = new Set(visibleLocal
+      .flatMap(c => [...c.querySelectorAll('a[href^="tel:"]')].map(a => normKey(a.getAttribute('href'))))
+      .filter(Boolean));
+
+    if (localTitles.size && this.dom.helpGrid) {
+      this.dom.helpGrid.querySelectorAll('.help-card').forEach(cardEl => {
+        if (cardEl.id === 'searchNoMatch' || cardEl.style.display === 'none') return;
+        const title = normKey(cardEl.dataset.title || cardEl.querySelector('h4')?.textContent || '');
+        const phone = normKey([...cardEl.querySelectorAll('a[href^="tel:"]')].map(a => a.getAttribute('href')).join(''));
+        if ((title && localTitles.has(title)) || (phone && localPhones.has(phone))) {
+          cardEl.style.display = 'none';
+          n1--;
+        }
+      });
+    }
+
+    // 4. Hide group headings/dividers when filtering
     [this.dom.helpGrid, this.dom.localGrid].forEach(grid => {
       grid?.querySelectorAll('.resource-divider, .resource-group-heading').forEach(el => {
         el.style.display = hasFilter ? 'none' : '';
