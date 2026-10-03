@@ -1329,6 +1329,43 @@ body.dark-mode .footer-branding {
   padding: 8px 0;
 }
 
+/* Themed clear-search X — always visible when the bar has text (mobiles
+   can't hover, so the native WebKit cancel button is hidden instead) */
+#resourceSearch::-webkit-search-cancel-button {
+  display: none;
+}
+
+.search-clear-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(204, 0, 0, 0.12);
+  color: var(--njit-red, #cc0000);
+  cursor: pointer;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  padding: 0;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.search-clear-btn.is-visible {
+  display: inline-flex;
+}
+
+.search-clear-btn:hover {
+  background: var(--njit-red, #cc0000);
+  color: #ffffff;
+}
+
+body.dark-mode .search-clear-btn {
+  background: rgba(255, 138, 138, 0.15);
+  color: var(--accent-soft, #ff8a8a);
+}
+
 /* Inline ZIP & Distance Popover Trigger Button - Responsive bounds */
 .zip-popover-btn {
   display: inline-flex;

@@ -536,6 +536,15 @@ class DynamicSurvey {
       }
     });
 
+    // Themed clear-search X: wipes the text + its filter (chips stay; the
+    // chips row has its own clear-all)
+    document.getElementById('searchClearBtn')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (this.dom.resourceSearch) this.dom.resourceSearch.value = '';
+      this.directMatchedResourceTitle = null;
+      this.applyResourceSearch();
+    });
+
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.unified-search-bar-wrap')) this.closeSearchDropdown();
     });
@@ -1487,6 +1496,19 @@ class DynamicSurvey {
     return this.matchQuery(unionName, q);
   }
 
+  /* For a union/contractor chip value, build the acceptable needles: the
+     value itself plus any acronym whose alias phrase appears inside it
+     (e.g. the chip "Operating Engineers Local 825" also accepts "IUOE"
+     in card text, so "IUOE Local 825 Sober Sunday" stays visible). */
+  unionNeedlesFor(uc) {
+    const needles = [uc];
+    const val = String(uc).toLowerCase();
+    Object.entries(QUERY_ALIASES).forEach(([acronym, phrases]) => {
+      if (phrases.some(p => val.includes(p))) needles.push(acronym);
+    });
+    return needles;
+  }
+
   /* Unified Search & Categorized Typeahead Dropdown */
   async onUnifiedSearchInput() {
     const input = this.dom.resourceSearch;
@@ -1809,6 +1831,10 @@ class DynamicSurvey {
 
     const hasFilter = !!(q || directTitle || tagChips.length || unionChips.length);
 
+    // Themed clear-search X: visible whenever the bar has text
+    const clearBtn = document.getElementById('searchClearBtn');
+    if (clearBtn) clearBtn.classList.toggle('is-visible', q.length > 0);
+
     let n1 = 0, n2 = 0;
 
     // 1. National helpGrid cards
@@ -1831,7 +1857,7 @@ class DynamicSurvey {
             if (!hasTagMatch) match = false;
           }
           if (unionChips.length > 0) {
-            const hasUnionMatch = unionChips.some(uc => cardText.includes(uc));
+            const hasUnionMatch = unionChips.some(uc => this.unionNeedlesFor(uc).some(needle => cardText.includes(needle)));
             if (!hasUnionMatch) match = false;
           }
         }
@@ -1854,13 +1880,16 @@ class DynamicSurvey {
         if (directTitle) {
           match = (cardTitle === directTitle || cardTitle.includes(directTitle));
         } else {
-          if (q && !this.matchQuery(cardText, q) && !this.matchQuery(cardUnion, q)) match = false;
+          // Haystack includes the sheet's "alt filter keywords" column so
+          // maintainer-added aliases (e.g. "IUOE") work in every search
+          const hay = cardText + ' ' + (cardEl.dataset.keywords || '').toLowerCase();
+          if (q && !this.matchQuery(hay, q) && !this.matchQuery(cardUnion, q)) match = false;
           if (tagChips.length > 0) {
             const hasTagMatch = tagChips.some(tc => cardText.includes(tc));
             if (!hasTagMatch) match = false;
           }
           if (unionChips.length > 0) {
-            const hasUnionMatch = unionChips.some(uc => cardUnion.includes(uc) || cardText.includes(uc) || this.unionMatchesQuery(cardUnion, uc));
+            const hasUnionMatch = unionChips.some(uc => this.unionNeedlesFor(uc).some(needle => cardUnion.includes(needle) || hay.includes(needle)));
             if (!hasUnionMatch) match = false;
           }
         }
@@ -2349,8 +2378,9 @@ class DynamicSurvey {
         ? `<div class="local-address"><i class="fas fa-video" aria-hidden="true"></i><span>${calUrl}</span></div>`
         : '';
 
+      const keywords = String(this.field(r, 'alt filter keywords') || '').trim();
       return `
-        <div class="help-card local-card" data-title="${header.replace(/"/g, '&quot;')}" data-union="${(union || '').replace(/"/g, '&quot;')}">
+        <div class="help-card local-card" data-title="${header.replace(/"/g, '&quot;')}" data-union="${(union || '').replace(/"/g, '&quot;')}" data-keywords="${keywords.replace(/"/g, '&quot;')}">
           <div class="help-card-header">
             <h4>${header}</h4>
             ${badge}
