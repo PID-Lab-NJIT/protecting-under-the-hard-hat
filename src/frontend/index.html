@@ -456,19 +456,40 @@
     }
 
     .supporter-card .supporter-logo {
-      height: 80px;
+      /* Logo plate: fixed footprint, light surface in BOTH themes so every
+         logo (dark/transparent/white-bg) stays visible and centered */
+      width: 96px;
+      height: 72px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 16px;
-      font-size: 2.2rem;
-      color: var(--accent);
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 10px;
+      padding: 8px;
+      margin: 0 auto 16px;
+      box-sizing: border-box;
     }
 
     .supporter-card .supporter-logo img {
-      max-height: 80px;
       max-width: 100%;
+      max-height: 100%;
       object-fit: contain;
+    }
+
+    .supporter-card .supporter-logo .logo-fallback-icon {
+      font-size: 1.8rem;
+      color: var(--accent);
+    }
+
+    .logo-fallback-icon.hidden {
+      display: none;
+    }
+
+    body.dark-mode .supporter-card .supporter-logo {
+      /* stays white in dark mode on purpose — keeps every logo readable */
+      background: #ffffff;
+      border-color: rgba(255, 255, 255, 0.15);
     }
 
     .supporter-card h4 {
@@ -491,6 +512,82 @@
 
     .supporter-featured {
       border: 2px solid rgba(204, 0, 0, 0.25);
+    }
+
+    /* ===== List / Grid view toggle ===== */
+    .view-toggle {
+      display: inline-flex;
+      gap: 4px;
+      margin-top: 14px;
+    }
+
+    .view-btn {
+      width: 38px;
+      height: 30px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .view-btn.is-active {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    body.dark-mode .view-btn {
+      background: var(--secondary-dark, #2d3748);
+      border-color: rgba(255, 255, 255, 0.15);
+      color: var(--text-dark, #e2e8f0);
+    }
+
+    body.dark-mode .view-btn.is-active {
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    /* ===== List view: uniform circle logos, one row per org ===== */
+    .supporter-grid.view-list {
+      flex-direction: column;
+      align-items: center;
+      max-width: 720px;
+      gap: 12px;
+    }
+
+    .supporter-grid.view-list .supporter-card {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      text-align: left;
+      width: 100%;
+      max-width: 640px;
+      flex: 0 0 auto;
+      padding: 12px 18px;
+      gap: 16px;
+    }
+
+    .supporter-grid.view-list .supporter-card .supporter-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      margin: 0;
+      padding: 10px;
+      flex-shrink: 0;
+    }
+
+    .supporter-grid.view-list .supporter-card h4 {
+      margin: 0 0 6px;
+    }
+
+    .supporter-grid.view-list .supporter-card a {
+      font-size: 0.85rem;
     }
 
     /* ===== TESTIMONIES CAROUSEL ===== */
@@ -2220,6 +2317,10 @@
       <div class="section-header">
         <h2><span class="diagonal-line">Associations</span></h2>
         <p>Associations supporting Protecting Under the Hard Hat</p>
+        <div class="view-toggle" role="group" aria-label="Layout">
+          <button type="button" class="view-btn is-active" data-view="grid" aria-label="Grid view"><i class="fas fa-grip" aria-hidden="true"></i></button>
+          <button type="button" class="view-btn" data-view="list" aria-label="List view"><i class="fas fa-list" aria-hidden="true"></i></button>
+        </div>
       </div>
       <div class="supporter-grid" id="associationsGrid"></div>
     </section>
@@ -2229,6 +2330,10 @@
       <div class="section-header">
         <h2><span class="diagonal-line">Contractors</span></h2>
         <p>Contractors supporting Protecting Under the Hard Hat</p>
+        <div class="view-toggle" role="group" aria-label="Layout">
+          <button type="button" class="view-btn is-active" data-view="grid" aria-label="Grid view"><i class="fas fa-grip" aria-hidden="true"></i></button>
+          <button type="button" class="view-btn" data-view="list" aria-label="List view"><i class="fas fa-list" aria-hidden="true"></i></button>
+        </div>
       </div>
       <div class="supporter-grid" id="contractorsGrid"></div>
     </section>
@@ -2238,6 +2343,10 @@
       <div class="section-header">
         <h2><span class="diagonal-line">Unions</span></h2>
         <p>Unions supporting Protecting Under the Hard Hat</p>
+        <div class="view-toggle" role="group" aria-label="Layout">
+          <button type="button" class="view-btn is-active" data-view="grid" aria-label="Grid view"><i class="fas fa-grip" aria-hidden="true"></i></button>
+          <button type="button" class="view-btn" data-view="list" aria-label="List view"><i class="fas fa-list" aria-hidden="true"></i></button>
+        </div>
       </div>
       <div class="supporter-grid" id="unionsGrid"></div>
     </section>
@@ -2853,17 +2962,42 @@
     // ===== Supporters (JSON-driven) =====
     let SUPPORTERS = null;
 
+    /* Resolve a logo/photo reference into a usable URL. Accepts:
+       - full URLs (http/https) — Drive share links are converted to direct
+         image URLs so pasting "Copy link" from Drive just works
+       - repo-relative paths starting with logos/ or static/assets/
+       - bare filenames (assumed under static/assets/logos/) */
+    function resolveMediaUrl(value) {
+      const s = String(value || '').trim();
+      if (!s) return '';
+      if (/^https?:\/\//i.test(s)) {
+        const fileMatch = s.match(/drive\.google\.com\/file\/d\/([^/?#]+)/i);
+        if (fileMatch) return 'https://drive.google.com/thumbnail?id=' + fileMatch[1] + '&sz=w256';
+        const idMatch = s.match(/[?&]id=([^&]+)/i);
+        if (idMatch && /drive\.google\.com/i.test(s)) return 'https://drive.google.com/thumbnail?id=' + idMatch[1] + '&sz=w256';
+        return s;
+      }
+      if (/^(logos|static\/assets)\//i.test(s)) return 'static/assets/' + s.replace(/^static\/assets\//i, '');
+      return 'static/assets/logos/' + s;
+    }
+
     function supporterCardHTML(entry) {
       const featured = entry.featured ? ' supporter-featured' : '';
-      const logo = entry.logo
-        ? `<img src="${entry.logo}" alt="${entry.name} logo">`
-        : `<i class="${entry.icon || 'fas fa-building'}"></i>`;
+      const logoSrc = resolveMediaUrl(entry.logo);
+      const iconCls = entry.icon || 'fas fa-building';
+      const logo = logoSrc
+        ? `<img src="${logoSrc}" alt="${entry.name} logo" loading="lazy"
+             onerror="const p=this.parentElement; this.remove(); p?.querySelector('.logo-fallback-icon')?.classList.remove('hidden');">`
+        : '';
       const link = entry.url
         ? `<a href="${entry.url}" target="_blank" rel="noopener noreferrer">Visit website <i class="fas fa-arrow-up-right-from-square" style="font-size:.75em"></i></a>`
         : '';
       return `
         <div class="supporter-card${featured}">
-          <div class="supporter-logo">${logo}</div>
+          <div class="supporter-logo">
+            ${logo}
+            <i class="${iconCls} logo-fallback-icon${logoSrc ? ' hidden' : ''}" aria-hidden="true"></i>
+          </div>
           <h4>${entry.name}</h4>
           ${link}
         </div>`;
@@ -2884,15 +3018,19 @@
       const dots = document.getElementById('testimonyDots');
       if (!track || !dots) return;
       carouselCount = (entries || []).length;
-      track.innerHTML = (entries || []).map(t => `
+      track.innerHTML = (entries || []).map(t => {
+        const photo = resolveMediaUrl(t.headshot) || 'static/assets/headshots/placeholder.svg';
+        return `
         <div class="testimony-slide" role="group" aria-roledescription="slide">
           <div class="headshot-frame">
-            <img src="${t.headshot || 'static/assets/headshots/placeholder.svg'}" alt="${t.name}">
+            <img src="${photo}" alt="${t.name}"
+              onerror="this.onerror=null; this.src='static/assets/headshots/placeholder.svg';">
           </div>
           <p class="testimony-quote">${t.quote}</p>
           <div class="testimony-name">${t.name}</div>
           <div class="testimony-affiliation">${t.affiliation || ''}</div>
-        </div>`).join('');
+        </div>`;
+      }).join('');
       dots.innerHTML = (entries || []).map((_, i) =>
         `<button class="carousel-dot${i === 0 ? ' active' : ''}" onclick="carouselGoTo(${i})" aria-label="Go to testimony ${i + 1}"></button>`).join('');
       carouselIndex = 0;
@@ -2918,16 +3056,175 @@
       carouselUpdate();
     }
 
-    async function loadSupporters() {
-      try {
-        const r = await fetch('static/supporters.json', { cache: 'no-cache' });
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        SUPPORTERS = await r.json();
-      } catch (e) {
-        console.error('Failed to load supporters.json', e);
-        SUPPORTERS = { associations: [], contractors: [], unions: [], testimonies: [] };
-      }
+    /* ===== Published Google Sheet pipeline (Supporters / Testimonies) =====
+       The team edits a Google Sheet (tabs: "Supporters", "Testimonies"),
+       publishes it to the web (File → Share → Publish to web → CSV), and the
+       site fetches the CSV directly. The bundled JSON always renders first;
+       the sheet only ever overlays it when it parses into usable data.
+       See docs/content-updates.md and the template files. */
 
+    const SHEET_CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+
+    // Minimal RFC-4180-ish CSV parser: quoted fields, "" escapes, CRLF.
+    function parseCSV(text) {
+      const rows = [];
+      let row = [];
+      let field = '';
+      let inQuotes = false;
+      const pushField = () => { row.push(field); field = ''; };
+      const pushRow = () => {
+        pushField();
+        if (row.length > 1 || String(row[0] || '').trim() !== '') rows.push(row);
+        row = [];
+      };
+      for (let i = 0; i < text.length; i++) {
+        const c = text[i];
+        if (inQuotes) {
+          if (c === '"') {
+            if (text[i + 1] === '"') { field += '"'; i++; }
+            else inQuotes = false;
+          } else field += c;
+        } else if (c === '"') inQuotes = true;
+        else if (c === ',') pushField();
+        else if (c === '\n' || c === '\r') {
+          if (c === '\r' && text[i + 1] === '\n') i++;
+          pushRow();
+        } else field += c;
+      }
+      if (field !== '' || row.length) pushRow();
+      return rows;
+    }
+
+    // Normalized header lookup: "Entity Name" → "entityname"
+    function headerIndex(headers, name) {
+      const want = String(name).toLowerCase().replace(/[^a-z]/g, '');
+      return headers.findIndex(h => String(h).toLowerCase().replace(/[^a-z]/g, '') === want);
+    }
+
+    function parseSupportersSheet(text) {
+      const rows = parseCSV(text);
+      if (rows.length < 2) return null;
+      const headers = rows[0];
+      const iT = headerIndex(headers, 'Tab');
+      const iN = headerIndex(headers, 'Entity Name');
+      const iW = headerIndex(headers, 'Website Link');
+      const iL = headerIndex(headers, 'Logo Link');
+      if (iN < 0 || iT < 0) return null;
+      const out = { associations: [], contractors: [], unions: [], testimonies: SUPPORTERS?.testimonies || [] };
+      for (const r of rows.slice(1)) {
+        const group = String(r[iT] || '').trim().toLowerCase();
+        const name = String(r[iN] || '').trim();
+        if (!name) continue;
+        const entry = {
+          name,
+          url: String(r[iW] || '').trim() || null,
+          logo: String(r[iL] || '').trim() || null,
+          featured: false,
+        };
+        if (group.startsWith('association')) out.associations.push(entry);
+        else if (group.startsWith('contractor')) out.contractors.push(entry);
+        else if (group.startsWith('union')) out.unions.push(entry);
+        // Unknown "Tab" values are ignored on purpose
+      }
+      const total = out.associations.length + out.contractors.length + out.unions.length;
+      return total ? out : null;
+    }
+
+    function parseTestimoniesSheet(text) {
+      const rows = parseCSV(text);
+      if (rows.length < 2) return null;
+      const headers = rows[0];
+      const iN = headerIndex(headers, 'Name');
+      const iR = headerIndex(headers, 'Role');
+      const iA = headerIndex(headers, 'Affiliation');
+      const iQ = headerIndex(headers, 'Quote');
+      const iP = headerIndex(headers, 'Photo');
+      if (iN < 0 || iQ < 0) return null;
+      const list = [];
+      for (const r of rows.slice(1)) {
+        const name = String(r[iN] || '').trim();
+        const quote = String(r[iQ] || '').trim();
+        if (!name || !quote) continue;
+        const role = String(r[iR] || '').trim();
+        const affiliation = String(r[iA] || '').trim();
+        list.push({
+          name,
+          quote,
+          affiliation: [role, affiliation].filter(Boolean).join(', '),
+          headshot: String(r[iP] || '').trim() || null,
+        });
+      }
+      return list.length ? list : null;
+    }
+
+    function readSheetCache(key) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        return (Date.now() - parsed.t < SHEET_CACHE_TTL) ? parsed.data : null;
+      } catch { return null; }
+    }
+
+    function writeSheetCache(key, data) {
+      try { localStorage.setItem(key, JSON.stringify({ t: Date.now(), data })); } catch { }
+    }
+
+    async function fetchPublishedCSV(url) {
+      const sep = url.includes('?') ? '&' : '?';
+      const res = await fetch(url + sep + 't=' + Date.now(), { cache: 'no-cache' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.text();
+    }
+
+    // Sheet overlay: fetch the published Supporters CSV; on success swap the
+    // rendered groups. Any failure keeps the bundled JSON (current method).
+    async function loadSupportersFromSheet() {
+      const url = (typeof PUTHH_CONFIG !== 'undefined' && PUTHH_CONFIG.SUPPORTERS_SHEET_URL) || '';
+      if (!url) return;
+
+      const cached = readSheetCache('supportersSheet:v1');
+      if (cached) {
+        SUPPORTERS = cached;
+        renderSupporterGroups();
+        return;
+      }
+      try {
+        const text = await fetchPublishedCSV(url);
+        const parsed = parseSupportersSheet(text);
+        if (!parsed) throw new Error('sheet had no usable rows');
+        SUPPORTERS = parsed;
+        renderSupporterGroups();
+        writeSheetCache('supportersSheet:v1', parsed);
+      } catch (e) {
+        console.warn('Supporters sheet unavailable — keeping bundled content.', e);
+      }
+    }
+
+    // Same overlay for the testimonies tab
+    async function loadTestimoniesFromSheet() {
+      const url = (typeof PUTHH_CONFIG !== 'undefined' && PUTHH_CONFIG.TESTIMONIES_SHEET_URL) || '';
+      if (!url) return;
+
+      const cached = readSheetCache('testimoniesSheet:v1');
+      if (cached) {
+        renderTestimonies(cached);
+        initTestimonyLightbox();
+        return;
+      }
+      try {
+        const text = await fetchPublishedCSV(url);
+        const parsed = parseTestimoniesSheet(text);
+        if (!parsed) throw new Error('sheet had no usable rows');
+        renderTestimonies(parsed);
+        initTestimonyLightbox();
+        writeSheetCache('testimoniesSheet:v1', parsed);
+      } catch (e) {
+        console.warn('Testimonies sheet unavailable — keeping bundled content.', e);
+      }
+    }
+
+    function renderSupporterGroups() {
       // Associations: featured (ACCNJ) first, rest alphabetical
       // NOTE: keep supporters.json entries alphabetized by name within each
       // group — these renderers enforce order, but the JSON should match.
@@ -2940,8 +3237,49 @@
       renderSupporterGroup('associationsGrid', sortWithFeatured(SUPPORTERS.associations));
       renderSupporterGroup('contractorsGrid', (SUPPORTERS.contractors || []).slice().sort((a, b) => a.name.localeCompare(b.name)));
       renderSupporterGroup('unionsGrid', sortWithFeatured(SUPPORTERS.unions));
+    }
+
+    // ===== Supporters List/Grid view toggle =====
+    // One shared preference (localStorage) across the three org tabs.
+    window.setSupportersView = function (mode) {
+      const list = mode === 'list';
+      try { localStorage.setItem('supportersView', list ? 'list' : 'grid'); } catch { }
+      document.querySelectorAll('.supporter-grid').forEach(g => g.classList.toggle('view-list', list));
+      document.querySelectorAll('.view-toggle .view-btn').forEach(b => {
+        const active = b.dataset.view === (list ? 'list' : 'grid');
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-pressed', String(active));
+      });
+    };
+
+    function initSupportersView() {
+      let saved = 'grid';
+      try { if (localStorage.getItem('supportersView') === 'list') saved = 'list'; } catch { }
+      window.setSupportersView(saved);
+      // Wire the List/Grid buttons (delegated — covers all three tabs)
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.view-btn');
+        if (btn && btn.dataset.view) window.setSupportersView(btn.dataset.view);
+      });
+    }
+
+    async function loadSupporters() {
+      try {
+        const r = await fetch('static/supporters.json', { cache: 'no-cache' });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        SUPPORTERS = await r.json();
+      } catch (e) {
+        console.error('Failed to load supporters.json', e);
+        SUPPORTERS = { associations: [], contractors: [], unions: [], testimonies: [] };
+      }
+
+      renderSupporterGroups();
       renderTestimonies(SUPPORTERS.testimonies || []);
       initTestimonyLightbox();
+
+      // Sheet overlay runs after the bundled content is on screen
+      await loadSupportersFromSheet();
+      await loadTestimoniesFromSheet();
     }
 
     // Handle Newsletter Submit
@@ -3294,6 +3632,7 @@
       loadSupporters();
       initMaterialImageLightbox();
       initTeamHeadshotBlur();
+      initSupportersView();
     });
 
     // Update indicator on resize
