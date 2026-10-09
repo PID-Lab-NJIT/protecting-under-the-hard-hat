@@ -2318,8 +2318,8 @@
         <h2><span class="diagonal-line">Associations</span></h2>
         <p>Associations supporting Protecting Under the Hard Hat</p>
         <div class="view-toggle" role="group" aria-label="Layout">
-          <button type="button" class="view-btn is-active" data-view="grid" aria-label="Grid view"><i class="fas fa-grip" aria-hidden="true"></i></button>
-          <button type="button" class="view-btn" data-view="list" aria-label="List view"><i class="fas fa-list" aria-hidden="true"></i></button>
+          <button type="button" class="view-btn is-active" data-view="list" aria-label="List view"><i class="fas fa-list" aria-hidden="true"></i></button>
+          <button type="button" class="view-btn" data-view="grid" aria-label="Grid view"><i class="fas fa-grip" aria-hidden="true"></i></button>
         </div>
       </div>
       <div class="supporter-grid" id="associationsGrid"></div>
@@ -2331,8 +2331,8 @@
         <h2><span class="diagonal-line">Contractors</span></h2>
         <p>Contractors supporting Protecting Under the Hard Hat</p>
         <div class="view-toggle" role="group" aria-label="Layout">
-          <button type="button" class="view-btn is-active" data-view="grid" aria-label="Grid view"><i class="fas fa-grip" aria-hidden="true"></i></button>
-          <button type="button" class="view-btn" data-view="list" aria-label="List view"><i class="fas fa-list" aria-hidden="true"></i></button>
+          <button type="button" class="view-btn is-active" data-view="list" aria-label="List view"><i class="fas fa-list" aria-hidden="true"></i></button>
+          <button type="button" class="view-btn" data-view="grid" aria-label="Grid view"><i class="fas fa-grip" aria-hidden="true"></i></button>
         </div>
       </div>
       <div class="supporter-grid" id="contractorsGrid"></div>
@@ -2344,8 +2344,8 @@
         <h2><span class="diagonal-line">Unions</span></h2>
         <p>Unions supporting Protecting Under the Hard Hat</p>
         <div class="view-toggle" role="group" aria-label="Layout">
-          <button type="button" class="view-btn is-active" data-view="grid" aria-label="Grid view"><i class="fas fa-grip" aria-hidden="true"></i></button>
-          <button type="button" class="view-btn" data-view="list" aria-label="List view"><i class="fas fa-list" aria-hidden="true"></i></button>
+          <button type="button" class="view-btn is-active" data-view="list" aria-label="List view"><i class="fas fa-list" aria-hidden="true"></i></button>
+          <button type="button" class="view-btn" data-view="grid" aria-label="Grid view"><i class="fas fa-grip" aria-hidden="true"></i></button>
         </div>
       </div>
       <div class="supporter-grid" id="unionsGrid"></div>
@@ -3241,9 +3241,10 @@
 
     // ===== Supporters List/Grid view toggle =====
     // One shared preference (localStorage) across the three org tabs.
+    // Default is LIST; a stored explicit choice always wins.
     window.setSupportersView = function (mode) {
       const list = mode === 'list';
-      try { localStorage.setItem('supportersView', list ? 'list' : 'grid'); } catch { }
+      try { localStorage.setItem('supportersView2', list ? 'list' : 'grid'); } catch { }
       document.querySelectorAll('.supporter-grid').forEach(g => g.classList.toggle('view-list', list));
       document.querySelectorAll('.view-toggle .view-btn').forEach(b => {
         const active = b.dataset.view === (list ? 'list' : 'grid');
@@ -3253,8 +3254,8 @@
     };
 
     function initSupportersView() {
-      let saved = 'grid';
-      try { if (localStorage.getItem('supportersView') === 'list') saved = 'list'; } catch { }
+      let saved = 'list';
+      try { if (localStorage.getItem('supportersView2') === 'grid') saved = 'grid'; } catch { }
       window.setSupportersView(saved);
       // Wire the List/Grid buttons (delegated — covers all three tabs)
       document.addEventListener('click', (e) => {
