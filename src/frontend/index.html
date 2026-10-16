@@ -3016,9 +3016,9 @@
       if (!s) return '';
       if (/^https?:\/\//i.test(s)) {
         const fileMatch = s.match(/drive\.google\.com\/file\/d\/([^/?#]+)/i);
-        if (fileMatch) return 'https://drive.google.com/thumbnail?id=' + fileMatch[1] + '&sz=w256';
+        if (fileMatch) return 'https://drive.google.com/thumbnail?id=' + fileMatch[1] + '&sz=w400';
         const idMatch = s.match(/[?&]id=([^&]+)/i);
-        if (idMatch && /drive\.google\.com/i.test(s)) return 'https://drive.google.com/thumbnail?id=' + idMatch[1] + '&sz=w256';
+        if (idMatch && /drive\.google\.com/i.test(s)) return 'https://drive.google.com/thumbnail?id=' + idMatch[1] + '&sz=w400';
         return s;
       }
       if (/^(logos|static\/assets)\//i.test(s)) return 'static/assets/' + s.replace(/^static\/assets\//i, '');
@@ -3158,7 +3158,6 @@
       if (iN < 0 || iT < 0) return null;
       const out = { partners: [], associations: [], contractors: [], unions: [], industryAllies: [], testimonies: SUPPORTERS?.testimonies || [] };
       for (const r of rows.slice(1)) {
-        const group = String(r[iT] || '').trim().toLowerCase();
         const name = String(r[iN] || '').trim();
         if (!name) continue;
         const entry = {
@@ -3167,13 +3166,20 @@
           logo: String(r[iL] || '').trim() || null,
           featured: false,
         };
-        if (group.startsWith('association')) out.associations.push(entry);
-        else if (group.startsWith('contractor')) out.contractors.push(entry);
-        else if (group.startsWith('union')) out.unions.push(entry);
-        else if (group.startsWith('committed partner') || group.startsWith('partner')) out.partners.push(entry);
-        else if (group.startsWith('industry all')) out.industryAllies.push(entry);
-        // Unknown or blank "Tab" values are ignored on purpose (blank rows are
-        // how the team stages entities they haven't categorized yet)
+        // The Tab cell may list several groups ("Committed Partners,
+        // Associations") — the entry then appears in each of them.
+        const tokens = String(r[iT] || '').split(/\s*(?:[,/&+;]|\band\b|\n)\s*/i);
+        for (const token of tokens) {
+          const t = token.trim().toLowerCase();
+          if (!t) continue;
+          if (t.startsWith('association')) out.associations.push(entry);
+          else if (t.startsWith('contractor')) out.contractors.push(entry);
+          else if (t.startsWith('union')) out.unions.push(entry);
+          else if (t.startsWith('committed partner') || t.startsWith('partner')) out.partners.push(entry);
+          else if (t.startsWith('industry all')) out.industryAllies.push(entry);
+          // Unknown group names are ignored on purpose
+        }
+        // Blank Tab = staging row the team hasn't categorized yet — hidden
       }
       const total = out.partners.length + out.associations.length + out.contractors.length + out.unions.length + out.industryAllies.length;
       return total ? out : null;
@@ -3229,7 +3235,9 @@
     // Sheet overlay: fetch the published Supporters CSV and apply it per group.
     // A group is replaced only when the sheet has at least one usable row for
     // it — groups the team hasn't filled in yet keep the bundled JSON content.
-    // Any fetch/parse failure keeps the bundled JSON (current method).
+    // Stale-while-revalidate: a cached copy renders instantly, then every page
+    // load still re-checks the sheet in the background, so edits show up on
+    // the next page load instead of up to 10 minutes later.
     async function loadSupportersFromSheet() {
       const url = (typeof PUTHH_CONFIG !== 'undefined' && PUTHH_CONFIG.SUPPORTERS_SHEET_URL) || '';
       if (!url) return;
@@ -3238,7 +3246,6 @@
       if (cached) {
         SUPPORTERS = cached;
         renderSupporterGroups();
-        return;
       }
       try {
         const text = await fetchPublishedCSV(url);
@@ -3250,11 +3257,12 @@
           if ((parsed[g] || []).length) { merged[g] = parsed[g]; applied = true; }
         }
         if (!applied) throw new Error('sheet had no usable rows');
+        const changed = JSON.stringify(merged) !== JSON.stringify(SUPPORTERS);
         SUPPORTERS = merged;
-        renderSupporterGroups();
         writeSheetCache('supportersSheet:v2', merged);
+        if (changed) renderSupporterGroups();
       } catch (e) {
-        console.warn('Supporters sheet unavailable — keeping bundled content.', e);
+        if (!cached) console.warn('Supporters sheet unavailable — keeping bundled content.', e);
       }
     }
 
