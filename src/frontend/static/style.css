@@ -3151,9 +3151,29 @@ body.dark-mode .material-card {
   transform: translateX(-50%) translateY(0);
 }
 
-/* Logo lightbox: white letterbox so light/transparent logos stay visible */
+/* Logo lightbox: plain white, no blur gradient, card hugs the logo */
+#imageLightboxOverlay.logo-mode .image-lightbox-container {
+  width: fit-content;
+  max-width: min(92vw, 680px);
+  min-width: min(320px, 92vw);
+}
+
 #imageLightboxOverlay.logo-mode .image-lightbox-img-wrap {
   background: #ffffff;
+  width: fit-content;
+  max-width: 100%;
+  min-width: min(280px, 86vw);
+  margin: 0 auto;
+  padding: 26px 34px;
+  box-sizing: border-box;
+}
+
+#imageLightboxOverlay.logo-mode .image-lightbox-img-wrap img.blur-fill {
+  display: none;
+}
+
+#imageLightboxOverlay.logo-mode .image-lightbox-img-wrap img.main {
+  max-height: 48vh;
 }
 
 @media (max-width: 600px) {
