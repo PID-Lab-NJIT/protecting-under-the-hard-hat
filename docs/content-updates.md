@@ -1,12 +1,14 @@
 # Updating Website Content (Supporters / Testimonies)
 
-The Supporters, Contractors, Unions, and Testimonies sections are driven by
-Google Sheets. You edit a Sheet; the website picks up the changes on its own —
-no developer, no deploy, no code.
+The Supporters tab is driven by a Google Sheet — the published
+["Supporters Info" sheet](https://docs.google.com/spreadsheets/d/e/2PACX-1vQnKJvyvFe2oZZJRgEZ9XgfbaTNOajtAst94TI0BxUU-FAEbHuT6wwGHekOmX0iVQ/pubhtml).
+You edit the Sheet; the website picks up the changes on its own — no developer,
+no deploy, no code. Testimonies can be sheet-driven the same way later (not
+wired yet).
 
 ---
 
-## One-time setup (per sheet)
+## Sheet setup (already done for the Supporters Info sheet)
 
 1. Open the template file (`docs/templates/`) and import it into Google Sheets
    (or recreate the columns exactly).
@@ -24,16 +26,23 @@ automatically (can take a few minutes — Google caches the published file).
 ### Supporters sheet
 | Column        | What goes in it |
 | ------------- | --------------- |
-| `Tab`         | `Associations`, `Contractors`, or `Unions` (decides which page the row shows on) |
+| `ID`          | Optional short code (e.g. `ACCNJ0`). The site ignores it. |
+| `Tab`         | Which page the row shows on: `Committed Partners`, `Associations`, `Contractors`, `Unions`, or `Industry Allies` |
 | `Entity Name` | The org name as it should appear |
 | `Website Link`| Full URL (e.g. `https://…`) — leave blank for no link |
 | `Logo Link`   | Optional. One of: a direct image URL, a Google Drive share link, or a repo path like `logos/Contractors/waters-bugbee.jpeg`. Leave blank → a placeholder icon shows instead. |
 
+- **A row only appears once its `Tab` is filled in.** Rows with a name but no
+  Tab are treated as a staging area and are hidden from the site.
 - Keep one row per organization. Delete a row = remove it from the site.
+- Groups work independently: a group updates as soon as it has at least one
+  row; groups with no rows keep the content bundled with the website.
 - Logos: **the file must be shared as "Anyone with the link"** or it will not
   load. Drive-hosted images can occasionally be rate-limited by Google at high
   traffic — if a logo ever looks flaky, host the file on the website instead
-  (drop it in `src/frontend/static/assets/logos/…` and commit).
+  (drop it in `src/frontend/static/assets/logos/…` and commit). Avoid
+  right-click-"copy image address" links from Google Search results (they
+  contain `gstatic`/encrypted tokens and expire).
 
 ### Testimonies sheet
 | Column        | What goes in it |

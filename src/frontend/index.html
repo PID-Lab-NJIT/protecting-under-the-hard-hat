@@ -514,6 +514,31 @@
       border: 2px solid rgba(204, 0, 0, 0.25);
     }
 
+    /* ===== Committed Partners preview on the Supporters landing page ===== */
+    .supporters-partners-preview {
+      max-width: 1000px;
+      margin: 0 auto 36px;
+      text-align: center;
+    }
+
+    .supporters-partners-preview h3 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .supporters-partners-preview h3 i {
+      color: var(--accent);
+      margin-right: 8px;
+    }
+
+    .supporters-partners-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 22px;
+    }
+
     /* ===== List / Grid view toggle ===== */
     .view-toggle {
       display: inline-flex;
@@ -1983,7 +2008,6 @@
           <div class="nav-dropdown" role="menu">
             <button data-tab="about-mission" onclick="switchTab('about-mission')">Our Mission</button>
             <button data-tab="about-goals" onclick="switchTab('about-goals')">Our Goals</button>
-            <button data-tab="about-partners" onclick="switchTab('about-partners')">Our Partners</button>
             <button data-tab="about-team" onclick="switchTab('about-team')">Meet the Team</button>
             <!-- Alumni panel exists but is hidden from nav for now -->
           </div>
@@ -1994,9 +2018,11 @@
             Supporters <span class="caret"><i class="fas fa-chevron-down"></i></span>
           </button>
           <div class="nav-dropdown" role="menu">
+            <button id="navCommittedPartners" data-tab="supporters-partners" onclick="switchTab('supporters-partners')">Committed Partners</button>
             <button data-tab="supporters-associations" onclick="switchTab('supporters-associations')">Associations</button>
             <button data-tab="supporters-contractors" onclick="switchTab('supporters-contractors')">Contractors</button>
             <button data-tab="supporters-unions" onclick="switchTab('supporters-unions')">Unions</button>
+            <button id="navIndustryAllies" data-tab="supporters-industry-allies" onclick="switchTab('supporters-industry-allies')">Industry Allies</button>
             <button data-tab="supporters-testimonies" onclick="switchTab('supporters-testimonies')">Testimonies</button>
           </div>
         </div>
@@ -2053,8 +2079,8 @@
             and overall well-being. Through a brief survey and resource platform, we aim to make it easier to find
             support and access help when it is needed. As the initiative grows, we continue to expand our resources,
             partnerships, and outreach to better serve the construction community.</p>
-          <a class="home-intro-link" href="#" onclick="switchTab('about-partners'); return false;">
-            Learn more about our mission and partners <i class="fas fa-arrow-right"></i>
+          <a class="home-intro-link" href="#" onclick="switchTab('supporters'); return false;">
+            Learn more about our mission and committed partners <i class="fas fa-arrow-right"></i>
           </a>
         </div>
 
@@ -2074,7 +2100,7 @@
     <section id="about" class="tab-panel" data-parent="about">
       <div class="section-header">
         <h2><span class="diagonal-line">About Us</span></h2>
-        <p>Learn about our mission, our goals, our partners, and the people who make this initiative possible</p>
+        <p>Learn about our mission, our goals, our committed partners, and the people who make this initiative possible</p>
       </div>
       <div class="overview-grid">
         <button class="overview-card" onclick="switchTab('about-mission')">
@@ -2087,12 +2113,6 @@
           <span class="overview-icon"><i class="fas fa-flag-checkered"></i></span>
           <h3>Our Goals</h3>
           <p>What we aim to change across the construction industry.</p>
-          <span class="overview-go">Explore <i class="fas fa-arrow-right"></i></span>
-        </button>
-        <button class="overview-card" onclick="switchTab('about-partners')">
-          <span class="overview-icon"><i class="fas fa-handshake"></i></span>
-          <h3>Our Partners</h3>
-          <p>The organizations powering this initiative.</p>
           <span class="overview-go">Explore <i class="fas fa-arrow-right"></i></span>
         </button>
         <button class="overview-card" onclick="switchTab('about-team')">
@@ -2130,30 +2150,6 @@
             industry, reduce stigma surrounding help-seeking, and connect individuals with trusted resources and
             support services. We strive to foster a culture in which mental well-being is valued alongside physical
             safety and where workers know that help is available when they need it.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ABOUT: OUR PARTNERS -->
-    <section id="about-partners" class="tab-panel" data-parent="about">
-      <div class="section-header">
-        <h2><span class="diagonal-line">Our Partners</span></h2>
-      </div>
-      <div class="partners-section">
-        <!-- Keep partner cards alphabetized by name when adding new ones -->
-        <div class="partners-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); max-width: 700px;">
-          <div class="partner-card">
-            <div class="partner-logo-img">
-              <img src="static/assets/logos/Unions/map-logo.jpeg" alt="International Union of Operating Engineers Local 825 MAP logo">
-            </div>
-            <div class="partner-name">International Union of Operating Engineers (IUOE) Local 825</div>
-          </div>
-          <div class="partner-card">
-            <div class="partner-logo-img">
-              <img src="static/New_Jersey_IT_logo.svg" alt="New Jersey Institute of Technology logo">
-            </div>
-            <div class="partner-name">New Jersey Institute of Technology</div>
-          </div>
         </div>
       </div>
     </section>
@@ -2281,9 +2277,20 @@
     <section id="supporters" class="tab-panel" data-parent="supporters">
       <div class="section-header">
         <h2><span class="diagonal-line">Supporters</span></h2>
-        <p>The associations, contractors, unions, and voices standing behind this initiative</p>
+        <p>The partners, associations, contractors, unions, and voices standing behind this initiative</p>
+      </div>
+      <div class="supporters-partners-preview">
+        <h3><i class="fas fa-handshake"></i> Committed Partners</h3>
+        <p class="supporters-partners-subtitle">The core organizations powering Protecting Under the Hard Hat</p>
+        <div class="supporter-grid" id="partnersLandingGrid"></div>
       </div>
       <div class="overview-grid">
+        <button class="overview-card" onclick="switchTab('supporters-partners')">
+          <span class="overview-icon"><i class="fas fa-handshake"></i></span>
+          <h3>Committed Partners</h3>
+          <p>The core partners behind the initiative.</p>
+          <span class="overview-go">Explore <i class="fas fa-arrow-right"></i></span>
+        </button>
         <button class="overview-card" onclick="switchTab('supporters-associations')">
           <span class="overview-icon"><i class="fas fa-building-columns"></i></span>
           <h3>Associations</h3>
@@ -2302,6 +2309,12 @@
           <p>Labor unions supporting their members.</p>
           <span class="overview-go">Explore <i class="fas fa-arrow-right"></i></span>
         </button>
+        <button class="overview-card" id="overviewIndustryAllies" onclick="switchTab('supporters-industry-allies')">
+          <span class="overview-icon"><i class="fas fa-handshake-angle"></i></span>
+          <h3>Industry Allies</h3>
+          <p>Allied organizations amplifying our mission.</p>
+          <span class="overview-go">Explore <i class="fas fa-arrow-right"></i></span>
+        </button>
         <button class="overview-card" onclick="switchTab('supporters-testimonies')">
           <span class="overview-icon"><i class="fas fa-quote-right"></i></span>
           <h3>Testimonies</h3>
@@ -2309,6 +2322,33 @@
           <span class="overview-go">Explore <i class="fas fa-arrow-right"></i></span>
         </button>
       </div>
+    </section>
+
+    <!-- SUPPORTERS: COMMITTED PARTNERS -->
+    <!-- Keep supporters.json entries alphabetized by name within each group -->
+    <section id="supporters-partners" class="tab-panel" data-parent="supporters">
+      <div class="section-header">
+        <h2><span class="diagonal-line">Committed Partners</span></h2>
+        <p>The core partners supporting Protecting Under the Hard Hat</p>
+        <div class="view-toggle" role="group" aria-label="Layout">
+          <button type="button" class="view-btn is-active" data-view="list" aria-label="List view"><i class="fas fa-list" aria-hidden="true"></i></button>
+          <button type="button" class="view-btn" data-view="grid" aria-label="Grid view"><i class="fas fa-grip" aria-hidden="true"></i></button>
+        </div>
+      </div>
+      <div class="supporter-grid" id="partnersGrid"></div>
+    </section>
+
+    <!-- SUPPORTERS: INDUSTRY ALLIES -->
+    <section id="supporters-industry-allies" class="tab-panel" data-parent="supporters">
+      <div class="section-header">
+        <h2><span class="diagonal-line">Industry Allies</span></h2>
+        <p>Allied organizations supporting Protecting Under the Hard Hat</p>
+        <div class="view-toggle" role="group" aria-label="Layout">
+          <button type="button" class="view-btn is-active" data-view="list" aria-label="List view"><i class="fas fa-list" aria-hidden="true"></i></button>
+          <button type="button" class="view-btn" data-view="grid" aria-label="Grid view"><i class="fas fa-grip" aria-hidden="true"></i></button>
+        </div>
+      </div>
+      <div class="supporter-grid" id="industryAlliesGrid"></div>
     </section>
 
     <!-- SUPPORTERS: ASSOCIATIONS -->
@@ -2426,22 +2466,22 @@
           <div class="material-card-header">
             <h3><i class="fas fa-flag"></i> Vinyl Banners</h3>
             <div class="banner-size-toggle" role="radiogroup" aria-label="Vinyl Banner Size Selection">
-              <button type="button" class="size-toggle-btn active" id="bannerBtnSmall" onclick="setBannerSizeMode('small')">Small (36"×60")</button>
-              <button type="button" class="size-toggle-btn" id="bannerBtnLarge" onclick="setBannerSizeMode('large')">Large (48"×120")</button>
+              <button type="button" class="size-toggle-btn active" id="bannersBtnSmall" onclick="setBannerSizeMode('small')">Small (24"×36")</button>
+              <button type="button" class="size-toggle-btn" id="bannersBtnLarge" onclick="setBannerSizeMode('large')">Large (36"×60")</button>
             </div>
           </div>
-          
+
           <div class="materials-carousel" id="carousel-banners">
             <button type="button" class="materials-carousel-btn prev" onclick="moveMaterialsCarousel('banners', -1)" aria-label="Previous banner slide"><i class="fas fa-chevron-left"></i></button>
-            
-            <!-- Small Size Slide Track -->
-            <div class="materials-carousel-viewport banner-track-view" id="bannerViewSmall">
+
+            <!-- Small Size Slide Track (24" × 36") -->
+            <div class="materials-carousel-viewport banner-track-view" id="bannersViewSmall">
               <div class="materials-carousel-track">
                 <div class="materials-slide active">
                   <div class="material-card-image">
                     <span class="slide-badge">Small Size</span>
-                    <img src="static/assets/order-materials/poster-vinyl-36x60.png" alt="3 foot by 5 foot vinyl banner mockup" loading="lazy">
-                    <span class="spec-label">36" × 60" Banner</span>
+                    <img src="static/assets/order-materials/poster-24x36.png" alt="24 by 36 inch vinyl banner mockup" loading="lazy">
+                    <span class="spec-label">24" × 36" Banner</span>
                   </div>
                   <div class="material-card-body">
                     <p>Weatherproof vinyl banners for jobsites, fences, and union halls.</p>
@@ -2451,7 +2491,7 @@
                   <div class="material-card-image">
                     <span class="slide-badge">Small Size</span>
                     <img src="static/assets/order-materials/banner-fence-1.jpeg" alt="Vinyl banner hung on a jobsite fence" loading="lazy">
-                    <span class="spec-label">36" × 60" Jobsite Fence Banner</span>
+                    <span class="spec-label">24" × 36" Jobsite Fence Banner</span>
                   </div>
                   <div class="material-card-body">
                     <p>Weatherproof vinyl banners for jobsites, fences, and union halls.</p>
@@ -2460,14 +2500,14 @@
               </div>
             </div>
 
-            <!-- Large Size Slide Track -->
-            <div class="materials-carousel-viewport banner-track-view" id="bannerViewLarge" style="display:none;">
+            <!-- Large Size Slide Track (36" × 60") -->
+            <div class="materials-carousel-viewport banner-track-view" id="bannersViewLarge" style="display:none;">
               <div class="materials-carousel-track">
                 <div class="materials-slide active">
                   <div class="material-card-image">
                     <span class="slide-badge">Large Size</span>
-                    <img src="static/assets/order-materials/banner-fence-3.jpeg" alt="Large vinyl banner on a chain-link jobsite fence" loading="lazy">
-                    <span class="spec-label">48" × 120" Jobsite Fence Banner</span>
+                    <img src="static/assets/order-materials/poster-vinyl-36x60.png" alt="36 by 60 inch vinyl banner mockup" loading="lazy">
+                    <span class="spec-label">36" × 60" Banner</span>
                   </div>
                   <div class="material-card-body">
                     <p>Weatherproof vinyl banners for jobsites, fences, and union halls.</p>
@@ -2476,8 +2516,18 @@
                 <div class="materials-slide">
                   <div class="material-card-image">
                     <span class="slide-badge">Large Size</span>
-                    <img src="static/assets/order-materials/banner-wall-2.jpeg" alt="Large vinyl banner mounted on a wooden construction wall" loading="lazy">
-                    <span class="spec-label">48" × 120" Main Entrance Banner</span>
+                    <img src="static/assets/order-materials/banner-fence-3.jpeg" alt="Vinyl banner on a chain-link jobsite fence" loading="lazy">
+                    <span class="spec-label">36" × 60" Jobsite Fence Banner</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Weatherproof vinyl banners for jobsites, fences, and union halls.</p>
+                  </div>
+                </div>
+                <div class="materials-slide">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Large Size</span>
+                    <img src="static/assets/order-materials/banner-wall-2.jpeg" alt="Vinyl banner mounted on a wooden construction wall" loading="lazy">
+                    <span class="spec-label">36" × 60" Main Entrance Banner</span>
                   </div>
                   <div class="material-card-body">
                     <p>Weatherproof vinyl banners for jobsites, fences, and union halls.</p>
@@ -2488,10 +2538,8 @@
 
             <button type="button" class="materials-carousel-btn next" onclick="moveMaterialsCarousel('banners', 1)" aria-label="Next banner slide"><i class="fas fa-chevron-right"></i></button>
           </div>
-          <div class="materials-carousel-dots" id="dots-banners">
-            <button type="button" class="dot active" onclick="setMaterialsCarouselSlide('banners', 0)" aria-label="Slide 1"></button>
-            <button type="button" class="dot" onclick="setMaterialsCarouselSlide('banners', 1)" aria-label="Slide 2"></button>
-          </div>
+          <!-- Dots are rebuilt per active size view by setBannerSizeMode -->
+          <div class="materials-carousel-dots" id="dots-banners"></div>
         </div>
 
         <!-- POSTERS CARD -->
@@ -2563,12 +2611,18 @@
         <div class="material-card">
           <div class="material-card-header">
             <h3><i class="fas fa-note-sticky"></i> Stickers</h3>
+            <div class="banner-size-toggle" role="radiogroup" aria-label="Sticker Size Selection">
+              <button type="button" class="size-toggle-btn active" id="stickersBtnSmall" onclick="setStickerSizeMode('small')">Small (2"×1.7")</button>
+              <button type="button" class="size-toggle-btn" id="stickersBtnLarge" onclick="setStickerSizeMode('large')">Large (4"×3.4")</button>
+            </div>
           </div>
+
           <div class="materials-carousel" id="carousel-stickers">
             <button type="button" class="materials-carousel-btn prev" onclick="moveMaterialsCarousel('stickers', -1)" aria-label="Previous sticker slide"><i class="fas fa-chevron-left"></i></button>
-            <div class="materials-carousel-viewport">
+
+            <!-- Small Size Slide Track (2" × 1.7") -->
+            <div class="materials-carousel-viewport banner-track-view" id="stickersViewSmall">
               <div class="materials-carousel-track">
-                <!-- Slide 0: Hard Hat Decal -->
                 <div class="materials-slide active">
                   <div class="material-card-image">
                     <span class="slide-badge">Hard Hat Decal</span>
@@ -2579,18 +2633,6 @@
                     <p>Durable stickers for hard hats, equipment, and toolboxes.</p>
                   </div>
                 </div>
-                <!-- Slide 1: Toolbox Sticker -->
-                <div class="materials-slide">
-                  <div class="material-card-image">
-                    <span class="slide-badge">Toolbox Sticker</span>
-                    <img src="static/assets/order-materials/sticker-4x3.4.png" alt="4 by 3.4 inch sticker mockup" loading="lazy">
-                    <span class="spec-label">4" × 3.4" Sticker</span>
-                  </div>
-                  <div class="material-card-body">
-                    <p>Durable stickers for hard hats, equipment, and toolboxes.</p>
-                  </div>
-                </div>
-                <!-- Slide 2: Stickers in use (hard hat & bottle) -->
                 <div class="materials-slide">
                   <div class="material-card-image">
                     <span class="slide-badge">In Use</span>
@@ -2601,7 +2643,6 @@
                     <p>Durable stickers for hard hats, equipment, and toolboxes.</p>
                   </div>
                 </div>
-                <!-- Slide 3: Stickers in use (truck) -->
                 <div class="materials-slide">
                   <div class="material-card-image">
                     <span class="slide-badge">In Use</span>
@@ -2614,14 +2655,47 @@
                 </div>
               </div>
             </div>
+
+            <!-- Large Size Slide Track (4" × 3.4") -->
+            <div class="materials-carousel-viewport banner-track-view" id="stickersViewLarge" style="display:none;">
+              <div class="materials-carousel-track">
+                <div class="materials-slide active">
+                  <div class="material-card-image">
+                    <span class="slide-badge">Toolbox Sticker</span>
+                    <img src="static/assets/order-materials/sticker-4x3.4.png" alt="4 by 3.4 inch sticker mockup" loading="lazy">
+                    <span class="spec-label">4" × 3.4" Sticker</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Durable stickers for hard hats, equipment, and toolboxes.</p>
+                  </div>
+                </div>
+                <div class="materials-slide">
+                  <div class="material-card-image">
+                    <span class="slide-badge">In Use</span>
+                    <img src="static/assets/order-materials/stickers-hardhat-bottle.png" alt="Stickers applied to a hard hat and water bottle" loading="lazy">
+                    <span class="spec-label">Hard Hats & Water Bottles</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Durable stickers for hard hats, equipment, and toolboxes.</p>
+                  </div>
+                </div>
+                <div class="materials-slide">
+                  <div class="material-card-image">
+                    <span class="slide-badge">In Use</span>
+                    <img src="static/assets/order-materials/sticker-truck-1.jpeg" alt="Sticker applied to a truck tailgate" loading="lazy">
+                    <span class="spec-label">Trucks & Equipment</span>
+                  </div>
+                  <div class="material-card-body">
+                    <p>Durable stickers for hard hats, equipment, and toolboxes.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <button type="button" class="materials-carousel-btn next" onclick="moveMaterialsCarousel('stickers', 1)" aria-label="Next sticker slide"><i class="fas fa-chevron-right"></i></button>
           </div>
-          <div class="materials-carousel-dots" id="dots-stickers">
-            <button type="button" class="dot active" onclick="setMaterialsCarouselSlide('stickers', 0)" aria-label="Slide 1"></button>
-            <button type="button" class="dot" onclick="setMaterialsCarouselSlide('stickers', 1)" aria-label="Slide 2"></button>
-            <button type="button" class="dot" onclick="setMaterialsCarouselSlide('stickers', 2)" aria-label="Slide 3"></button>
-            <button type="button" class="dot" onclick="setMaterialsCarouselSlide('stickers', 3)" aria-label="Slide 4"></button>
-          </div>
+          <!-- Dots are rebuilt per active size view by setStickerSizeMode -->
+          <div class="materials-carousel-dots" id="dots-stickers"></div>
         </div>
       </div>
 
@@ -2793,7 +2867,7 @@
   <!-- Footer (NJIT logo + © text removed per request) -->
   <footer class="main-footer"></footer>
 
-  <script src="static/config.js?v=3"></script>
+  <script src="static/config.js?v=4"></script>
   <script>
     // ===== Config-driven values =====
     // Google Form (Order Materials): link + embedded iframe from PUTHH_CONFIG
@@ -3110,7 +3184,7 @@
       const iW = headerIndex(headers, 'Website Link');
       const iL = headerIndex(headers, 'Logo Link');
       if (iN < 0 || iT < 0) return null;
-      const out = { associations: [], contractors: [], unions: [], testimonies: SUPPORTERS?.testimonies || [] };
+      const out = { partners: [], associations: [], contractors: [], unions: [], industryAllies: [], testimonies: SUPPORTERS?.testimonies || [] };
       for (const r of rows.slice(1)) {
         const group = String(r[iT] || '').trim().toLowerCase();
         const name = String(r[iN] || '').trim();
@@ -3124,9 +3198,12 @@
         if (group.startsWith('association')) out.associations.push(entry);
         else if (group.startsWith('contractor')) out.contractors.push(entry);
         else if (group.startsWith('union')) out.unions.push(entry);
-        // Unknown "Tab" values are ignored on purpose
+        else if (group.startsWith('committed partner') || group.startsWith('partner')) out.partners.push(entry);
+        else if (group.startsWith('industry all')) out.industryAllies.push(entry);
+        // Unknown or blank "Tab" values are ignored on purpose (blank rows are
+        // how the team stages entities they haven't categorized yet)
       }
-      const total = out.associations.length + out.contractors.length + out.unions.length;
+      const total = out.partners.length + out.associations.length + out.contractors.length + out.unions.length + out.industryAllies.length;
       return total ? out : null;
     }
 
@@ -3177,13 +3254,15 @@
       return res.text();
     }
 
-    // Sheet overlay: fetch the published Supporters CSV; on success swap the
-    // rendered groups. Any failure keeps the bundled JSON (current method).
+    // Sheet overlay: fetch the published Supporters CSV and apply it per group.
+    // A group is replaced only when the sheet has at least one usable row for
+    // it — groups the team hasn't filled in yet keep the bundled JSON content.
+    // Any fetch/parse failure keeps the bundled JSON (current method).
     async function loadSupportersFromSheet() {
       const url = (typeof PUTHH_CONFIG !== 'undefined' && PUTHH_CONFIG.SUPPORTERS_SHEET_URL) || '';
       if (!url) return;
 
-      const cached = readSheetCache('supportersSheet:v1');
+      const cached = readSheetCache('supportersSheet:v2');
       if (cached) {
         SUPPORTERS = cached;
         renderSupporterGroups();
@@ -3193,9 +3272,15 @@
         const text = await fetchPublishedCSV(url);
         const parsed = parseSupportersSheet(text);
         if (!parsed) throw new Error('sheet had no usable rows');
-        SUPPORTERS = parsed;
+        const merged = { ...SUPPORTERS };
+        let applied = false;
+        for (const g of ['partners', 'associations', 'contractors', 'unions', 'industryAllies']) {
+          if ((parsed[g] || []).length) { merged[g] = parsed[g]; applied = true; }
+        }
+        if (!applied) throw new Error('sheet had no usable rows');
+        SUPPORTERS = merged;
         renderSupporterGroups();
-        writeSheetCache('supportersSheet:v1', parsed);
+        writeSheetCache('supportersSheet:v2', merged);
       } catch (e) {
         console.warn('Supporters sheet unavailable — keeping bundled content.', e);
       }
@@ -3225,7 +3310,7 @@
     }
 
     function renderSupporterGroups() {
-      // Associations: featured (ACCNJ) first, rest alphabetical
+      // Committed Partners first everywhere; featured first, rest alphabetical.
       // NOTE: keep supporters.json entries alphabetized by name within each
       // group — these renderers enforce order, but the JSON should match.
       const sortWithFeatured = (list) => {
@@ -3233,14 +3318,33 @@
         const rest = (list || []).filter(x => !x.featured).sort((a, b) => a.name.localeCompare(b.name));
         return [...feat, ...rest];
       };
+      const sortAlpha = (list) => (list || []).slice().sort((a, b) => a.name.localeCompare(b.name));
 
+      const partners = sortWithFeatured(SUPPORTERS.partners);
+      renderSupporterGroup('partnersLandingGrid', partners);
+      renderSupporterGroup('partnersGrid', partners);
       renderSupporterGroup('associationsGrid', sortWithFeatured(SUPPORTERS.associations));
-      renderSupporterGroup('contractorsGrid', (SUPPORTERS.contractors || []).slice().sort((a, b) => a.name.localeCompare(b.name)));
+      renderSupporterGroup('contractorsGrid', sortAlpha(SUPPORTERS.contractors));
       renderSupporterGroup('unionsGrid', sortWithFeatured(SUPPORTERS.unions));
+      renderSupporterGroup('industryAlliesGrid', sortAlpha(SUPPORTERS.industryAllies));
+      updateSupportersGroupVisibility();
+    }
+
+    // Groups with no entries (e.g. Industry Allies before the sheet fills in)
+    // hide their nav item, landing card, and panel entirely.
+    function updateSupportersGroupVisibility() {
+      const setEmpty = (id, empty) => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = empty ? 'none' : '';
+      };
+      const alliesEmpty = !(SUPPORTERS.industryAllies || []).length;
+      setEmpty('navIndustryAllies', alliesEmpty);
+      setEmpty('overviewIndustryAllies', alliesEmpty);
+      setEmpty('supporters-industry-allies', alliesEmpty);
     }
 
     // ===== Supporters List/Grid view toggle =====
-    // One shared preference (localStorage) across the three org tabs.
+    // One shared preference (localStorage) across the org tabs.
     // Default is LIST; a stored explicit choice always wins.
     window.setSupportersView = function (mode) {
       const list = mode === 'list';
@@ -3271,7 +3375,7 @@
         SUPPORTERS = await r.json();
       } catch (e) {
         console.error('Failed to load supporters.json', e);
-        SUPPORTERS = { associations: [], contractors: [], unions: [], testimonies: [] };
+        SUPPORTERS = { partners: [], associations: [], contractors: [], unions: [], industryAllies: [], testimonies: [] };
       }
 
       renderSupporterGroups();
@@ -3533,7 +3637,8 @@
 
     // ===== Materials Carousel & Size Toggle Handlers (Synchronized) =====
     window.materialsCarouselState = { banners: 0, posters: 0, stickers: 0 };
-    window.bannerSizeMode = 'small';
+    window.bannersSizeMode = 'small';
+    window.stickersSizeMode = 'small';
     window.masterMaterialsTimer = null;
 
     window.resetMasterMaterialsTimer = function() {
@@ -3549,31 +3654,46 @@
       }, 6000);
     };
 
-    window.setBannerSizeMode = function(mode) {
-      window.bannerSizeMode = mode;
-      const smallBtn = document.getElementById('bannerBtnSmall');
-      const largeBtn = document.getElementById('bannerBtnLarge');
-      const smallView = document.getElementById('bannerViewSmall');
-      const largeView = document.getElementById('bannerViewLarge');
+    // Shared Small/Large size-toggle logic for the banner and sticker
+    // carousels: each size has its own slide track, and the dots must match
+    // the active track's slide count, so they are rebuilt on every switch.
+    function setSizeSizeMode(carouselId, mode) {
+      window[carouselId + 'SizeMode'] = mode;
+      const smallBtn = document.getElementById(carouselId + 'BtnSmall');
+      const largeBtn = document.getElementById(carouselId + 'BtnLarge');
+      const smallView = document.getElementById(carouselId + 'ViewSmall');
+      const largeView = document.getElementById(carouselId + 'ViewLarge');
+      if (!smallBtn || !largeBtn || !smallView || !largeView) return;
 
-      if (smallBtn && largeBtn && smallView && largeView) {
-        const isSmall = mode === 'small';
-        smallBtn.classList.toggle('active', isSmall);
-        largeBtn.classList.toggle('active', !isSmall);
-        smallView.style.display = isSmall ? 'block' : 'none';
-        largeView.style.display = isSmall ? 'none' : 'block';
-        window.setMaterialsCarouselSlide('banners', 0, true);
-      }
-    };
+      const isSmall = mode === 'small';
+      smallBtn.classList.toggle('active', isSmall);
+      largeBtn.classList.toggle('active', !isSmall);
+      smallView.style.display = isSmall ? 'block' : 'none';
+      largeView.style.display = isSmall ? 'none' : 'block';
+
+      const activeView = isSmall ? smallView : largeView;
+      rebuildMaterialsDots(carouselId, activeView.querySelectorAll('.materials-slide').length);
+      window.setMaterialsCarouselSlide(carouselId, 0, true);
+    }
+
+    function rebuildMaterialsDots(carouselId, count) {
+      const dotsWrap = document.getElementById('dots-' + carouselId);
+      if (!dotsWrap) return;
+      dotsWrap.innerHTML = Array.from({ length: count }, (_, i) =>
+        `<button type="button" class="dot${i === 0 ? ' active' : ''}" onclick="setMaterialsCarouselSlide('${carouselId}', ${i})" aria-label="Slide ${i + 1}"></button>`).join('');
+    }
+
+    window.setBannerSizeMode = function (mode) { setSizeSizeMode('banners', mode); };
+    window.setStickerSizeMode = function (mode) { setSizeSizeMode('stickers', mode); };
 
     window.setMaterialsCarouselSlide = function(carouselId, slideIndex, isManual = true) {
       const carousel = document.getElementById('carousel-' + carouselId);
       if (!carousel) return;
 
       let viewport = carousel.querySelector('.materials-carousel-viewport');
-      if (carouselId === 'banners') {
-        const activeMode = window.bannerSizeMode || 'small';
-        viewport = document.getElementById(activeMode === 'small' ? 'bannerViewSmall' : 'bannerViewLarge');
+      if (carouselId === 'banners' || carouselId === 'stickers') {
+        const activeMode = window[carouselId + 'SizeMode'] || 'small';
+        viewport = document.getElementById(carouselId + 'View' + (activeMode === 'small' ? 'Small' : 'Large'));
       }
       if (!viewport) return;
 
@@ -3634,6 +3754,9 @@
       initMaterialImageLightbox();
       initTeamHeadshotBlur();
       initSupportersView();
+      // Build the size-toggle carousels' dots (HTML ships them empty)
+      window.setBannerSizeMode('small');
+      window.setStickerSizeMode('small');
     });
 
     // Update indicator on resize
