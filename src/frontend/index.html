@@ -3497,9 +3497,14 @@
     });
 
     // ===== Materials Image Lightbox (mirrors the bio modal) =====
+    // logo-mode restyling is stripped AFTER the 0.3s fade-out finishes —
+    // removing it during the fade flashes the dark gradient version.
+    let logoModeResetTimer = null;
+
     window.openImageLightbox = function(src, alt, caption, opts = {}) {
       const overlay = document.getElementById('imageLightboxOverlay');
       if (!overlay) return;
+      if (logoModeResetTimer) { clearTimeout(logoModeResetTimer); logoModeResetTimer = null; }
       document.getElementById('imageLightboxImg').src = src;
       document.getElementById('imageLightboxImg').alt = alt || '';
       document.getElementById('imageLightboxBlur').src = src;
@@ -3516,7 +3521,12 @@
     window.closeImageLightbox = function() {
       const overlay = document.getElementById('imageLightboxOverlay');
       if (overlay && overlay.classList.contains('active')) {
-        overlay.classList.remove('active', 'logo-mode');
+        overlay.classList.remove('active');
+        if (logoModeResetTimer) clearTimeout(logoModeResetTimer);
+        logoModeResetTimer = setTimeout(() => {
+          overlay.classList.remove('logo-mode');
+          logoModeResetTimer = null;
+        }, 400);
         overlay.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
         window.resetMasterMaterialsTimer();
