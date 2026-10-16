@@ -2,7 +2,10 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    # github.io always shows the most recent push: dev pushes deploy dev
+    # (preview), merges to main deploy main. Production (.org) is AWS
+    # Amplify following main only.
+    branches: [main, dev]
   workflow_dispatch:
 
 permissions:
