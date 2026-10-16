@@ -514,31 +514,6 @@
       border: 2px solid rgba(204, 0, 0, 0.25);
     }
 
-    /* ===== Committed Partners preview on the Supporters landing page ===== */
-    .supporters-partners-preview {
-      max-width: 1000px;
-      margin: 0 auto 36px;
-      text-align: center;
-    }
-
-    .supporters-partners-preview h3 {
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: var(--text-primary);
-      margin-bottom: 6px;
-    }
-
-    .supporters-partners-preview h3 i {
-      color: var(--accent);
-      margin-right: 8px;
-    }
-
-    .supporters-partners-subtitle {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      margin-bottom: 22px;
-    }
-
     /* ===== List / Grid view toggle ===== */
     .view-toggle {
       display: inline-flex;
@@ -2279,11 +2254,6 @@
         <h2><span class="diagonal-line">Supporters</span></h2>
         <p>The partners, associations, contractors, unions, and voices standing behind this initiative</p>
       </div>
-      <div class="supporters-partners-preview">
-        <h3><i class="fas fa-handshake"></i> Committed Partners</h3>
-        <p class="supporters-partners-subtitle">The core organizations powering Protecting Under the Hard Hat</p>
-        <div class="supporter-grid" id="partnersLandingGrid"></div>
-      </div>
       <div class="overview-grid">
         <button class="overview-card" onclick="switchTab('supporters-partners')">
           <span class="overview-icon"><i class="fas fa-handshake"></i></span>
@@ -3323,7 +3293,6 @@
       const sortAlpha = (list) => (list || []).slice().sort((a, b) => a.name.localeCompare(b.name));
 
       const partners = sortWithFeatured(SUPPORTERS.partners);
-      renderSupporterGroup('partnersLandingGrid', partners);
       renderSupporterGroup('partnersGrid', partners);
       renderSupporterGroup('associationsGrid', sortWithFeatured(SUPPORTERS.associations));
       renderSupporterGroup('contractorsGrid', sortAlpha(SUPPORTERS.contractors));
