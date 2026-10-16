@@ -3114,6 +3114,48 @@ body.dark-mode .material-card {
   border-color: rgba(255, 255, 255, 0.1);
 }
 
+/* ===== SUPPORTER CARD POLISH: flush link + logo lightbox ===== */
+.supporter-logo {
+  position: relative;
+}
+
+/* Name + link share one text block, so the link sits directly under the
+   name (list view) instead of floating at the card edge */
+.supporter-card .supporter-card-text {
+  min-width: 0;
+}
+
+.supporter-grid.view-list .supporter-card .supporter-card-text {
+  flex: 1;
+  text-align: left;
+}
+
+/* Logos open the shared fullscreen lightbox */
+.supporter-logo img {
+  cursor: zoom-in;
+}
+
+/* Compact pill, bottom-center of the plate (same treatment as testimonies) */
+.supporter-logo .image-view-badge {
+  top: auto;
+  bottom: 5px;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%) translateY(6px);
+  padding: 3px 9px;
+  font-size: 0.66rem;
+}
+
+.supporter-logo:hover .image-view-badge {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Logo lightbox: white letterbox so light/transparent logos stay visible */
+#imageLightboxOverlay.logo-mode .image-lightbox-img-wrap {
+  background: #ffffff;
+}
+
 @media (max-width: 600px) {
   .bio-modal-container {
     padding: 24px 18px;

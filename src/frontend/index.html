@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Protecting Under the Hard Hat</title>
   <link rel="icon" type="image/png" href="static/assets/logos/PUTHH-Logo.png" />
-  <link rel="stylesheet" href="static/style.css?v=17" />
+  <link rel="stylesheet" href="static/style.css?v=18" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     /* ===== TAB NAVIGATION STYLES ===== */
@@ -3072,8 +3072,10 @@
             ${logo}
             <i class="${iconCls} logo-fallback-icon${logoSrc ? ' hidden' : ''}" aria-hidden="true"></i>
           </div>
-          <h4>${entry.name}</h4>
-          ${link}
+          <div class="supporter-card-text">
+            <h4>${entry.name}</h4>
+            ${link}
+          </div>
         </div>`;
     }
 
@@ -3328,6 +3330,7 @@
       renderSupporterGroup('unionsGrid', sortWithFeatured(SUPPORTERS.unions));
       renderSupporterGroup('industryAlliesGrid', sortAlpha(SUPPORTERS.industryAllies));
       updateSupportersGroupVisibility();
+      initSupporterLogoLightbox();
     }
 
     // Groups with no entries (e.g. Industry Allies before the sheet fills in)
@@ -3525,13 +3528,15 @@
     });
 
     // ===== Materials Image Lightbox (mirrors the bio modal) =====
-    window.openImageLightbox = function(src, alt, caption) {
+    window.openImageLightbox = function(src, alt, caption, opts = {}) {
       const overlay = document.getElementById('imageLightboxOverlay');
       if (!overlay) return;
       document.getElementById('imageLightboxImg').src = src;
       document.getElementById('imageLightboxImg').alt = alt || '';
       document.getElementById('imageLightboxBlur').src = src;
       document.getElementById('imageLightboxCaption').textContent = caption || '';
+      // White backdrop for logos (they'd vanish on the dark letterbox)
+      overlay.classList.toggle('logo-mode', !!(opts && opts.logoMode));
       overlay.classList.add('active');
       overlay.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
@@ -3542,7 +3547,7 @@
     window.closeImageLightbox = function() {
       const overlay = document.getElementById('imageLightboxOverlay');
       if (overlay && overlay.classList.contains('active')) {
-        overlay.classList.remove('active');
+        overlay.classList.remove('active', 'logo-mode');
         overlay.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
         window.resetMasterMaterialsTimer();
@@ -3614,6 +3619,30 @@
           const slide = frame.closest('.testimony-slide');
           const name = slide?.querySelector('.testimony-name')?.textContent?.trim() || '';
           openImageLightbox(img.src, img.alt, name);
+        };
+        img.addEventListener('click', open);
+        badge.addEventListener('click', open);
+      });
+    }
+
+    // Supporter logos open the same lightbox, captioned with the org name.
+    // logo-mode gives the image area a white backdrop so light or
+    // transparent logos stay visible. Icon-only plates stay non-clickable.
+    function initSupporterLogoLightbox() {
+      document.querySelectorAll('.supporter-logo').forEach(plate => {
+        const img = plate.querySelector('img');
+        if (!img || img.dataset.lightboxReady) return;
+        img.dataset.lightboxReady = '1';
+
+        const badge = document.createElement('span');
+        badge.className = 'image-view-badge';
+        badge.innerHTML = '<i class="fas fa-expand"></i> View';
+        plate.appendChild(badge);
+
+        const open = () => {
+          const card = plate.closest('.supporter-card');
+          const name = card?.querySelector('h4')?.textContent?.trim() || 'Supporter logo';
+          openImageLightbox(img.src, img.alt, name, { logoMode: true });
         };
         img.addEventListener('click', open);
         badge.addEventListener('click', open);
