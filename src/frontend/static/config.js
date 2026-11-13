@@ -16,7 +16,7 @@ const PUTHH_CONFIG = {
   // CSV form of the published Testimonies sheet
   // (columns: Name, Role/Title, Testimony Text, Picture). While empty,
   // the site shows the bundled testimonies from supporters.json.
-  TESTIMONIES_SHEET_URL: '',
+  TESTIMONIES_SHEET_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQkx0H_i2QM8-j_UgGopKgzF1R9azO48U3c8NI-i7MwFIWTH5JasuODne9Skq6T0vNkCGCM7MzMzfYP/pub?output=csv',
   // Google Form: Order Materials (iframe appends ?embedded=true)
   GOOGLE_FORM_URL: 'https://docs.google.com/forms/d/e/1FAIpQLScNOBfKAanjziMngN4BmT3u5t5XD_xUlo1_dXkkg3mvdpPFqQ/viewform',
   // Public-facing survey URL used in share/email text
