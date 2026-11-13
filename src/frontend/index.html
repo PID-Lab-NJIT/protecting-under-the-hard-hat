@@ -2837,7 +2837,7 @@
   <!-- Footer (NJIT logo + © text removed per request) -->
   <footer class="main-footer"></footer>
 
-  <script src="static/config.js?v=4"></script>
+  <script src="static/config.js?v=5"></script>
   <script>
     // ===== Config-driven values =====
     // Google Form (Order Materials): link + embedded iframe from PUTHH_CONFIG
@@ -3185,15 +3185,25 @@
       return total ? out : null;
     }
 
+    // First matching column among several accepted header spellings, so
+    // "Quote"/"Testimony Text", "Photo"/"Picture", "Role"/"Role/Title" all work.
+    function headerIndexAny(headers, names) {
+      for (const n of names) {
+        const i = headerIndex(headers, n);
+        if (i >= 0) return i;
+      }
+      return -1;
+    }
+
     function parseTestimoniesSheet(text) {
       const rows = parseCSV(text);
       if (rows.length < 2) return null;
       const headers = rows[0];
-      const iN = headerIndex(headers, 'Name');
-      const iR = headerIndex(headers, 'Role');
-      const iA = headerIndex(headers, 'Affiliation');
-      const iQ = headerIndex(headers, 'Quote');
-      const iP = headerIndex(headers, 'Photo');
+      const iN = headerIndexAny(headers, ['Name']);
+      const iR = headerIndexAny(headers, ['Role', 'Role/Title']);
+      const iA = headerIndexAny(headers, ['Affiliation']);
+      const iQ = headerIndexAny(headers, ['Quote', 'Testimony Text']);
+      const iP = headerIndexAny(headers, ['Photo', 'Picture']);
       if (iN < 0 || iQ < 0) return null;
       const list = [];
       for (const r of rows.slice(1)) {
@@ -3266,7 +3276,9 @@
       }
     }
 
-    // Same overlay for the testimonies tab
+    // Same overlay for the testimonies tab — stale-while-revalidate like the
+    // supporters loader: cached rows render instantly, then every page load
+    // still re-checks the sheet in the background and re-renders on change.
     async function loadTestimoniesFromSheet() {
       const url = (typeof PUTHH_CONFIG !== 'undefined' && PUTHH_CONFIG.TESTIMONIES_SHEET_URL) || '';
       if (!url) return;
@@ -3275,17 +3287,19 @@
       if (cached) {
         renderTestimonies(cached);
         initTestimonyLightbox();
-        return;
       }
       try {
         const text = await fetchPublishedCSV(url);
         const parsed = parseTestimoniesSheet(text);
         if (!parsed) throw new Error('sheet had no usable rows');
-        renderTestimonies(parsed);
-        initTestimonyLightbox();
+        const changed = JSON.stringify(parsed) !== JSON.stringify(cached);
         writeSheetCache('testimoniesSheet:v1', parsed);
+        if (!cached || changed) {
+          renderTestimonies(parsed);
+          initTestimonyLightbox();
+        }
       } catch (e) {
-        console.warn('Testimonies sheet unavailable — keeping bundled content.', e);
+        if (!cached) console.warn('Testimonies sheet unavailable — keeping bundled content.', e);
       }
     }
 

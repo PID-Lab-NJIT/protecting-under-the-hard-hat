@@ -13,6 +13,9 @@ const PUTHH_CONFIG = {
   // (columns: ID, Tab, Entity Name, Website Link, Logo Link; Tab = Committed
   // Partners / Associations / Contractors / Unions / Industry Allies).
   SUPPORTERS_SHEET_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQnKJvyvFe2oZZJRgEZ9XgfbaTNOajtAst94TI0BxUU-FAEbHuT6wwGHekOmX0iVQ/pub?output=csv',
+  // CSV form of the published Testimonies sheet
+  // (columns: Name, Role/Title, Testimony Text, Picture). While empty,
+  // the site shows the bundled testimonies from supporters.json.
   TESTIMONIES_SHEET_URL: '',
   // Google Form: Order Materials (iframe appends ?embedded=true)
   GOOGLE_FORM_URL: 'https://docs.google.com/forms/d/e/1FAIpQLScNOBfKAanjziMngN4BmT3u5t5XD_xUlo1_dXkkg3mvdpPFqQ/viewform',

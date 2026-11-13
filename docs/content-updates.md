@@ -3,8 +3,8 @@
 The Supporters tab is driven by a Google Sheet — the published
 ["Supporters Info" sheet](https://docs.google.com/spreadsheets/d/e/2PACX-1vQnKJvyvFe2oZZJRgEZ9XgfbaTNOajtAst94TI0BxUU-FAEbHuT6wwGHekOmX0iVQ/pubhtml).
 You edit the Sheet; the website picks up the changes on its own — no developer,
-no deploy, no code. Testimonies can be sheet-driven the same way later (not
-wired yet).
+no deploy, no code. Testimonies work the same way once their published link is
+set (`TESTIMONIES_SHEET_URL` in `src/frontend/static/config.js`).
 
 ---
 
@@ -56,13 +56,24 @@ Nothing needs to be run, pulled, or redeployed.
   (`src/frontend/static/assets/logos/…`, then reference `logos/…`).
 
 ### Testimonies sheet
-| Column        | What goes in it |
-| ------------- | --------------- |
-| `Name`        | Person's name (required) |
-| `Role`        | e.g. "Foreman" |
-| `Affiliation` | e.g. "Waters & Bugbee — Laborers' Union Local 172" |
-| `Quote`       | The testimonial text (required) |
-| `Photo`       | Optional. Same rules as logos; blank → placeholder headshot |
+| Column           | What goes in it |
+| ---------------- | --------------- |
+| `Name`           | Person's name (required) |
+| `Role/Title`     | e.g. "Foreman at Waters & Bugbee" — shown under the name |
+| `Testimony Text` | The testimonial text (required — a row with an empty text stays hidden until it's filled in) |
+| `Picture`        | Optional headshot. Same rules as logos (Drive share link or repo path); blank → placeholder headshot |
+
+## Survey resources sheet (search behavior)
+
+The survey's local resource list comes from the team-maintained "Resources"
+sheet (synced to the site through the existing pipeline). Keep **one row per
+organization**. If the org serves several partners, list them
+**comma-separated in `Union/Contractor`** — the website splits them into
+separate searchable cards automatically. Example: title `Hunterdon Health`
+with `Union/Contractor` = `Vollers, HVI, Layout, Assuncao Bros` becomes four
+cards ("Hunterdon Health Vollers", "Hunterdon Health HVI", …). Searching a
+partner name ("vollers") shows just that card; searching the org name
+("hunterdon health") shows all of them.
 
 ## Good to know
 
