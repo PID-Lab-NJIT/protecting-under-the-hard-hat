@@ -121,7 +121,9 @@ body {
   position: fixed;
   top: 16px;
   right: 16px;
-  z-index: 2000;
+  /* Same stacking as .lang-toggle/.exit-ramp-btn (3200) so the button stays
+     clickable above the start/mode overlays (3100). */
+  z-index: 3200;
   background: var(--bg-secondary);
   color: var(--text-primary);
   border: 1.5px solid var(--text-secondary);

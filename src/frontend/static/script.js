@@ -2001,7 +2001,7 @@ class DynamicSurvey {
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data?.error || `HTTP ${res.status}`);
 
-      const list = Array.isArray(data.resources) ? data.resources : [];
+      const list = this.expandLocalRows(Array.isArray(data.resources) ? data.resources : []);
       const place = data.zip_code_info ? `${data.zip_code_info.city}, ${data.zip_code_info.state}` : zip;
 
       this._zipResults = { list, place };
@@ -2051,7 +2051,7 @@ class DynamicSurvey {
     this._allLocalFetch = fetch(`${LOCAL_RESOURCES_ENDPOINT}?${params}`, { method: 'GET' })
       .then(res => res.json().then(data => {
         if (!res.ok || !data.success) throw new Error(data?.error || `HTTP ${res.status}`);
-        this._allLocalResources = Array.isArray(data.resources) ? data.resources : [];
+        this._allLocalResources = this.expandLocalRows(Array.isArray(data.resources) ? data.resources : []);
         // All-resources model: the local grid renders as soon as the full
         // list arrives (ZIP distances, if any, are layered on separately)
         this.refreshLocalResults();
@@ -2063,6 +2063,35 @@ class DynamicSurvey {
         return null;
       });
     return this._allLocalFetch;
+  }
+
+  /* Split multi-partner rows into per-partner cards. The Resources sheet
+     keeps one row per org and lists the partners it serves comma-separated
+     in Union/Contractor (e.g. title "Hunterdon Health" with union cell
+     "Vollers, HVI, Layout, Assuncao Bros"). Each partner becomes its own
+     row titled "<org> <partner>" so searching one name ("vollers") surfaces
+     only that card, while searching the org ("hunterdon health") shows them
+     all. Single-value and N/A union cells pass through untouched. */
+  expandLocalRows(rows) {
+    const list = Array.isArray(rows) ? rows : [];
+    const out = [];
+    for (const r of list) {
+      const union = String(this.field(r, 'Union/Contractor') || '').trim();
+      const title = String(this.field(r, 'title') || '').trim();
+      const parts = union.split(',').map(s => s.trim()).filter(Boolean);
+      if (title && !this.isNA(union) && parts.length > 1) {
+        const unionKey = Object.keys(r).find(k => k.toLowerCase() === 'union/contractor') || 'Union/Contractor';
+        // "alt filter keywords" usually mirrors the same comma list — scope
+        // it to each row's own partner so only that row matches its name.
+        const keywordsKey = Object.keys(r).find(k => k.toLowerCase() === 'alt filter keywords');
+        for (const part of parts) {
+          out.push({ ...r, [unionKey]: part, ...(keywordsKey ? { [keywordsKey]: part } : {}), title: `${title} ${part}` });
+        }
+      } else {
+        out.push(r);
+      }
+    }
+    return out;
   }
 
   field(row, name) {
