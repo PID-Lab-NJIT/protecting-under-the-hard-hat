@@ -2,10 +2,11 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    # github.io always shows the most recent push: dev pushes deploy dev
-    # (preview), merges to main deploy main. Production (.org) is AWS
-    # Amplify following main only.
-    branches: [main, dev]
+    # github.io is the permanent dev/demo site — only dev pushes deploy it.
+    # (Previously main also deployed here; since Pages serves whichever
+    # branch deployed last, a merge to main would silently revert the demo
+    # to main's code.) Production (.org) is AWS Amplify following main only.
+    branches: [dev]
   workflow_dispatch:
 
 permissions:
