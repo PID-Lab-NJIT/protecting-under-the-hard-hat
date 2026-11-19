@@ -261,7 +261,7 @@ Log:
 - Request info - all fields.
 - Success response info: type and resource count.
 - That analytics stored successfully (if so).
-- A warning if any resource ZIP doesn't exist in the ZIP code dataset.
+- A warning if any resource ZIP doesn't exist in the ZIP code dataset (except 00000 and 99999).
 - Any errors caught via try-catch.
 - Any non-`200` status code and the descriptive error message.
 
