@@ -102,7 +102,7 @@ export function loadZipData() {
  * @param {string|number|null} cell
  * @returns {{ type: string, zip?: string, start?: string, end?: string, key?: string }}
  */
-export function parseResourceZip(cell) {
+function _parseResourceZip(cell) {
     const rangeMatch = String(cell).match(/^\s*(\d+)\s*-\s*(\d+)\s*$/);
     if (rangeMatch) {
         const start = normalizeZip(rangeMatch[1]);
@@ -148,7 +148,7 @@ function _prepareResourceZips(resources, zipColumn, zipData) {
     const rangeCache = {};
     const zipSpecs = resources.map((resource) => {
         const cell = resource[zipColumn];
-        const spec = parseResourceZip(cell);
+        const spec = _parseResourceZip(cell);
 
         if (spec.type === "invalid") {
             console.warn(`Resource ZIP code "${cell}" is invalid; excluding from local results.`);
@@ -182,7 +182,7 @@ function _prepareResourceZips(resources, zipColumn, zipData) {
 export function distanceToResource(userZip, spec, zipData, rangeCache) {
     const user = zipData[userZip];
     const distanceTo = (zip) =>
-        haversineDistance(user.lat, user.long, zipData[zip].lat, zipData[zip].long);
+        _haversineDistance(user.lat, user.long, zipData[zip].lat, zipData[zip].long);
 
     if (spec.type === "single") return distanceTo(spec.zip);
     if (spec.type === "range") {
@@ -326,7 +326,7 @@ function _toRadians(degrees) {
  * @param {number} long2
  * @returns {number} Distance in meters.
  */
-export function haversineDistance(lat1, long1, lat2, long2) {
+function _haversineDistance(lat1, long1, lat2, long2) {
     const dLat = _toRadians(lat2 - lat1);
     const dLong = _toRadians(long2 - long1);
     const a =
