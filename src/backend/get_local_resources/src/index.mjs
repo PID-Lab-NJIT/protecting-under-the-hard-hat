@@ -3,7 +3,7 @@
 
 import express from "express";
 import serverless from "serverless-http";
-import { normalizeZip, loadZipData, getResourcesData, validateQueryParams, haversineDistance, saveAnalytics } from "./util.mjs";
+import { normalizeZip, loadZipData, getResourcesData, validateQueryParams, distanceToResource, saveAnalytics } from "./util.mjs";
 
 const MARGIN = 5000;                // meters; filtering leeway for floating point errors
 
@@ -63,7 +63,7 @@ app.get("/local-resources", async (req, res) => {
 		const zipCode = zipCodeRaw;
 		const maxRadius = Number(maxRadiusRaw);
 
-        const { resources, zipColumn } = await getResourcesData();
+        const { resources, zipSpecs, rangeCache } = await getResourcesData();
 
         // max-radius == -1: return every resource, unsorted, with no distance/ZIP info.
         if (maxRadius === -1) {
@@ -98,31 +98,16 @@ app.get("/local-resources", async (req, res) => {
             return res.status(404).json({ success: false, error });
         }
 
-        // Distance from the user ZIP to each resource's own ZIP, filtered to
-        // max-radius (plus MARGIN leeway), closest first. Resources are the
-        // limiting factor here (few), so only their ZIPs are considered -
-        // not every ZIP in the dataset.
+        // Distance from the user ZIP to each resource (single ZIP or range),
+        // filtered to max-radius (plus MARGIN leeway). Sentinel/invalid resource
+        // ZIPs yield null and are skipped (warnings were logged at load time).
         const resourceDistances = [];
-        for (const resource of resources) {
-            const resourceZip = normalizeZip(resource[zipColumn]);
-            const resourceZipInfo = zipData[resourceZip];
-            if (!resourceZipInfo) {
-                console.warn(
-                    `Resource ZIP code ${resourceZip} not found in ZIP dataset; excluding resource.`,
-                );
-                continue;
-            }
-
-            const distance = haversineDistance(
-                userZipInfo.lat,
-                userZipInfo.long,
-                resourceZipInfo.lat,
-                resourceZipInfo.long,
-            );
-            if (distance <= maxRadius + MARGIN) {
+        resources.forEach((resource, i) => {
+            const distance = distanceToResource(userZip, zipSpecs[i], zipData, rangeCache);
+            if (distance != null && distance <= maxRadius + MARGIN) {
                 resourceDistances.push([distance, resource]);
             }
-        }
+        });
 
         resourceDistances.sort((a, b) => a[0] - b[0]);
 
