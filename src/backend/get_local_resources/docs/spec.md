@@ -90,8 +90,7 @@ Schema:
 - A manually-maintained CSV dataset of resources with address, ZIP code, phone number, etc.
 - Cases for ZIP codes:
   - Regular (e.g. 07102)
-  - 00000 ([TODO])
-  - 99999 ([TODO])
+  - Sentinel: 00000 (national resource) or 99999 ([TODO])
   - Range, representing an entire state (e.g. 10000-14999)
 - Stored in S3 bucket under name `resources.csv` at root.
 - Flexible schema since it can be updated frequently.
@@ -168,20 +167,21 @@ Constants:
    2.1. Find the user ZIP code's `lat` and `long` using the ZIP code dataset.
    2.2. Collect all the resources.
    2.3. Create a dictionary that maps ZIP code ranges in the dataset to a list of all valid normalized ZIP codes inside that range, e.g. `{ '10000-14999': ['10000', ..., '14999'] }`. Call this the "range cache".
-   2.3. Create an `nx2` array `resourceDistances` (where `n` is the number of resources). The 2nd element in each pair is a resource object, and the 1st element is the distance to the resource ZIP code(s) from the user ZIP code.
-    Cases for resource ZIP code:
-    - Single value => simply calculate distance
-    - Range:
-      - User ZIP code within range => distance = 0
-      - User ZIP code out of range => calculate distance to all the ZIP codes in the range (using the range cache) and select minimum.
-    - Invalid (including sentinel 00000 and 99999) => ignore
-   To find the distance, use the Haversine formula on a pair of `lat` and `long`. If any resource ZIP code is invalid (not in the ZIP code dataset), simply don't include that resource.
-   
-   2.4. Filter out pairs where the distance exceeds `max-radius + MARGIN`.
-   2.5. Sort `resourceDistances` by the 1st element (distance) in ascending order. Closest resource should be at the top. No need to handle ties - the original resource dataset order should prevail.
-   2.6. Transform the `nx2` `resourceDistances` array into an `nx1` `localResources` array, where each element is a resource object with a `distance` field added.
-   2.7. Save analytics data as specified in the [Analytics Storage](#analytics-storage) section above.
-   2.8. Return a JSON response object, adding the `localResources` array and any other necessary fields to it as per the response schema.
+   2.4. Create an `nx2` array `resourceDistances` (where `n` is the number of resources). The 2nd element in each pair is a resource object, and the 1st element is the distance to the resource ZIP code(s) from the user ZIP code.
+   Cases for resource ZIP code:
+   - Single value => simply calculate distance
+   - Range:
+     - User ZIP code within range => distance = 0
+     - User ZIP code out of range => calculate distance to all the ZIP codes in the range (using the range cache) and select minimum.
+   - Invalid (including sentinel 00000 and 99999) => ignore
+     To find the distance, use the Haversine formula on a pair of `lat` and `long`. If any resource ZIP code is invalid (not in the ZIP code dataset), simply don't include that resource.
+
+   2.5. Filter out pairs where the distance exceeds `max-radius + MARGIN`.
+   2.6. Sort `resourceDistances` by the 1st element (distance) in ascending order. Closest resource should be at the top. No need to handle ties - the original resource dataset order should prevail.
+   2.7. Transform the `nx2` `resourceDistances` array into an `nx1` `localResources` array, where each element is a resource object with a `distance` field added.
+   2.8. Save analytics data as specified in the [Analytics Storage](#analytics-storage) section above.
+   2.9. Return a JSON response object, adding the `localResources` array and any other necessary fields to it as per the response schema.
+
 3. If `max-radius == -1` (ZIP code not given, get all resources):
    3.1. Save analytics data as in Step 2.7.
    3.2. Return a JSON response with all the resources as they are, adding other necessary fields as per the response schema.
