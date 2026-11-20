@@ -24,6 +24,9 @@ const _SAVE_PATH = "data/new";       // for request analytics
 const _ZIP_CODE_DATA_PATH = "data/zip-codes.csv";   // on Lambda itself
 const _RESOURCES_TTL_MS = 4 * 60 * 60 * 1000; // 4 hours
 const _EARTH_RADIUS_M = 6371000;     // meters
+const _SENTINEL_ZIPS = new Set(["00000", "99999"]); // resources with no real location
+
+let _zipData = null;                 // memoized by loadZipData
 
 // ---------------------------------------------------------------------------
 // Data management
@@ -65,6 +68,7 @@ function _findZipColumn(fields) {
  * @returns {Object}
  */
 export function loadZipData() {
+    if (_zipData) return _zipData;
     const csvText = fs.readFileSync(
         path.join(__dirname, _ZIP_CODE_DATA_PATH),
         "utf-8",
@@ -85,13 +89,113 @@ export function loadZipData() {
             state: row.State,
         };
     }
+    _zipData = zipData;
     return zipData;
 }
 
 /**
+ * Parses a resource's ZIP code cell into one of:
+ * - { type: "single", zip }
+ * - { type: "range", start, end, key } (inclusive, all normalized; `key` is "start-end")
+ * - { type: "sentinel" } for 00000 and 99999
+ * - { type: "invalid" } for anything else, including reversed ranges
+ * @param {string|number|null} cell
+ * @returns {{ type: string, zip?: string, start?: string, end?: string, key?: string }}
+ */
+export function parseResourceZip(cell) {
+    const rangeMatch = String(cell).match(/^\s*(\d+)\s*-\s*(\d+)\s*$/);
+    if (rangeMatch) {
+        const start = normalizeZip(rangeMatch[1]);
+        const end = normalizeZip(rangeMatch[2]);
+        if (start === "invalid" || end === "invalid" || start > end) {
+            return { type: "invalid" };
+        }
+        return { type: "range", start, end, key: `${start}-${end}` };
+    }
+
+    const zip = normalizeZip(typeof cell === "string" ? cell.trim() : cell);
+    if (zip === "invalid") return { type: "invalid" };
+    if (_SENTINEL_ZIPS.has(zip)) return { type: "sentinel" };
+    return { type: "single", zip };
+}
+
+/**
+ * Lists every ZIP in the inclusive range [start, end] that exists in the ZIP dataset.
+ * @param {string} start - Normalized ZIP.
+ * @param {string} end - Normalized ZIP.
+ * @param {Object} zipData
+ * @returns {string[]}
+ */
+function _zipsInRange(start, end, zipData) {
+    const zips = [];
+    for (let n = Number(start); n <= Number(end); n++) {
+        const zip = normalizeZip(n);
+        if (zipData[zip]) zips.push(zip);
+    }
+    return zips;
+}
+
+/**
+ * Parses every resource's ZIP cell and builds the "range cache" mapping each
+ * range key to its valid ZIPs. Logs a warning once per unusable resource ZIP
+ * (sentinels excluded). Called once per resources load, not per request.
+ * @param {Object[]} resources
+ * @param {string} zipColumn
+ * @param {Object} zipData
+ * @returns {{ zipSpecs: Object[], rangeCache: Object }} zipSpecs[i] belongs to resources[i].
+ */
+function _prepareResourceZips(resources, zipColumn, zipData) {
+    const rangeCache = {};
+    const zipSpecs = resources.map((resource) => {
+        const cell = resource[zipColumn];
+        const spec = parseResourceZip(cell);
+
+        if (spec.type === "invalid") {
+            console.warn(`Resource ZIP code "${cell}" is invalid; excluding from local results.`);
+        } else if (spec.type === "single" && !zipData[spec.zip]) {
+            console.warn(`Resource ZIP code ${spec.zip} not found in ZIP dataset; excluding from local results.`);
+            return { type: "invalid" };
+        } else if (spec.type === "range") {
+            if (!(spec.key in rangeCache)) {
+                rangeCache[spec.key] = _zipsInRange(spec.start, spec.end, zipData);
+            }
+            if (rangeCache[spec.key].length === 0) {
+                console.warn(`Resource ZIP range ${spec.key} has no ZIP codes in ZIP dataset; excluding from local results.`);
+                return { type: "invalid" };
+            }
+        }
+        return spec;
+    });
+    return { zipSpecs, rangeCache };
+}
+
+/**
+ * Distance from the user ZIP to a resource, per the resource's parsed ZIP spec:
+ * single => direct distance; range => 0 if the user ZIP is inside it, else the
+ * minimum distance to any ZIP in the range; sentinel/invalid => null (ignore).
+ * @param {string} userZip - Normalized user ZIP (must exist in zipData).
+ * @param {Object} spec - From parseResourceZip, as vetted by _prepareResourceZips.
+ * @param {Object} zipData
+ * @param {Object} rangeCache
+ * @returns {number|null} Distance in meters, or null if the resource should be ignored.
+ */
+export function distanceToResource(userZip, spec, zipData, rangeCache) {
+    const user = zipData[userZip];
+    const distanceTo = (zip) =>
+        haversineDistance(user.lat, user.long, zipData[zip].lat, zipData[zip].long);
+
+    if (spec.type === "single") return distanceTo(spec.zip);
+    if (spec.type === "range") {
+        if (userZip >= spec.start && userZip <= spec.end) return 0;
+        return Math.min(...rangeCache[spec.key].map(distanceTo));
+    }
+    return null;
+}
+
+/**
  * Fetches resources.csv from S3 and parses it into the resource objects as-is
- * (one per CSV row), alongside the name of their ZIP code column.
- * @returns {Promise<{ resources: Object[], zipColumn: string }>}
+ * (one per CSV row), alongside each one's parsed ZIP spec and the range cache.
+ * @returns {Promise<{ resources: Object[], zipSpecs: Object[], rangeCache: Object }>}
  */
 async function _loadResourcesData() {
     const response = await _s3.send(
@@ -104,7 +208,8 @@ async function _loadResourcesData() {
         skipEmptyLines: true,
     });
     const zipColumn = _findZipColumn(meta.fields);
-    return { resources, zipColumn };
+    const { zipSpecs, rangeCache } = _prepareResourceZips(resources, zipColumn, loadZipData());
+    return { resources, zipSpecs, rangeCache };
 }
 
 // Cached across warm invocations; refetched after RESOURCES_TTL_MS or if the
