@@ -280,4 +280,5 @@ Log:
 - Use Prettier for formatting.
 - Always use camelCase for variable and function names. Convert JSON object keys (camel_case) and query parameters (kebab-case) into camelCase when reading them.
 - Use `variable == null` or `variable != null` if `variable` can plausibly be either `null` or `undefined`. Do NOT use `variable === null || variable === undefined` (and similarly for the `!==` conditions).
+- Keep exports to a minimum (e.g. remove exports as needed when other scripts don't use them).
 - Prefix function and module-scope variable names with `_` if they're not exported (except in `index.?js`).
