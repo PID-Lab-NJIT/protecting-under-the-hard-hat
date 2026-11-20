@@ -137,6 +137,10 @@ bash ./deploy.sh upload_to_drive/
 
 [TODO]
 
+### `download_from_drive`
+
+- Must be Drive editors files (not .docx, .xlsx, etc., but native Docs, Sheets, etc.)
+
 ### 🌐 Amplify
 
 - Config file: [`amplify.yml`](./amplify.yml)

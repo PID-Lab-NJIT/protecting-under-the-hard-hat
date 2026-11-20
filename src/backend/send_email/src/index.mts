@@ -29,7 +29,7 @@ const RATE_LIMIT_WINDOW_SECONDS = Number(process.env.RATE_LIMIT_WINDOW_SECONDS);
 const RATE_LIMIT_MAX_REQUESTS = Number(process.env.RATE_LIMIT_MAX_REQUESTS);
 const RATE_LIMIT_TTL_SECONDS = Number(process.env.RATE_LIMIT_TTL_SECONDS);
 const SENDER_EMAIL_ADDRESS = process.env.SENDER_EMAIL_ADDRESS as string;
-const RECIPIENT_EMAIL_ADDRESS = process.env.RECIPIENT_EMAIL_ADDRESS as string;
+const RECIPIENT_EMAIL_ADDRESSES = process.env.RECIPIENT_EMAIL_ADDRESSES as string;
 
 // ---------------------------------------------------------------------------
 // AWS clients
@@ -231,7 +231,7 @@ async function sendContactEmail(
   await sesClient.send(
     new SendEmailCommand({
       Source: SENDER_EMAIL_ADDRESS,
-      Destination: { ToAddresses: [RECIPIENT_EMAIL_ADDRESS] },
+      Destination: { ToAddresses: RECIPIENT_EMAIL_ADDRESSES.split(',') },
       ReplyToAddresses: [payload.email],
       Message: {
         Subject: { Data: "PUTHH: New Contact Message", Charset: "UTF-8" },
