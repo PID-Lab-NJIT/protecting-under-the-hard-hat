@@ -156,7 +156,7 @@ Schema:
 - Delete the cache if the promise fails.
 - To avoid stale resources when the function stays warm for a long time, use a TTL of 4 hours.
 
-3. Create a dictionary that maps ZIP code ranges in the dataset to a list of all valid normalized ZIP codes inside that range, e.g. `{ '10000-14999': ['10000', ..., '14999'] }`. Call this the "range cache".
+3. Eagerly create a dictionary that maps ZIP code ranges in the dataset to a list of all valid normalized ZIP codes inside that range, e.g. `{ '10000-14999': ['10000', ..., '14999'] }`. Call this the "range cache".
 
 ### Function Scope
 
